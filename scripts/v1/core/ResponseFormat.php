@@ -1,4 +1,5 @@
 <?php
+checkEnv();
 
 abstract class ResponseFormat {
 

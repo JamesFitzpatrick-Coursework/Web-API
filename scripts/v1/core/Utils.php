@@ -1,5 +1,16 @@
 <?php
 
+if (!defined("IN_BACKEND")) {
+	die();
+}
+
+function checkEnv()
+{
+	if (!defined("IN_BACKEND")) {
+		die();
+	}
+}
+
 function include_all($dir)
 {
 	foreach (glob("$dir/*.php") as $filename)
