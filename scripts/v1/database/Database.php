@@ -22,18 +22,21 @@ class Database {
 	{
 		if (!self::$connected) return FALSE;
 		
-		$result = mysqli_query(self::$connection, $query);
-		
-		if ($result === FALSE)
-		{
-			return FALSE;
-		}
-		else if ($result === TRUE)
-		{
-			return TRUE;
-		}
+		return mysqli_query(self::$connection, $query);
+	}
+	
+	public static function fetch_data($result)
+	{
+		if (!self::$connected) return FALSE;
 		
 		return mysqli_fetch_assoc($result);
+	}
+	
+	public static function close_query($query)
+	{
+		if (!self::$connected) return FALSE;
+		
+		return mysqli_free_result($query);
 	}
 	
 	public static function close()

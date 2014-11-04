@@ -31,7 +31,7 @@ class Token
 			return null;
 		}
 	
-		return new Token($type, $user, randomHex(14), SERVER_PUBLIC);
+		return new Token(dechex($type), $user, randomHex(14), SERVER_PUBLIC);
 	}
 	
 	public static function generateNewToken($type) 
@@ -39,9 +39,14 @@ class Token
 		return Token::generateToken($type, randomHex(8));
 	}
 	
-	public function __construct($type, $user, $random, $server)
+	public static function decode($token)
 	{
-		$this->type = dechex($type);
+		return new Token(substr($token, 0, 2), substr($token, 3, 8), substr($token, 12, 14), substr($token, 27, 8));
+	}
+	
+	protected function __construct($type, $user, $random, $server)
+	{
+		$this->type = $type;
 		$this->user = $user;
 		$this->random = $random;
 		$this->server = $server;

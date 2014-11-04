@@ -1,24 +1,28 @@
 <?php
-include('Crypt/RSA.php');
 
 class HandshakeEndpoint extends Endpoint {
 
-	private $crypt;
-	
-	public function __construct()
-	{
-		$crypt = new Crypt_RSA();
-	}
-
 	public function handle($body) {
-		/*$crypt = new Crypt_RSA();
-		extract($crypt->createKey());
-		$client = array ("private" => $privatekey, "public" => $publickey);
+		$data = json_decode($body);
 		
-		extract($crypt->createKey());
-		$server = array ("private" => $privatekey, "public" => $publickey);*/
+		if (!isset($data->{"user-id"}) || !isset($data->{"client-id"})) {
+			throw new EndpointExecutionException("Invalid request");
+		}
 		
-		$token = Token::generateToken(TOKEN_REQUEST, "93CE9079");
-		return array("refresh" => $token->toString(), /*"crypt" => array("private" => $client["private"], "public" => $server["public"])*/);
+		$userid = Token::decode($data->{"user-id"});
+		$token = Token::generateToken(TOKEN_REQUEST, $userid->getUserSecret());
+		
+		$query = "INSERT INTO " . DATABASE_TABLE_TOKENS . " (`token`, `user`, `expires`) VALUES ('" . $token->toString() . "','" . $userid->toString() . "', NOW() + INTERVAL 1 HOUR);";
+		
+		$result = Database::query($query);
+		
+		if (!$result) {
+			throw new EndpointExecutionException("An error occurred adding token to database", array("query" => $query));
+		}
+		
+		return array("client-id" => $data->{"client-id"},
+					"user-id" => $userid->toString(),
+					"refresh" => $token->toString(),
+					"expires" => 3600);
 	}
 }

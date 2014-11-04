@@ -13,11 +13,7 @@ require_all('endpoints');
 require_all('format');
 require_all('exception');
 
-// Setup endpoints
-$endpoints = array();
-$endpoints[""] = new ServerEndpoint();
-$endpoints["handshake"] = new HandshakeEndpoint();
-$endpoints["users/create"] = new UserCreateEndpoint();
+require_once 'Routes.php';
 
 // Setup response formats
 $formats = array();
@@ -34,6 +30,7 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
     $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
 }
 
+// Get response format if provided
 $responseFormat = DEFAULT_FORMAT;
 
 if (array_key_exists('HTTP_X_RESPONSE_FORMAT', $_SERVER)) {
@@ -41,12 +38,16 @@ if (array_key_exists('HTTP_X_RESPONSE_FORMAT', $_SERVER)) {
 }
 
 try {
+	// get the requested endpoint
 	$request = strtolower($_REQUEST['request']);
 	
+	// Sanitize the request
 	if (strlen($request) != 0 && endsWith("/", $request)) {
 		$request = substr($request, 0, strlen($request) - 1);
 	}
 	
+	// Check to see if endpoint exists
+	global $endpoints;
 	if (!array_key_exists($request, $endpoints)) {
 		throw new MethodNotFoundException($request);
 	} else {
@@ -54,6 +55,7 @@ try {
 		
 		$body = @file_get_contents('php://input');
 		
+		// Handle request
 		$payload = $endpoint->handle($body);
 		$code = HTTP_OK;
 	}
@@ -72,6 +74,7 @@ try {
 	$payload = array("error" => $ex->getMessage());
 }
 
+// Check to see if response format is valid
 if (!array_key_exists($responseFormat, $formats)) {
 	$code = HTTP_BAD_REQUEST;
 	$payload = array("error" => "Response type not found", "requested" => $responseFormat);
@@ -80,10 +83,12 @@ if (!array_key_exists($responseFormat, $formats)) {
 					
 $format = $formats[$responseFormat];
 
+// Create the response
 $response = array("success" => $code == HTTP_OK,
 					"status" => $code,
 					"payload" => $payload);
 
+// Display the response to the client
 http_response_code($code);
 header("Content-Type: " . $format->getContentType());
 $format->render($response);

@@ -4,7 +4,7 @@ class EndpointExecutionException extends Exception
 {
 	private $data;
 	
-	public function __construct($error, $data)
+	public function __construct($error, $data = array())
 	{
 		parent::__construct($error);
 		$this->data = $data;
