@@ -8,4 +8,9 @@ class Crypt {
 	{
 		return hash_hmac(HASH_ALGORITHM, $password, $secret);
 	}
+	
+	public static function checkPassword($hash, $password, $secret)
+	{
+		return $hash == self::hashPassword($password, $secret);
+	}
 }

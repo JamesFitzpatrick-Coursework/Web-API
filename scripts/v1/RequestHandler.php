@@ -38,6 +38,10 @@ if (array_key_exists('HTTP_X_RESPONSE_FORMAT', $_SERVER)) {
 }
 
 try {
+	if ($_SERVER['REQUEST_METHOD'] != "POST") {
+		throw new MethodNotAllowedException($_SERVER['REQUEST_METHOD']);
+	}
+	
 	// get the requested endpoint
 	$request = strtolower($_REQUEST['request']);
 	
@@ -59,9 +63,12 @@ try {
 		$payload = $endpoint->handle($body);
 		$code = HTTP_OK;
 	}
-} catch (MethodNotFound $ex) {
+} catch (MethodNotFoundException $ex) {
 	$code = HTTP_NOT_FOUND;
 	$payload = array("error" => "Method Not Found", "requested" => $ex->getRequest());
+} catch (MethodNotAllowedException $ex) {
+	$code = HTTP_METHOD_NOT_ALLOWED;
+	$payload = array ("error" => "Request method not allowed", "method" => $ex->getMethod());
 } catch (EndpointExecutionException $ex) {
 	$code = HTTP_BAD_REQUEST;
 	$payload = array("error" => $ex->getMessage());
@@ -69,6 +76,9 @@ try {
 	foreach ($ex->getData() as $key => $value) {
 		$payload[$key] = $value;
 	}
+} catch (InvalidTokenException $ex) {
+	$code = HTTP_BAD_REQUEST;
+	$payload = array("error" => $ex->getMessage());
 } catch (Exception $ex) {
 	$code = HTTP_INTERNAL_ERROR;
 	$payload = array("error" => $ex->getMessage());

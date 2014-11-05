@@ -13,8 +13,6 @@ define("TOKEN_ACCESS", 0xAC);
 define("TOKEN_REFRESH", 0xAD);
 define("TOKEN_USER", 0xAE);
 
-define ("SERVER_PUBLIC", "4FA851DB");
-
 class Token
 {
 	private $type;
@@ -31,7 +29,7 @@ class Token
 			return null;
 		}
 	
-		return new Token(dechex($type), $user, randomHex(14), SERVER_PUBLIC);
+		return new Token(dechex($type), $user, randomHex(14), randomHex(8));
 	}
 	
 	public static function generateNewToken($type) 
@@ -46,10 +44,10 @@ class Token
 	
 	protected function __construct($type, $user, $random, $server)
 	{
-		$this->type = $type;
-		$this->user = $user;
-		$this->random = $random;
-		$this->server = $server;
+		$this->type = strtolower($type);
+		$this->user = strtolower($user);
+		$this->random = strtolower($random);
+		$this->server = strtolower($server);
 	}
 	
 	public function toString()
