@@ -1,9 +1,9 @@
 <?php
 
-class InvalidTokenException extends Exception
+class InvalidTokenException extends EndpointExecutionException
 {
-	public function __construct($error)
-	{
-		parent::__construct($error);
-	}
+    public function __construct($error)
+    {
+        parent::__construct($error);
+    }
 }

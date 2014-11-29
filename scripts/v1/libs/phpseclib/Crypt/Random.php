@@ -62,6 +62,7 @@ if (!function_exists('crypt_random_string')) {
      * eg. for RSA key generation.
      *
      * @param Integer $length
+     *
      * @return String
      * @access public
      */
@@ -171,9 +172,9 @@ if (!function_exists('crypt_random_string')) {
                 ini_set('session.use_cookies', $old_use_cookies);
                 session_cache_limiter($old_session_cache_limiter);
             } else {
-               if ($_OLD_SESSION !== false) {
-                   $_SESSION = $_OLD_SESSION;
-                   unset($_OLD_SESSION);
+                if ($_OLD_SESSION !== false) {
+                    $_SESSION = $_OLD_SESSION;
+                    unset($_OLD_SESSION);
                 } else {
                     unset($_SESSION);
                 }
@@ -232,6 +233,7 @@ if (!function_exists('crypt_random_string')) {
                     break;
                 default:
                     user_error('crypt_random_string requires at least one symmetric cipher be loaded');
+
                     return false;
             }
 
@@ -255,8 +257,9 @@ if (!function_exists('crypt_random_string')) {
             $i = $crypto->encrypt(microtime()); // strlen(microtime()) == 21
             $r = $crypto->encrypt($i ^ $v); // strlen($v) == 20
             $v = $crypto->encrypt($r ^ $i); // strlen($r) == 20
-            $result.= $r;
+            $result .= $r;
         }
+
         return substr($result, 0, $length);
     }
 }
@@ -269,6 +272,7 @@ if (!function_exists('phpseclib_resolve_include_path')) {
      * PHP 5.3.2) with fallback implementation for earlier PHP versions.
      *
      * @param string $filename
+     *
      * @return mixed Filename (string) on success, false otherwise.
      * @access public
      */

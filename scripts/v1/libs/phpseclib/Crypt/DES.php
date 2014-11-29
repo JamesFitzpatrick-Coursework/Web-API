@@ -69,8 +69,8 @@ if (!class_exists('Crypt_Base')) {
 
 /**#@+
  * @access private
- * @see Crypt_DES::_setupKey()
- * @see Crypt_DES::_processBlock()
+ * @see    Crypt_DES::_setupKey()
+ * @see    Crypt_DES::_processBlock()
  */
 /**
  * Contains $keys[CRYPT_DES_ENCRYPT]
@@ -84,8 +84,8 @@ define('CRYPT_DES_DECRYPT', 1);
 
 /**#@+
  * @access public
- * @see Crypt_DES::encrypt()
- * @see Crypt_DES::decrypt()
+ * @see    Crypt_DES::encrypt()
+ * @see    Crypt_DES::decrypt()
  */
 /**
  * Encrypt / decrypt using the Counter mode.
@@ -123,7 +123,7 @@ define('CRYPT_DES_MODE_OFB', CRYPT_MODE_OFB);
 
 /**#@+
  * @access private
- * @see Crypt_Base::Crypt_Base()
+ * @see    Crypt_Base::Crypt_Base()
  */
 /**
  * Toggles the internal implementation
@@ -147,7 +147,7 @@ class Crypt_DES extends Crypt_Base
     /**
      * Block Length of the cipher
      *
-     * @see Crypt_Base::block_size
+     * @see    Crypt_Base::block_size
      * @var Integer
      * @access private
      */
@@ -156,8 +156,8 @@ class Crypt_DES extends Crypt_Base
     /**
      * The Key
      *
-     * @see Crypt_Base::key
-     * @see setKey()
+     * @see    Crypt_Base::key
+     * @see    setKey()
      * @var String
      * @access private
      */
@@ -166,8 +166,8 @@ class Crypt_DES extends Crypt_Base
     /**
      * The default password key_size used by setPassword()
      *
-     * @see Crypt_Base::password_key_size
-     * @see Crypt_Base::setPassword()
+     * @see    Crypt_Base::password_key_size
+     * @see    Crypt_Base::setPassword()
      * @var Integer
      * @access private
      */
@@ -176,7 +176,7 @@ class Crypt_DES extends Crypt_Base
     /**
      * The namespace used by the cipher for its constants.
      *
-     * @see Crypt_Base::const_namespace
+     * @see    Crypt_Base::const_namespace
      * @var String
      * @access private
      */
@@ -185,7 +185,7 @@ class Crypt_DES extends Crypt_Base
     /**
      * The mcrypt specific name of the cipher
      *
-     * @see Crypt_Base::cipher_name_mcrypt
+     * @see    Crypt_Base::cipher_name_mcrypt
      * @var String
      * @access private
      */
@@ -194,7 +194,7 @@ class Crypt_DES extends Crypt_Base
     /**
      * Optimizing value while CFB-encrypting
      *
-     * @see Crypt_Base::cfb_init_len
+     * @see    Crypt_Base::cfb_init_len
      * @var Integer
      * @access private
      */
@@ -205,8 +205,8 @@ class Crypt_DES extends Crypt_Base
      *
      * Used only if $engine == CRYPT_DES_MODE_INTERNAL
      *
-     * @see Crypt_DES::_setupKey()
-     * @see Crypt_DES::_processBlock()
+     * @see    Crypt_DES::_setupKey()
+     * @see    Crypt_DES::_processBlock()
      * @var Integer
      * @access private
      */
@@ -215,7 +215,7 @@ class Crypt_DES extends Crypt_Base
     /**
      * max possible size of $key
      *
-     * @see Crypt_DES::setKey()
+     * @see    Crypt_DES::setKey()
      * @var String
      * @access private
      */
@@ -224,7 +224,7 @@ class Crypt_DES extends Crypt_Base
     /**
      * The Key Schedule
      *
-     * @see Crypt_DES::_setupKey()
+     * @see    Crypt_DES::_setupKey()
      * @var Array
      * @access private
      */
@@ -237,8 +237,8 @@ class Crypt_DES extends Crypt_Base
      * with each byte containing all bits in the same state as the
      * corresponding bit in the index value.
      *
-     * @see Crypt_DES::_processBlock()
-     * @see Crypt_DES::_setupKey()
+     * @see    Crypt_DES::_processBlock()
+     * @see    Crypt_DES::_setupKey()
      * @var Array
      * @access private
      */
@@ -672,8 +672,9 @@ class Crypt_DES extends Crypt_Base
      *
      * If the key is not explicitly set, it'll be assumed to be all zero's.
      *
-     * @see Crypt_Base::setKey()
+     * @see    Crypt_Base::setKey()
      * @access public
+     *
      * @param String $key
      */
     function setKey($key)
@@ -691,11 +692,13 @@ class Crypt_DES extends Crypt_Base
     /**
      * Encrypts a block
      *
-     * @see Crypt_Base::_encryptBlock()
-     * @see Crypt_Base::encrypt()
-     * @see Crypt_DES::encrypt()
+     * @see    Crypt_Base::_encryptBlock()
+     * @see    Crypt_Base::encrypt()
+     * @see    Crypt_DES::encrypt()
      * @access private
+     *
      * @param String $in
+     *
      * @return String
      */
     function _encryptBlock($in)
@@ -706,11 +709,13 @@ class Crypt_DES extends Crypt_Base
     /**
      * Decrypts a block
      *
-     * @see Crypt_Base::_decryptBlock()
-     * @see Crypt_Base::decrypt()
-     * @see Crypt_DES::decrypt()
+     * @see    Crypt_Base::_decryptBlock()
+     * @see    Crypt_Base::decrypt()
+     * @see    Crypt_DES::decrypt()
      * @access private
+     *
      * @param String $in
+     *
      * @return String
      */
     function _decryptBlock($in)
@@ -725,11 +730,13 @@ class Crypt_DES extends Crypt_Base
      * {@link http://en.wikipedia.org/wiki/Image:Feistel.png Feistel.png} to get a general
      * idea of what this function does.
      *
-     * @see Crypt_DES::_encryptBlock()
-     * @see Crypt_DES::_decryptBlock()
+     * @see    Crypt_DES::_encryptBlock()
+     * @see    Crypt_DES::_decryptBlock()
      * @access private
+     *
      * @param String $block
      * @param Integer $mode
+     *
      * @return String
      */
     function _processBlock($block, $mode)
@@ -746,25 +753,25 @@ class Crypt_DES extends Crypt_Base
             $sbox8 = array_map("intval", $this->sbox8);
             /* Merge $shuffle with $[inv]ipmap */
             for ($i = 0; $i < 256; ++$i) {
-                $shuffleip[]    =  $this->shuffle[$this->ipmap[$i]];
-                $shuffleinvip[] =  $this->shuffle[$this->invipmap[$i]];
+                $shuffleip[] = $this->shuffle[$this->ipmap[$i]];
+                $shuffleinvip[] = $this->shuffle[$this->invipmap[$i]];
             }
         }
 
-        $keys  = $this->keys[$mode];
-        $ki    = -1;
+        $keys = $this->keys[$mode];
+        $ki = -1;
 
         // Do the initial IP permutation.
         $t = unpack('Nl/Nr', $block);
         list($l, $r) = array($t['l'], $t['r']);
-        $block = ($shuffleip[ $r        & 0xFF] & "\x80\x80\x80\x80\x80\x80\x80\x80") |
-                 ($shuffleip[($r >>  8) & 0xFF] & "\x40\x40\x40\x40\x40\x40\x40\x40") |
-                 ($shuffleip[($r >> 16) & 0xFF] & "\x20\x20\x20\x20\x20\x20\x20\x20") |
-                 ($shuffleip[($r >> 24) & 0xFF] & "\x10\x10\x10\x10\x10\x10\x10\x10") |
-                 ($shuffleip[ $l        & 0xFF] & "\x08\x08\x08\x08\x08\x08\x08\x08") |
-                 ($shuffleip[($l >>  8) & 0xFF] & "\x04\x04\x04\x04\x04\x04\x04\x04") |
-                 ($shuffleip[($l >> 16) & 0xFF] & "\x02\x02\x02\x02\x02\x02\x02\x02") |
-                 ($shuffleip[($l >> 24) & 0xFF] & "\x01\x01\x01\x01\x01\x01\x01\x01");
+        $block = ($shuffleip[$r & 0xFF] & "\x80\x80\x80\x80\x80\x80\x80\x80") |
+            ($shuffleip[($r >> 8) & 0xFF] & "\x40\x40\x40\x40\x40\x40\x40\x40") |
+            ($shuffleip[($r >> 16) & 0xFF] & "\x20\x20\x20\x20\x20\x20\x20\x20") |
+            ($shuffleip[($r >> 24) & 0xFF] & "\x10\x10\x10\x10\x10\x10\x10\x10") |
+            ($shuffleip[$l & 0xFF] & "\x08\x08\x08\x08\x08\x08\x08\x08") |
+            ($shuffleip[($l >> 8) & 0xFF] & "\x04\x04\x04\x04\x04\x04\x04\x04") |
+            ($shuffleip[($l >> 16) & 0xFF] & "\x02\x02\x02\x02\x02\x02\x02\x02") |
+            ($shuffleip[($l >> 24) & 0xFF] & "\x01\x01\x01\x01\x01\x01\x01\x01");
 
         // Extract L0 and R0.
         $t = unpack('Nl/Nr', $block);
@@ -776,14 +783,14 @@ class Crypt_DES extends Crypt_Base
                 // start of "the Feistel (F) function" - see the following URL:
                 // http://en.wikipedia.org/wiki/Image:Data_Encryption_Standard_InfoBox_Diagram.png
                 // Merge key schedule.
-                $b1 = (($r >>  3) & 0x1FFFFFFF) ^ ($r << 29) ^ $keys[++$ki];
-                $b2 = (($r >> 31) & 0x00000001) ^ ($r <<  1) ^ $keys[++$ki];
+                $b1 = (($r >> 3) & 0x1FFFFFFF) ^ ($r << 29) ^ $keys[++$ki];
+                $b2 = (($r >> 31) & 0x00000001) ^ ($r << 1) ^ $keys[++$ki];
 
                 // S-box indexing.
                 $t = $sbox1[($b1 >> 24) & 0x3F] ^ $sbox2[($b2 >> 24) & 0x3F] ^
-                     $sbox3[($b1 >> 16) & 0x3F] ^ $sbox4[($b2 >> 16) & 0x3F] ^
-                     $sbox5[($b1 >>  8) & 0x3F] ^ $sbox6[($b2 >>  8) & 0x3F] ^
-                     $sbox7[ $b1        & 0x3F] ^ $sbox8[ $b2        & 0x3F] ^ $l;
+                    $sbox3[($b1 >> 16) & 0x3F] ^ $sbox4[($b2 >> 16) & 0x3F] ^
+                    $sbox5[($b1 >> 8) & 0x3F] ^ $sbox6[($b2 >> 8) & 0x3F] ^
+                    $sbox7[$b1 & 0x3F] ^ $sbox8[$b2 & 0x3F] ^ $l;
                 // end of "the Feistel (F) function"
 
                 $l = $r;
@@ -798,19 +805,19 @@ class Crypt_DES extends Crypt_Base
 
         // Perform the inverse IP permutation.
         return ($shuffleinvip[($r >> 24) & 0xFF] & "\x80\x80\x80\x80\x80\x80\x80\x80") |
-               ($shuffleinvip[($l >> 24) & 0xFF] & "\x40\x40\x40\x40\x40\x40\x40\x40") |
-               ($shuffleinvip[($r >> 16) & 0xFF] & "\x20\x20\x20\x20\x20\x20\x20\x20") |
-               ($shuffleinvip[($l >> 16) & 0xFF] & "\x10\x10\x10\x10\x10\x10\x10\x10") |
-               ($shuffleinvip[($r >>  8) & 0xFF] & "\x08\x08\x08\x08\x08\x08\x08\x08") |
-               ($shuffleinvip[($l >>  8) & 0xFF] & "\x04\x04\x04\x04\x04\x04\x04\x04") |
-               ($shuffleinvip[ $r        & 0xFF] & "\x02\x02\x02\x02\x02\x02\x02\x02") |
-               ($shuffleinvip[ $l        & 0xFF] & "\x01\x01\x01\x01\x01\x01\x01\x01");
+        ($shuffleinvip[($l >> 24) & 0xFF] & "\x40\x40\x40\x40\x40\x40\x40\x40") |
+        ($shuffleinvip[($r >> 16) & 0xFF] & "\x20\x20\x20\x20\x20\x20\x20\x20") |
+        ($shuffleinvip[($l >> 16) & 0xFF] & "\x10\x10\x10\x10\x10\x10\x10\x10") |
+        ($shuffleinvip[($r >> 8) & 0xFF] & "\x08\x08\x08\x08\x08\x08\x08\x08") |
+        ($shuffleinvip[($l >> 8) & 0xFF] & "\x04\x04\x04\x04\x04\x04\x04\x04") |
+        ($shuffleinvip[$r & 0xFF] & "\x02\x02\x02\x02\x02\x02\x02\x02") |
+        ($shuffleinvip[$l & 0xFF] & "\x01\x01\x01\x01\x01\x01\x01\x01");
     }
 
     /**
      * Creates the key schedule
      *
-     * @see Crypt_Base::_setupKey()
+     * @see    Crypt_Base::_setupKey()
      * @access private
      */
     function _setupKey()
@@ -1278,43 +1285,43 @@ class Crypt_DES extends Crypt_Base
             // Perform the PC/1 transformation and compute C and D.
             $t = unpack('Nl/Nr', $key);
             list($l, $r) = array($t['l'], $t['r']);
-            $key = ($this->shuffle[$pc1map[ $r        & 0xFF]] & "\x80\x80\x80\x80\x80\x80\x80\x00") |
-                   ($this->shuffle[$pc1map[($r >>  8) & 0xFF]] & "\x40\x40\x40\x40\x40\x40\x40\x00") |
-                   ($this->shuffle[$pc1map[($r >> 16) & 0xFF]] & "\x20\x20\x20\x20\x20\x20\x20\x00") |
-                   ($this->shuffle[$pc1map[($r >> 24) & 0xFF]] & "\x10\x10\x10\x10\x10\x10\x10\x00") |
-                   ($this->shuffle[$pc1map[ $l        & 0xFF]] & "\x08\x08\x08\x08\x08\x08\x08\x00") |
-                   ($this->shuffle[$pc1map[($l >>  8) & 0xFF]] & "\x04\x04\x04\x04\x04\x04\x04\x00") |
-                   ($this->shuffle[$pc1map[($l >> 16) & 0xFF]] & "\x02\x02\x02\x02\x02\x02\x02\x00") |
-                   ($this->shuffle[$pc1map[($l >> 24) & 0xFF]] & "\x01\x01\x01\x01\x01\x01\x01\x00");
+            $key = ($this->shuffle[$pc1map[$r & 0xFF]] & "\x80\x80\x80\x80\x80\x80\x80\x00") |
+                ($this->shuffle[$pc1map[($r >> 8) & 0xFF]] & "\x40\x40\x40\x40\x40\x40\x40\x00") |
+                ($this->shuffle[$pc1map[($r >> 16) & 0xFF]] & "\x20\x20\x20\x20\x20\x20\x20\x00") |
+                ($this->shuffle[$pc1map[($r >> 24) & 0xFF]] & "\x10\x10\x10\x10\x10\x10\x10\x00") |
+                ($this->shuffle[$pc1map[$l & 0xFF]] & "\x08\x08\x08\x08\x08\x08\x08\x00") |
+                ($this->shuffle[$pc1map[($l >> 8) & 0xFF]] & "\x04\x04\x04\x04\x04\x04\x04\x00") |
+                ($this->shuffle[$pc1map[($l >> 16) & 0xFF]] & "\x02\x02\x02\x02\x02\x02\x02\x00") |
+                ($this->shuffle[$pc1map[($l >> 24) & 0xFF]] & "\x01\x01\x01\x01\x01\x01\x01\x00");
             $key = unpack('Nc/Nd', $key);
-            $c = ( $key['c'] >> 4) & 0x0FFFFFFF;
+            $c = ($key['c'] >> 4) & 0x0FFFFFFF;
             $d = (($key['d'] >> 4) & 0x0FFFFFF0) | ($key['c'] & 0x0F);
 
             $keys[$des_round] = array(
                 CRYPT_DES_ENCRYPT => array(),
                 CRYPT_DES_DECRYPT => array_fill(0, 32, 0)
             );
-            for ($i = 0, $ki = 31; $i < 16; ++$i, $ki-= 2) {
+            for ($i = 0, $ki = 31; $i < 16; ++$i, $ki -= 2) {
                 $c <<= $shifts[$i];
                 $c = ($c | ($c >> 28)) & 0x0FFFFFFF;
                 $d <<= $shifts[$i];
                 $d = ($d | ($d >> 28)) & 0x0FFFFFFF;
 
                 // Perform the PC-2 transformation.
-                $cp = $pc2mapc1[ $c >> 24        ] | $pc2mapc2[($c >> 16) & 0xFF] |
-                      $pc2mapc3[($c >>  8) & 0xFF] | $pc2mapc4[ $c        & 0xFF];
-                $dp = $pc2mapd1[ $d >> 24        ] | $pc2mapd2[($d >> 16) & 0xFF] |
-                      $pc2mapd3[($d >>  8) & 0xFF] | $pc2mapd4[ $d        & 0xFF];
+                $cp = $pc2mapc1[$c >> 24] | $pc2mapc2[($c >> 16) & 0xFF] |
+                    $pc2mapc3[($c >> 8) & 0xFF] | $pc2mapc4[$c & 0xFF];
+                $dp = $pc2mapd1[$d >> 24] | $pc2mapd2[($d >> 16) & 0xFF] |
+                    $pc2mapd3[($d >> 8) & 0xFF] | $pc2mapd4[$d & 0xFF];
 
                 // Reorder: odd bytes/even bytes. Push the result in key schedule.
-                $val1 = ( $cp        & 0xFF000000) | (($cp <<  8) & 0x00FF0000) |
-                        (($dp >> 16) & 0x0000FF00) | (($dp >>  8) & 0x000000FF);
-                $val2 = (($cp <<  8) & 0xFF000000) | (($cp << 16) & 0x00FF0000) |
-                        (($dp >>  8) & 0x0000FF00) | ( $dp        & 0x000000FF);
-                $keys[$des_round][CRYPT_DES_ENCRYPT][       ] = $val1;
+                $val1 = ($cp & 0xFF000000) | (($cp << 8) & 0x00FF0000) |
+                    (($dp >> 16) & 0x0000FF00) | (($dp >> 8) & 0x000000FF);
+                $val2 = (($cp << 8) & 0xFF000000) | (($cp << 16) & 0x00FF0000) |
+                    (($dp >> 8) & 0x0000FF00) | ($dp & 0x000000FF);
+                $keys[$des_round][CRYPT_DES_ENCRYPT][] = $val1;
                 $keys[$des_round][CRYPT_DES_DECRYPT][$ki - 1] = $val1;
-                $keys[$des_round][CRYPT_DES_ENCRYPT][       ] = $val2;
-                $keys[$des_round][CRYPT_DES_DECRYPT][$ki    ] = $val2;
+                $keys[$des_round][CRYPT_DES_ENCRYPT][] = $val2;
+                $keys[$des_round][CRYPT_DES_DECRYPT][$ki] = $val2;
             }
         }
 
@@ -1345,7 +1352,7 @@ class Crypt_DES extends Crypt_Base
     /**
      * Setup the performance-optimized function for de/encrypt()
      *
-     * @see Crypt_Base::_setupInlineCrypt()
+     * @see    Crypt_Base::_setupInlineCrypt()
      * @access private
      */
     function _setupInlineCrypt()
@@ -1359,7 +1366,7 @@ class Crypt_DES extends Crypt_Base
 
         // We create max. 10 hi-optimized code for memory reason. Means: For each $key one ultra fast inline-crypt function.
         // After that, we'll still create very fast optimized code but not the hi-ultimative code, for each $mode one
-        $gen_hi_opt_code = (bool)( count($lambda_functions) < 10 );
+        $gen_hi_opt_code = (bool)(count($lambda_functions) < 10);
 
         // Generation of a uniqe hash for our generated code
         switch (true) {
@@ -1388,7 +1395,7 @@ class Crypt_DES extends Crypt_Base
                     $sbox6 = array_map("intval", $self->sbox6);
                     $sbox7 = array_map("intval", $self->sbox7);
                     $sbox8 = array_map("intval", $self->sbox8);'
-                    /* Merge $shuffle with $[inv]ipmap */ . '
+                /* Merge $shuffle with $[inv]ipmap */ . '
                     for ($i = 0; $i < 256; ++$i) {
                         $shuffleip[]    =  $self->shuffle[$self->ipmap[$i]];
                         $shuffleinvip[] =  $self->shuffle[$self->invipmap[$i]];
@@ -1443,7 +1450,8 @@ class Crypt_DES extends Crypt_Base
                         ($shuffleip[($l >> 16) & 0xFF] & "\x02\x02\x02\x02\x02\x02\x02\x02") |
                         ($shuffleip[($l >> 24) & 0xFF] & "\x01\x01\x01\x01\x01\x01\x01\x01")
                     );
-                    ' . /* Extract L0 and R0 */ '
+                    ' . /* Extract L0 and R0 */
+                    '
                     $l = $in[1];
                     $r = $in[2];
                 ';
@@ -1458,7 +1466,7 @@ class Crypt_DES extends Crypt_Base
                         // start of "the Feistel (F) function" - see the following URL:
                         // http://en.wikipedia.org/wiki/Image:Data_Encryption_Standard_InfoBox_Diagram.png
                         // Merge key schedule.
-                        $crypt_block[$c].= '
+                        $crypt_block[$c] .= '
                             $b1 = ((' . $r . ' >>  3) & 0x1FFFFFFF)  ^ (' . $r . ' << 29) ^ ' . $k[$c][++$ki] . ';
                             $b2 = ((' . $r . ' >> 31) & 0x00000001)  ^ (' . $r . ' <<  1) ^ ' . $k[$c][++$ki] . ';' .
                             /* S-box indexing. */
@@ -1476,7 +1484,7 @@ class Crypt_DES extends Crypt_Base
                 }
 
                 // Perform the inverse IP permutation.
-                $crypt_block[$c].= '$in =
+                $crypt_block[$c] .= '$in =
                     ($shuffleinvip[($l >> 24) & 0xFF] & "\x80\x80\x80\x80\x80\x80\x80\x80") |
                     ($shuffleinvip[($r >> 24) & 0xFF] & "\x40\x40\x40\x40\x40\x40\x40\x40") |
                     ($shuffleinvip[($l >> 16) & 0xFF] & "\x20\x20\x20\x20\x20\x20\x20\x20") |
@@ -1491,11 +1499,11 @@ class Crypt_DES extends Crypt_Base
             // Creates the inline-crypt function
             $lambda_functions[$code_hash] = $this->_createInlineCryptFunction(
                 array(
-                   'init_crypt'    => $init_crypt,
-                   'init_encrypt'  => $init_encrypt,
-                   'init_decrypt'  => $init_decrypt,
-                   'encrypt_block' => $crypt_block[CRYPT_DES_ENCRYPT],
-                   'decrypt_block' => $crypt_block[CRYPT_DES_DECRYPT]
+                    'init_crypt' => $init_crypt,
+                    'init_encrypt' => $init_encrypt,
+                    'init_decrypt' => $init_decrypt,
+                    'encrypt_block' => $crypt_block[CRYPT_DES_ENCRYPT],
+                    'decrypt_block' => $crypt_block[CRYPT_DES_DECRYPT]
                 )
             );
         }

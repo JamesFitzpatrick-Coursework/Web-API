@@ -2,15 +2,16 @@
 checkEnv();
 define ("HASH_ALGORITHM", "sha256");
 
-class Crypt {
+class Crypt
+{
 
-	public static function hashPassword($password, $secret) 
-	{
-		return hash_hmac(HASH_ALGORITHM, $password, $secret);
-	}
-	
-	public static function checkPassword($hash, $password, $secret)
-	{
-		return $hash == self::hashPassword($password, $secret);
-	}
+    public static function hashPassword($password, $secret)
+    {
+        return hash_hmac(HASH_ALGORITHM, $password, $secret);
+    }
+
+    public static function checkPassword($hash, $password, $secret)
+    {
+        return $hash == self::hashPassword($password, $secret);
+    }
 }

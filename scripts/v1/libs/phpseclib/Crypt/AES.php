@@ -70,8 +70,8 @@ if (!class_exists('Crypt_Rijndael')) {
 
 /**#@+
  * @access public
- * @see Crypt_AES::encrypt()
- * @see Crypt_AES::decrypt()
+ * @see    Crypt_AES::encrypt()
+ * @see    Crypt_AES::decrypt()
  */
 /**
  * Encrypt / decrypt using the Counter mode.
@@ -109,7 +109,7 @@ define('CRYPT_AES_MODE_OFB', CRYPT_MODE_OFB);
 
 /**#@+
  * @access private
- * @see Crypt_Base::Crypt_Base()
+ * @see    Crypt_Base::Crypt_Base()
  */
 /**
  * Toggles the internal implementation
@@ -133,7 +133,7 @@ class Crypt_AES extends Crypt_Rijndael
     /**
      * The namespace used by the cipher for its constants.
      *
-     * @see Crypt_Base::const_namespace
+     * @see    Crypt_Base::const_namespace
      * @var String
      * @access private
      */
@@ -144,8 +144,9 @@ class Crypt_AES extends Crypt_Rijndael
      *
      * Since Crypt_AES extends Crypt_Rijndael, this function is, technically, available, but it doesn't do anything.
      *
-     * @see Crypt_Rijndael::setBlockLength()
+     * @see    Crypt_Rijndael::setBlockLength()
      * @access public
+     *
      * @param Integer $length
      */
     function setBlockLength($length)
@@ -159,8 +160,9 @@ class Crypt_AES extends Crypt_Rijndael
      * Valid key lengths are 128, 192, and 256.  If the length is less than 128, it will be rounded up to
      * 128.  If the length is greater than 128 and invalid, it will be rounded down to the closest valid amount.
      *
-     * @see Crypt_Rijndael:setKeyLength()
+     * @see    Crypt_Rijndael:setKeyLength()
      * @access public
+     *
      * @param Integer $length
      */
     function setKeyLength($length)
@@ -180,9 +182,10 @@ class Crypt_AES extends Crypt_Rijndael
      *
      * Rijndael supports five different key lengths, AES only supports three.
      *
-     * @see Crypt_Rijndael:setKey()
-     * @see setKeyLength()
+     * @see    Crypt_Rijndael:setKey()
+     * @see    setKeyLength()
      * @access public
+     *
      * @param String $key
      */
     function setKey($key)

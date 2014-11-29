@@ -130,6 +130,7 @@ class Net_SFTP_Stream
      * Registers this class as a URL wrapper.
      *
      * @param optional String $protocol The wrapper name to be registered.
+     *
      * @return Boolean True on success, false otherwise.
      * @access public
      */
@@ -139,6 +140,7 @@ class Net_SFTP_Stream
             return false;
         }
         $class = function_exists('get_called_class') ? get_called_class() : __CLASS__;
+
         return stream_wrapper_register($protocol, $class);
     }
 
@@ -167,6 +169,7 @@ class Net_SFTP_Stream
      * NET_SSH2_MSG_USERAUTH_SUCCESS. For a failed login it's NET_SSH2_MSG_USERAUTH_FAILURE.
      *
      * @param String $path
+     *
      * @return String
      * @access private
      */
@@ -204,6 +207,7 @@ class Net_SFTP_Stream
             }
             if (isset($sftp) && is_object($sftp) && get_class($sftp) == 'Net_SFTP') {
                 $this->sftp = $sftp;
+
                 return $path;
             }
             if (isset($context[$scheme]['username'])) {
@@ -221,8 +225,8 @@ class Net_SFTP_Stream
             }
 
             // casting $pass to a string is necessary in the event that it's a Crypt_RSA object
-            if (isset(self::$instances[$host][$port][$user][(string) $pass])) {
-                $this->sftp = self::$instances[$host][$port][$user][(string) $pass];
+            if (isset(self::$instances[$host][$port][$user][(string)$pass])) {
+                $this->sftp = self::$instances[$host][$port][$user][(string)$pass];
             } else {
                 $this->sftp = new Net_SFTP($host, $port);
                 $this->sftp->disableStatCache();
@@ -240,6 +244,7 @@ class Net_SFTP_Stream
                     call_user_func($this->notification, STREAM_NOTIFY_AUTH_REQUIRED, STREAM_NOTIFY_SEVERITY_INFO, '', 0, 0, 0);
                     if (!$this->sftp->login($user, $pass)) {
                         call_user_func($this->notification, STREAM_NOTIFY_AUTH_RESULT, STREAM_NOTIFY_SEVERITY_ERR, 'Login Failure', NET_SSH2_MSG_USERAUTH_FAILURE, 0, 0);
+
                         return false;
                     }
                     call_user_func($this->notification, STREAM_NOTIFY_AUTH_RESULT, STREAM_NOTIFY_SEVERITY_INFO, 'Login Success', NET_SSH2_MSG_USERAUTH_SUCCESS, 0, 0);
@@ -248,7 +253,7 @@ class Net_SFTP_Stream
                         return false;
                     }
                 }
-                self::$instances[$host][$port][$user][(string) $pass] = $this->sftp;
+                self::$instances[$host][$port][$user][(string)$pass] = $this->sftp;
             }
         }
 
@@ -262,6 +267,7 @@ class Net_SFTP_Stream
      * @param String $mode
      * @param Integer $options
      * @param String $opened_path
+     *
      * @return Boolean
      * @access public
      */
@@ -301,6 +307,7 @@ class Net_SFTP_Stream
      * Read from stream
      *
      * @param Integer $count
+     *
      * @return Mixed
      * @access public
      */
@@ -324,6 +331,7 @@ class Net_SFTP_Stream
         if (isset($this->notification) && is_callable($this->notification)) {
             if ($result === false) {
                 call_user_func($this->notification, STREAM_NOTIFY_FAILURE, STREAM_NOTIFY_SEVERITY_ERR, $this->sftp->getLastSFTPError(), NET_SFTP_OPEN, 0, 0);
+
                 return 0;
             }
             // seems that PHP calls stream_read in 8k chunks
@@ -332,9 +340,10 @@ class Net_SFTP_Stream
 
         if (empty($result)) { // ie. false or empty string
             $this->eof = true;
+
             return false;
         }
-        $this->pos+= strlen($result);
+        $this->pos += strlen($result);
 
         return $result;
     }
@@ -343,6 +352,7 @@ class Net_SFTP_Stream
      * Write to stream
      *
      * @param String $data
+     *
      * @return Mixed
      * @access public
      */
@@ -357,6 +367,7 @@ class Net_SFTP_Stream
         if (isset($this->notification) && is_callable($this->notification)) {
             if (!$result) {
                 call_user_func($this->notification, STREAM_NOTIFY_FAILURE, STREAM_NOTIFY_SEVERITY_ERR, $this->sftp->getLastSFTPError(), NET_SFTP_OPEN, 0, 0);
+
                 return 0;
             }
             // seems that PHP splits up strings into 8k blocks before calling stream_write
@@ -366,11 +377,12 @@ class Net_SFTP_Stream
         if ($result === false) {
             return false;
         }
-        $this->pos+= strlen($data);
+        $this->pos += strlen($data);
         if ($this->pos > $this->size) {
             $this->size = $this->pos;
         }
         $this->eof = false;
+
         return strlen($data);
     }
 
@@ -408,6 +420,7 @@ class Net_SFTP_Stream
      *
      * @param Integer $offset
      * @param Integer $whence
+     *
      * @return Boolean
      * @access public
      */
@@ -420,14 +433,15 @@ class Net_SFTP_Stream
                 }
                 break;
             case SEEK_CUR:
-                $offset+= $this->pos;
+                $offset += $this->pos;
                 break;
             case SEEK_END:
-                $offset+= $this->size;
+                $offset += $this->size;
         }
 
         $this->pos = $offset;
         $this->eof = false;
+
         return true;
     }
 
@@ -437,6 +451,7 @@ class Net_SFTP_Stream
      * @param String $path
      * @param Integer $option
      * @param Mixed $var
+     *
      * @return Boolean
      * @access public
      */
@@ -469,6 +484,7 @@ class Net_SFTP_Stream
      * Retrieve the underlaying resource
      *
      * @param Integer $cast_as
+     *
      * @return Resource
      * @access public
      */
@@ -481,6 +497,7 @@ class Net_SFTP_Stream
      * Advisory file locking
      *
      * @param Integer $operation
+     *
      * @return Boolean
      * @access public
      */
@@ -498,6 +515,7 @@ class Net_SFTP_Stream
      *
      * @param String $path_from
      * @param String $path_to
+     *
      * @return Boolean
      * @access public
      */
@@ -523,6 +541,7 @@ class Net_SFTP_Stream
             if ($this->sftp->stat($path_to)) {
                 return $this->sftp->delete($path_to, true) && $this->sftp->rename($path_from, $path_to);
             }
+
             return false;
         }
 
@@ -550,6 +569,7 @@ class Net_SFTP_Stream
      *
      * @param String $path
      * @param Integer $options
+     *
      * @return Boolean
      * @access public
      */
@@ -561,6 +581,7 @@ class Net_SFTP_Stream
         }
         $this->pos = 0;
         $this->entries = $this->sftp->nlist($path);
+
         return $this->entries !== false;
     }
 
@@ -575,6 +596,7 @@ class Net_SFTP_Stream
         if (isset($this->entries[$this->pos])) {
             return $this->entries[$this->pos++];
         }
+
         return false;
     }
 
@@ -587,6 +609,7 @@ class Net_SFTP_Stream
     function _dir_rewinddir()
     {
         $this->pos = 0;
+
         return true;
     }
 
@@ -609,6 +632,7 @@ class Net_SFTP_Stream
      * @param String $path
      * @param Integer $mode
      * @param Integer $options
+     *
      * @return Boolean
      * @access public
      */
@@ -633,6 +657,7 @@ class Net_SFTP_Stream
      * @param String $path
      * @param Integer $mode
      * @param Integer $options
+     *
      * @return Boolean
      * @access public
      */
@@ -671,6 +696,7 @@ class Net_SFTP_Stream
         if ($results === false) {
             return false;
         }
+
         return $results;
     }
 
@@ -678,6 +704,7 @@ class Net_SFTP_Stream
      * Delete a file
      *
      * @param String $path
+     *
      * @return Boolean
      * @access public
      */
@@ -700,6 +727,7 @@ class Net_SFTP_Stream
      *
      * @param String $path
      * @param Integer $flags
+     *
      * @return Mixed
      * @access public
      */
@@ -722,6 +750,7 @@ class Net_SFTP_Stream
      * Truncate stream
      *
      * @param Integer $new_size
+     *
      * @return Boolean
      * @access public
      */
@@ -746,6 +775,7 @@ class Net_SFTP_Stream
      * @param Integer $option
      * @param Integer $arg1
      * @param Integer $arg2
+     *
      * @return Boolean
      * @access public
      */
@@ -775,6 +805,7 @@ class Net_SFTP_Stream
      *
      * @param String
      * @param Array
+     *
      * @return Mixed
      * @access public
      */
@@ -795,6 +826,7 @@ class Net_SFTP_Stream
         if (!method_exists($this, $name)) {
             return false;
         }
+
         return call_user_func_array(array($this, $name), $arguments);
     }
 }

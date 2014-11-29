@@ -17,7 +17,6 @@
  *    if (!$ssh->login('username', 'password')) {
  *        exit('bad login');
  *    }
-
  *    $scp = new Net_SCP($ssh);
  *    $scp->put('abcd', str_repeat('x', 1024*1024));
  * ?>
@@ -51,7 +50,7 @@
 
 /**#@+
  * @access public
- * @see Net_SCP::put()
+ * @see    Net_SCP::put()
  */
 /**
  * Reads data from a local file.
@@ -60,13 +59,13 @@ define('NET_SCP_LOCAL_FILE', 1);
 /**
  * Reads data from a string.
  */
-define('NET_SCP_STRING',  2);
+define('NET_SCP_STRING', 2);
 /**#@-*/
 
 /**#@+
  * @access private
- * @see Net_SCP::_send()
- * @see Net_SCP::_receive()
+ * @see    Net_SCP::_send()
+ * @see    Net_SCP::_receive()
  */
 /**
  * SSH1 is being used.
@@ -75,7 +74,7 @@ define('NET_SCP_SSH1', 1);
 /**
  * SSH2 is being used.
  */
-define('NET_SCP_SSH2',  2);
+define('NET_SCP_SSH2', 2);
 /**#@-*/
 
 /**
@@ -119,6 +118,7 @@ class Net_SCP
      * @param String $host
      * @param optional Integer $port
      * @param optional Integer $timeout
+     *
      * @return Net_SCP
      * @access public
      */
@@ -161,6 +161,7 @@ class Net_SCP
      * @param String $data
      * @param optional Integer $mode
      * @param optional Callable $callback
+     *
      * @return Boolean
      * @access public
      */
@@ -190,12 +191,14 @@ class Net_SCP
         } else {
             if (!is_file($data)) {
                 user_error("$data is not a valid file", E_USER_NOTICE);
+
                 return false;
             }
 
             $fp = @fopen($data, 'rb');
             if (!$fp) {
                 fclose($fp);
+
                 return false;
             }
             $size = filesize($data);
@@ -212,7 +215,7 @@ class Net_SCP
         while ($sent < $size) {
             $temp = $mode & NET_SCP_STRING ? substr($data, $sent, $this->packet_size) : fread($fp, $this->packet_size);
             $this->_send($temp);
-            $sent+= strlen($temp);
+            $sent += strlen($temp);
 
             if (is_callable($callback)) {
                 call_user_func($callback, $sent);
@@ -236,6 +239,7 @@ class Net_SCP
      *
      * @param String $remote_file
      * @param optional String $local_file
+     *
      * @return Mixed
      * @access public
      */
@@ -270,10 +274,10 @@ class Net_SCP
         while ($size < $info['size']) {
             $data = $this->_receive();
             // SCP usually seems to split stuff out into 16k chunks
-            $size+= strlen($data);
+            $size += strlen($data);
 
             if ($local_file === false) {
-                $content.= $data;
+                $content .= $data;
             } else {
                 fputs($fp, $data);
             }
@@ -283,6 +287,7 @@ class Net_SCP
 
         if ($local_file !== false) {
             fclose($fp);
+
             return true;
         }
 
@@ -293,6 +298,7 @@ class Net_SCP
      * Sends a packet to an SSH server
      *
      * @param String $data
+     *
      * @access private
      */
     function _send($data)
@@ -304,7 +310,7 @@ class Net_SCP
             case NET_SCP_SSH1:
                 $data = pack('CNa*', NET_SSH1_CMSG_STDIN_DATA, strlen($data), $data);
                 $this->ssh->_send_binary_packet($data);
-         }
+        }
     }
 
     /**
@@ -327,6 +333,7 @@ class Net_SCP
                     switch ($response[NET_SSH1_RESPONSE_TYPE]) {
                         case NET_SSH1_SMSG_STDOUT_DATA:
                             extract(unpack('Nlength', $response[NET_SSH1_RESPONSE_DATA]));
+
                             return $this->ssh->_string_shift($response[NET_SSH1_RESPONSE_DATA], $length);
                         case NET_SSH1_SMSG_STDERR_DATA:
                             break;
@@ -334,13 +341,15 @@ class Net_SCP
                             $this->ssh->_send_binary_packet(chr(NET_SSH1_CMSG_EXIT_CONFIRMATION));
                             fclose($this->ssh->fsock);
                             $this->ssh->bitmap = 0;
+
                             return false;
                         default:
                             user_error('Unknown packet received', E_USER_NOTICE);
+
                             return false;
                     }
                 }
-         }
+        }
     }
 
     /**
@@ -356,6 +365,6 @@ class Net_SCP
                 break;
             case NET_SCP_SSH1:
                 $this->ssh->disconnect();
-         }
+        }
     }
 }

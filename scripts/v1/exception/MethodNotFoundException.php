@@ -1,17 +1,14 @@
 <?php
 
-class MethodNotFoundException extends Exception
+class MethodNotFoundException extends EndpointExecutionException
 {
-	private $request;
+    public function __construct($request)
+    {
+        parent::__construct("Method not found", array ("request" => $request));
+    }
 
-	public function __construct($request)
-	{
-		parent::__construct("Method not found");
-		$this->request = request;
-	}
-	
-	public function getRequest()
-	{
-		return $this->request;
-	}
+    public function getErrorCode()
+    {
+        return HTTP_NOT_FOUND;
+    }
 }

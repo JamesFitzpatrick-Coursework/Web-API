@@ -1,17 +1,14 @@
 <?php
 
-class MethodNotAllowedException extends Exception
+class MethodNotAllowedException extends EndpointExecutionException
 {
-	private $method;
+    public function __construct($method)
+    {
+        parent::__construct("Method not allowed", array("method" => $method));
+    }
 
-	public function __construct($method)
-	{
-		parent::__construct("Method not allowed");
-		$this->method = method;
-	}
-	
-	public function getMethod()
-	{
-		return $this->method;
-	}
+    public function getErrorCode()
+    {
+        return HTTP_METHOD_NOT_ALLOWED;
+    }
 }

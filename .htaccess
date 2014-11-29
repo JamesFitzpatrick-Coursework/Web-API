@@ -4,3 +4,8 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule v1/(.*)$ scripts/v1/RequestHandler.php?request=$1 [QSA,NC,L]
 </IfModule>
+
+<Files  ~ "\.data$">
+  Order allow,deny
+  Deny from all
+</Files>

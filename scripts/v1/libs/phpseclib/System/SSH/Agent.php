@@ -86,7 +86,7 @@ class System_SSH_Agent_Identity
      *
      * @var Crypt_RSA
      * @access private
-     * @see System_SSH_Agent_Identity::getPublicKey()
+     * @see    System_SSH_Agent_Identity::getPublicKey()
      */
     var $key;
 
@@ -95,7 +95,7 @@ class System_SSH_Agent_Identity
      *
      * @var String
      * @access private
-     * @see System_SSH_Agent_Identity::sign()
+     * @see    System_SSH_Agent_Identity::sign()
      */
     var $key_blob;
 
@@ -104,7 +104,7 @@ class System_SSH_Agent_Identity
      *
      * @var Resource
      * @access private
-     * @see System_SSH_Agent_Identity::sign()
+     * @see    System_SSH_Agent_Identity::sign()
      */
     var $fsock;
 
@@ -112,6 +112,7 @@ class System_SSH_Agent_Identity
      * Default Constructor.
      *
      * @param Resource $fsock
+     *
      * @return System_SSH_Agent_Identity
      * @access private
      */
@@ -126,6 +127,7 @@ class System_SSH_Agent_Identity
      * Called by System_SSH_Agent::requestIdentities()
      *
      * @param Crypt_RSA $key
+     *
      * @access private
      */
     function setPublicKey($key)
@@ -141,6 +143,7 @@ class System_SSH_Agent_Identity
      * but this saves a small amount of computation.
      *
      * @param String $key_blob
+     *
      * @access private
      */
     function setPublicKeyBlob($key_blob)
@@ -154,6 +157,7 @@ class System_SSH_Agent_Identity
      * Wrapper for $this->key->getPublicKey()
      *
      * @param Integer $format optional
+     *
      * @return Mixed
      * @access public
      */
@@ -169,6 +173,7 @@ class System_SSH_Agent_Identity
      * ssh-agent's only supported mode is CRYPT_RSA_SIGNATURE_PKCS1
      *
      * @param Integer $mode
+     *
      * @access public
      */
     function setSignatureMode($mode)
@@ -181,6 +186,7 @@ class System_SSH_Agent_Identity
      * See "2.6.2 Protocol 2 private key signature request"
      *
      * @param String $message
+     *
      * @return String
      * @access public
      */
@@ -242,6 +248,7 @@ class System_SSH_Agent
                 break;
             default:
                 user_error('SSH_AUTH_SOCK not found');
+
                 return false;
         }
 
