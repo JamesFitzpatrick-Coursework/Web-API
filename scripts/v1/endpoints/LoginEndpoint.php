@@ -53,10 +53,10 @@ class LoginEndpoint extends Endpoint
             throw new EndpointExecutionException("Invalid password for user", array("user" => $userid->toString()));
         }
 
-        $query = "DELETE FROM " . DATABASE_TABLE_TOKENS . " WHERE `token` LIKE 'AC-%' AND `client-id`='" . $clientid->toString() . "' AND `user`='" . $userid->toString() . "';";
+        $query = "DELETE FROM " . DATABASE_TABLE_TOKENS . " WHERE `token` LIKE '" . TOKEN_ACCESS . "-%' AND `client-id`='" . $clientid->toString() . "' AND `user`='" . $userid->toString() . "';";
         Database::query($query);
 
-        $query = "DELETE FROM " . DATABASE_TABLE_TOKENS . " WHERE `token` LIKE '" . "-%' AND `client-id`='" . $clientid->toString() . "' AND `user`='" . $userid->toString() . "';";
+        $query = "DELETE FROM " . DATABASE_TABLE_TOKENS . " WHERE `token` LIKE '" . TOKEN_REFRESH . "-%' AND `client-id`='" . $clientid->toString() . "' AND `user`='" . $userid->toString() . "';";
         Database::query($query);
 
         $accessToken = Token::generateToken(TOKEN_ACCESS, $userid->getUserSecret());
