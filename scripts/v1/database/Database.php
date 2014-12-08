@@ -67,6 +67,29 @@ class Database
     }
 
     /**
+     * @param $result
+     *
+     * @return bool|int the amount of rows contained in the specified query
+     */
+    public static function count($result)
+    {
+        if (!self::$connected) {
+            return false;
+        }
+
+        return mysqli_num_rows($result);
+    }
+
+    public static function formatString($value)
+    {
+        if (!self::$connected) {
+            return false;
+        }
+
+        return mysqli_escape_string(self::$connection, $value);
+    }
+
+    /**
      * Frees the memory associated with a result
      *
      * @param $query mysqli_result the query result to close

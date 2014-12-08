@@ -15,11 +15,21 @@ class HandshakeEndpoint extends Endpoint
             $userid = Token::decode($data->{"user-id"});
             $query = "SELECT `name` FROM " . DATABASE_TABLE_USERS . " WHERE `id`='" . $userid->toString() . "';";
             $result = Database::query($query);
+
+            if (Database::count($result) == 0) {
+                throw new EndpointExecutionException("Could not find a user with that id", array ("user-iid" => $userid->toString()));
+            }
+
             $displayname = Database::fetch_data($result)["name"];
         } elseif (isset($data->{"display-name"})) {
             $displayname = $data->{"display-name"};
             $query = "SELECT `id` FROM " . DATABASE_TABLE_USERS . " WHERE `name`='" . $displayname . "';";
             $result = Database::query($query);
+
+            if (Database::count($result) == 0) {
+                throw new EndpointExecutionException("Could not find a user with that name", array ("display-name" => $displayname));
+            }
+
             $userid = Token::decode(Database::fetch_data($result)["id"]);
         }
 
