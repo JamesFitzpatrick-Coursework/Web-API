@@ -18,6 +18,10 @@ function include_all($dir)
     }
 
     foreach ($dir as $current) {
+        foreach (glob("$current/*.php.inc") as $filename) {
+            include_once $filename;
+        }
+
         foreach (glob("$current/*.php") as $filename) {
             include_once $filename;
         }
@@ -31,6 +35,10 @@ function require_all($dir)
     }
 
     foreach ($dir as $current) {
+        foreach (glob("$current/*.php.inc") as $filename) {
+            require_once $filename;
+        }
+
         foreach (glob("$current/*.php") as $filename) {
             require_once $filename;
         }

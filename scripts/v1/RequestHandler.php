@@ -5,7 +5,6 @@ define ("IN_BACKEND", true);
 set_include_path(get_include_path() . PATH_SEPARATOR . 'libs/phpseclib');
 
 require_once 'core/Utils.php';
-require_once 'exception/EndpointExecutionException.php';
 require_all(array('core', 'data', 'database', 'endpoints', 'format', 'exception'));
 require_once 'Routes.php';
 
