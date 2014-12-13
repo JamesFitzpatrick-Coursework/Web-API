@@ -32,8 +32,10 @@ class RefreshEndpoint extends Endpoint
         $query = "INSERT INTO " . DATABASE_TABLE_TOKENS . " (`token`, `client-id`, `user`, `expires`) VALUES ('" . $access->toString() . "','" . $clientid->toString() . "','" . $userid->toString() . "', NOW() + INTERVAL 1 HOUR);";
         Database::query($query);
 
-        return array("client-id" => $clientid->toString(),
+        return array(
+            "client-id" => $clientid->toString(),
             "user-profile" => array("user-id" => $userid->toString(), "display-name" => ""),
-            "access-token" => array("token" => $access->toString(), "expires" => 3600));
+            "access-token" => array("token" => $access->toString(), "expires" => 3600)
+        );
     }
 }

@@ -1,14 +1,16 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: James
  * Date: 09/12/2014
  * Time: 20:33
  */
+abstract class AuthenticatedEndpoint extends Endpoint
+{
 
-abstract class AuthenticatedEndpoint extends Endpoint {
-
-    public function execute($body) {
+    public function execute($body)
+    {
         $data = json_decode($body);
 
         if (!isset($data->{"client-id"})) {

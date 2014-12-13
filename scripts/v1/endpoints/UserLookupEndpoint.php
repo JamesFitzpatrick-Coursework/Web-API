@@ -11,8 +11,10 @@ class UserLookupEndpoint extends Endpoint
         $users = array();
 
         while ($row = Database::fetch_data($result)) {
-            $users[] = array("display-name" => $row["name"],
-                "user-id" => $row["id"]);
+            $users[] = array(
+                "display-name" => $row["name"],
+                "user-id" => $row["id"]
+            );
         }
 
         Database::close_query($result);

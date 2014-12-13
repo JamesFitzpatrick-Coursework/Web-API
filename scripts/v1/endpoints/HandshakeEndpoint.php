@@ -17,7 +17,7 @@ class HandshakeEndpoint extends Endpoint
             $result = Database::query($query);
 
             if (Database::count($result) == 0) {
-                throw new EndpointExecutionException("Could not find a user with that id", array ("user-iid" => $userid->toString()));
+                throw new EndpointExecutionException("Could not find a user with that id", array("user-iid" => $userid->toString()));
             }
 
             $displayname = Database::fetch_data($result)["name"];
@@ -27,7 +27,7 @@ class HandshakeEndpoint extends Endpoint
             $result = Database::query($query);
 
             if (Database::count($result) == 0) {
-                throw new EndpointExecutionException("Could not find a user with that name", array ("display-name" => $displayname));
+                throw new EndpointExecutionException("Could not find a user with that name", array("display-name" => $displayname));
             }
 
             $userid = Token::decode(Database::fetch_data($result)["id"]);
@@ -43,8 +43,10 @@ class HandshakeEndpoint extends Endpoint
             throw new EndpointExecutionException("An error occurred adding token to database", array("query" => $query));
         }
 
-        return array("client-id" => $data->{"client-id"},
-            "user" => array ("user-id" => $userid->toString(), "display-name" => $displayname),
-            "request-token" => array("token" => $token->toString(), "expires" => 3600));
+        return array(
+            "client-id" => $data->{"client-id"},
+            "user" => array("user-id" => $userid->toString(), "display-name" => $displayname),
+            "request-token" => array("token" => $token->toString(), "expires" => 3600)
+        );
     }
 }

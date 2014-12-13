@@ -61,8 +61,10 @@ try {
 // Error handling
 } catch (EndpointExecutionException $ex) {
     $code = $ex->getErrorCode();
-    $payload = array("error" => $ex->getMessage(),
-                        "cause" => "uk.co.thefishlive.meteor.exception." . get_class($ex));
+    $payload = array(
+        "error" => $ex->getMessage(),
+        "cause" => "uk.co.thefishlive.meteor.exception." . get_class($ex)
+    );
 
     foreach ($ex->getData() as $key => $value) {
         $payload[$key] = $value;
@@ -84,9 +86,11 @@ if (!array_key_exists($responseFormat, $formats)) {
 $format = $formats[$responseFormat];
 
 // Create the response
-$response = array("success" => $success,
+$response = array(
+    "success" => $success,
     "status" => $code,
-    "payload" => $payload);
+    "payload" => $payload
+);
 
 // Display the response to the client
 http_response_code($code);

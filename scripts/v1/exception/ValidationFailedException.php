@@ -1,6 +1,7 @@
 <?php
 
-class ValidationFailedException extends EndpointExecutionException {
+class ValidationFailedException extends EndpointExecutionException
+{
 
     public function __construct($error)
     {
