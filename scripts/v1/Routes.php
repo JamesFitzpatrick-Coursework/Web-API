@@ -10,6 +10,7 @@ $endpoints["login"] = new LoginEndpoint();
 $endpoints["refresh"] = new RefreshEndpoint();
 $endpoints["invalidate"] = new InvalidateEndpoint();
 $endpoints["validate"] = new ValidateEndpoint();
+$endpoints["test"] = new TestEndpoint();
 
 $endpoints["users"] = new UserLookupEndpoint();
 $endpoints["users/create"] = new UserCreateEndpoint();

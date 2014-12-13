@@ -23,7 +23,7 @@ class HandshakeEndpoint extends Endpoint
             $displayname = Database::fetch_data($result)["name"];
         } elseif (isset($data->{"display-name"})) {
             $displayname = $data->{"display-name"};
-            $query = "SELECT `id` FROM " . DATABASE_TABLE_USERS . " WHERE `name`='" . $displayname . "';";
+            $query = "SELECT `id` FROM " . DATABASE_TABLE_USERS . " WHERE `name`='" . Database::format_string($displayname) . "';";
             $result = Database::query($query);
 
             if (Database::count($result) == 0) {

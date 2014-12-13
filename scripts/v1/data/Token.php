@@ -8,6 +8,8 @@ define("TOKEN_USER", "AE");
 
 class Token
 {
+    const TOKEN_REGEX = "/^([A-F0-9]{2})-([A-F0-9]{8})-([A-F0-9]{14})-([A-F0-9]{8})$/";
+
     private $type;
     private $user;
     private $random;
@@ -29,7 +31,11 @@ class Token
 
     public static function decode($token)
     {
-        return new Token(substr($token, 0, 2), substr($token, 3, 8), substr($token, 12, 14), substr($token, 27, 8));
+        if (preg_match(self::TOKEN_REGEX, $token, $result) != 1) {
+            throw new InvalidTokenException("Token (" . $token . ") is not a valid token");
+        }
+
+        return new Token($result[1], $result[2], $result[3], $result[4]);
     }
 
     protected function __construct($type, $user, $random, $server)

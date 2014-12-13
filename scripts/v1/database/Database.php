@@ -44,7 +44,7 @@ class Database
         $result = mysqli_query(self::$connection, $query);
 
         if ($result === false || mysqli_errno(self::$connection) != 0) {
-            throw new DatabaseException(mysqli_error(self::$connection));
+            throw new DatabaseException(mysqli_error(self::$connection), $query);
         }
 
         return $result;
@@ -80,7 +80,7 @@ class Database
         return mysqli_num_rows($result);
     }
 
-    public static function formatString($value)
+    public static function format_string($value)
     {
         if (!self::$connected) {
             return false;

@@ -32,9 +32,9 @@ class UserCreateEndpoint extends Endpoint
         // Add the user to the database
         Database::query("INSERT INTO " . DATABASE_TABLE_USERS . " VALUES
 						('" . $token->toString() . "',
-						'" . Database::formatString($username) . "',
+						'" . Database::format_string($username) . "',
 						'" . $token->getUserSecret() . "',
-						'" . Database::formatString($password) . "');");
+						'" . Database::format_string($password) . "');");
 
         // Return the new user to the client
         return array(

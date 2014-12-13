@@ -26,8 +26,8 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
 // Get response format if provided
 $responseFormat = DEFAULT_FORMAT;
 
-if (array_key_exists('HTTP_X_RESPONSE_FORMAT', $_SERVER)) {
-    $responseFormat = $_SERVER['HTTP_X_RESPONSE_FORMAT'];
+if (array_key_exists(HEADER_RESPONSE_FORMAT, $_SERVER)) {
+    $responseFormat = $_SERVER[HEADER_RESPONSE_FORMAT];
 }
 
 try {
@@ -54,14 +54,15 @@ try {
         $body = @file_get_contents('php://input');
 
         // Handle request
-        $payload = $endpoint->handle($body);
+        $payload = $endpoint->execute($body);
         $code = HTTP_OK;
         $success = true;
     }
 // Error handling
 } catch (EndpointExecutionException $ex) {
     $code = $ex->getErrorCode();
-    $payload = array("error" => $ex->getMessage());
+    $payload = array("error" => $ex->getMessage(),
+                        "cause" => "uk.co.thefishlive.meteor.exception." . get_class($ex));
 
     foreach ($ex->getData() as $key => $value) {
         $payload[$key] = $value;
