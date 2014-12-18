@@ -1,7 +1,9 @@
 <?php
 define ("DEFAULT_FORMAT", "json");
 define ("IN_BACKEND", true);
+define ("DEBUG", true);
 
+error_reporting(DEBUG ? E_ALL : E_NONE);
 set_include_path(get_include_path() . PATH_SEPARATOR . 'libs/phpseclib');
 
 require_once 'core/Utils.php';
@@ -39,7 +41,7 @@ try {
     $request = strtolower($_REQUEST['request']);
 
     // Sanitize the request
-    if (strlen($request) != 0 && endsWith("/", $request)) {
+    if (strlen($request) != 0 && endsWith($request, "/")) {
         $request = substr($request, 0, strlen($request) - 1);
     }
 
@@ -61,19 +63,22 @@ try {
 // Error handling
 } catch (EndpointExecutionException $ex) {
     $code = $ex->getErrorCode();
+    $success = false;
     $payload = array(
-        "error" => $ex->getMessage(),
-        "cause" => "uk.co.thefishlive.meteor.exception." . get_class($ex)
+        "cause" => "uk.co.thefishlive.meteor.exception." . get_class($ex),
+        "error" => $ex->getMessage()
     );
 
     foreach ($ex->getData() as $key => $value) {
         $payload[$key] = $value;
     }
-    $success = false;
 } catch (Exception $ex) {
     $code = HTTP_INTERNAL_ERROR;
-    $payload = array("error" => $ex->getMessage());
     $success = false;
+    $payload = array(
+        "cause" => "uk.co.thefishlive.meteor.exception.ServerExecutionException",
+        "error" => $ex->getMessage()
+    );
 }
 
 // Check to see if response format is valid
@@ -95,5 +100,5 @@ $response = array(
 // Display the response to the client
 http_response_code($code);
 header("Content-Type: " . $format->getContentType());
-$format->render($response);
+echo $format->render($response);
 					

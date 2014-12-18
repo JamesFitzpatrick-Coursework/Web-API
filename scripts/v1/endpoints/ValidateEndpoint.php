@@ -3,7 +3,7 @@
 class ValidateEndpoint extends Endpoint
 {
 
-    public function handle($body)
+    public function handle($data)
     {
         $data = json_decode($body);
 
@@ -23,6 +23,6 @@ class ValidateEndpoint extends Endpoint
             throw new ValidationFailedException("Specified token is not valid");
         }
 
-        return array("client-id" => $clientid->toString());
+        return array();
     }
 }

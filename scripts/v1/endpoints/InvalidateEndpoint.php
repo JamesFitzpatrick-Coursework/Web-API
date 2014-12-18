@@ -3,10 +3,8 @@
 class InvalidateEndpoint extends Endpoint
 {
 
-    public function handle($body)
+    public function handle($data)
     {
-        $data = json_decode($body);
-
         if (!isset($data->{"user-id"}) || !isset($data->{"client-id"}) || !isset($data->{"token"})) {
             throw new EndpointExecutionException("Invalid request");
         }
@@ -17,6 +15,6 @@ class InvalidateEndpoint extends Endpoint
         $query = "DELETE FROM " . DATABASE_TABLE_TOKENS . " WHERE `token`='" . $token->toString() . "' AND `client-id`='" . $clientid->toString() . "'";
         Database::query($query);
 
-        return array("client-id" => $clientid->toString());
+        return array();
     }
 }

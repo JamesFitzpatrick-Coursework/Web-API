@@ -5,6 +5,7 @@ define("TOKEN_REQUEST", "AB");
 define("TOKEN_ACCESS", "AC");
 define("TOKEN_REFRESH", "AD");
 define("TOKEN_USER", "AE");
+define("TOKEN_GROUP", "AF");
 
 class Token
 {
@@ -27,6 +28,11 @@ class Token
     public static function generateNewToken($type)
     {
         return Token::generateToken($type, randomHex(8));
+    }
+
+    public static function verify($token)
+    {
+        return preg_match(self::TOKEN_REGEX, $token) == 1;
     }
 
     public static function decode($token)

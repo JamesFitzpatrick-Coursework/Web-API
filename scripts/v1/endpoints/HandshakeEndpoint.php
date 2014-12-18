@@ -3,11 +3,9 @@
 class HandshakeEndpoint extends Endpoint
 {
 
-    public function handle($body)
+    public function handle($data)
     {
-        $data = json_decode($body);
-
-        if (!(isset($data->{"user-id"}) || isset($data->{"display-name"})) || !isset($data->{"client-id"})) {
+        if (!(isset($data->{"user-id"}) || isset($data->{"display-name"}))) {
             throw new EndpointExecutionException("Invalid request");
         }
 
@@ -44,7 +42,6 @@ class HandshakeEndpoint extends Endpoint
         }
 
         return array(
-            "client-id" => $data->{"client-id"},
             "user" => array("user-id" => $userid->toString(), "display-name" => $displayname),
             "request-token" => array("token" => $token->toString(), "expires" => 3600)
         );

@@ -12,7 +12,7 @@ class XMLResponseFormat extends ResponseFormat
     {
         $xml = new SimpleXMLElement('<response/>');
         $this->array_to_xml($data, $xml);
-        echo $xml->asXML();
+        return $xml->asXML();
     }
 
     public function array_to_xml(array $arr, SimpleXMLElement $xml)

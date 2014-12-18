@@ -1,12 +1,10 @@
 <?php
 
-class UserCreateEndpoint extends Endpoint
+class UserCreateEndpoint extends AuthenticatedEndpoint
 {
 
-    public function handle($body)
+    public function handle($data)
     {
-        $data = json_decode($body);
-
         if (!isset($data->{"client-id"}) || !isset($data->{"username"}) || !isset($data->{"password"})) {
             throw new EndpointExecutionException("Invalid request");
         }
@@ -14,12 +12,7 @@ class UserCreateEndpoint extends Endpoint
         $clientid = Token::decode($data->{"client-id"});
         $username = $data->{"username"};
 
-        // Check to see if user exists already
-        $result = Database::query("SELECT count('id') AS `count` FROM " . DATABASE_TABLE_USERS . " WHERE `name`='" . $username . "'");
-        $count = Database::fetch_data($result)["count"];
-        Database::close_query($result);
-
-        if ($count >= 1) {
+        if (Backend::user_exists($username)) {
             throw new EndpointExecutionException("User already exists", array("username" => $username));
         }
 
@@ -29,18 +22,12 @@ class UserCreateEndpoint extends Endpoint
         // Hash their password for storage
         $password = Crypt::hashPassword($data->{"password"}, $token->getUserSecret());
 
-        // Add the user to the database
-        Database::query("INSERT INTO " . DATABASE_TABLE_USERS . " VALUES
-						('" . $token->toString() . "',
-						'" . Database::format_string($username) . "',
-						'" . $token->getUserSecret() . "',
-						'" . Database::format_string($password) . "');");
+        // Create their entry in the user database
+        Backend::create_user($token, $username, $password);
 
         // Return the new user to the client
         return array(
-            "client-id" => $clientid->toString(),
-            "userid" => $token->toString(),
-            "username" => $username
+            "user" => array ("user-id" => $token->toString(), "display-name" => $username)
         );
     }
 }

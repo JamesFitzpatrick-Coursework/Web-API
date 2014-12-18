@@ -8,7 +8,7 @@
  */
 class TestEndpoint extends AuthenticatedEndpoint
 {
-    public function handle($body)
+    public function handle($data)
     {
         return array();
     }

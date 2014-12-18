@@ -11,10 +11,18 @@ abstract class AuthenticatedEndpoint extends Endpoint
 
     public function execute($body)
     {
-        $data = json_decode($body);
+        if (DEBUG) {
+            return parent::execute($body);
+        }
+
+        $data = $body == "" ? array() : json_decode($body);
 
         if (!isset($data->{"client-id"})) {
             throw new EndpointExecutionException("Invalid request");
+        }
+
+        if (!isset($_SERVER[HEADER_AUTH_USER]) || !isset($_SERVER[HEADER_AUTH_TOKEN])) {
+            throw new AuthorizationException("Must provide authentication");
         }
 
         $user = Token::decode($_SERVER[HEADER_AUTH_USER]);
@@ -47,7 +55,9 @@ abstract class AuthenticatedEndpoint extends Endpoint
             throw new AuthorizationException("Token provided is not a valid access token");
         }
 
-        return $this->handle($body);
+        $payload = $this->handle($data);
+        $payload["client-id"] = $data->{"client-id"};
+        return $payload;
     }
 
 } 

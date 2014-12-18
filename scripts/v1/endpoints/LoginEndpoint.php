@@ -3,10 +3,8 @@
 class LoginEndpoint extends Endpoint
 {
 
-    public function handle($body)
+    public function handle($data)
     {
-        $data = json_decode($body);
-
         if (!isset($data->{"user-id"})
             || !isset($data->{"client-id"})
             || !isset($data->{"request-token"})
@@ -66,7 +64,6 @@ class LoginEndpoint extends Endpoint
         Database::query("INSERT INTO " . DATABASE_TABLE_TOKENS . " (`token`, `client-id`, `user`, `expires`) VALUES ('" . $refreshToken->toString() . "','" . $clientid->toString() . "', '" . $userid->toString() . "', NOW() + INTERVAL 1 YEAR);");
 
         return array(
-            "client-id" => $data->{"client-id"},
             "access-token" => array("token" => $accessToken->toString(), "expires" => 3600),
             "refresh-token" => array("token" => $refreshToken->toString(), "expires" => false),
             "profile" => array("user-id" => $userid->toString(), "display-name" => $row["name"])

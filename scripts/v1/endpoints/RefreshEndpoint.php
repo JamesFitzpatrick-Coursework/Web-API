@@ -3,10 +3,8 @@
 class RefreshEndpoint extends Endpoint
 {
 
-    public function handle($body)
+    public function handle($data)
     {
-        $data = json_decode($body);
-
         if (!isset($data->{"user-id"}) || !isset($data->{"client-id"}) || !isset($data->{"refresh-token"})) {
             throw new EndpointExecutionException("Invalid request");
         }
@@ -33,7 +31,6 @@ class RefreshEndpoint extends Endpoint
         Database::query($query);
 
         return array(
-            "client-id" => $clientid->toString(),
             "user-profile" => array("user-id" => $userid->toString(), "display-name" => ""),
             "access-token" => array("token" => $access->toString(), "expires" => 3600)
         );

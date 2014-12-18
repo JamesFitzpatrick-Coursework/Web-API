@@ -17,10 +17,6 @@ class JsonResponseFormat extends ResponseFormat
 
     public function render(array $data)
     {
-        if ($this->pretty) {
-            echo json_encode($data, JSON_PRETTY_PRINT);
-        } else {
-            echo json_encode($data);
-        }
+        return json_encode($data, $this->pretty ? JSON_PRETTY_PRINT : 0);
     }
 }

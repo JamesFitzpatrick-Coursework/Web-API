@@ -1,13 +1,13 @@
 <?php
 
 if (!defined("IN_BACKEND")) {
-    die();
+    die("Invalid environment");
 }
 
 function checkEnv()
 {
     if (!defined("IN_BACKEND")) {
-        die();
+        die("Invalid environment");
     }
 }
 

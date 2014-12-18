@@ -9,11 +9,3 @@ database.user = "root"
 database.password = ""
 database.port = 3306
 database.prefix = "meteor_"
-
-## Token ##
-token.format = CC-UUUUUUUU-RRRRRRRRRRRRRR-TTTTTTTT
-token.access.expire = 3600
-token.code.client = AB
-token.code.request = BC
-token.code.access = CD
-token.code.refresh = DE

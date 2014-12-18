@@ -3,7 +3,6 @@ checkEnv();
 
 class Config
 {
-
     private static $config;
 
     public static function loadConfig()
