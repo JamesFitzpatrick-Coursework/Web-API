@@ -1,3 +1,5 @@
 .idea/
 error_log
 scripts/v1/secret/Secret.php
+*.mwb
+*.bak

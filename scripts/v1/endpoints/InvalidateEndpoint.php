@@ -12,8 +12,7 @@ class InvalidateEndpoint extends Endpoint
         $clientid = Token::decode($data->{"client-id"});
         $token = Token::decode($data->{"token"});
 
-        $query = "DELETE FROM " . DATABASE_TABLE_TOKENS . " WHERE `token`='" . $token->toString() . "' AND `client-id`='" . $clientid->toString() . "'";
-        Database::query($query);
+        Backend::invalidate_token($clientid, $token);
 
         return array();
     }

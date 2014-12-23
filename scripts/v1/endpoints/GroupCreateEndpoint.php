@@ -10,33 +10,22 @@ class GroupCreateEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        if (!isset($data->{"client-id"}) || !isset($data->{"group-name"})) {
+        if (!isset($data->{"group-name"})) {
             throw new EndpointExecutionException("Invalid request");
         }
 
-        $clientid = Token::decode($data->{"client-id"});
         $groupname = $data->{"group-name"};
 
-        // Check to see if user exists already
-        $result = Database::query("SELECT count('id') AS `count` FROM " . DATABASE_TABLE_GROUPS . " WHERE `name`='" . Database::format_string($groupname) . "'");
-        $count = Database::fetch_data($result)["count"];
-        Database::close_query($result);
-
-        if ($count >= 1) {
-            throw new EndpointExecutionException("Group already exists", array("group-name" => $groupname));
+        if (Backend::group_exists($groupname)) {
+            throw new EndpointExecutionException("Group with name already exists", array ("display-name", $groupname));
         }
 
-        // Generate a new user id for this user
-        $token = Token::generateNewToken(TOKEN_GROUP);
-
-        // Add the user to the database
-        Database::query("INSERT INTO " . DATABASE_TABLE_GROUPS . " VALUES
-						('" . $token->toString() . "',
-						'" . Database::format_string($groupname) . "');");
+        // Add the group to the database
+        $groupid = Backend::create_group($groupname);
 
         // Return the new user to the client
         return array(
-            "group" => array ("group-id" => $token->toString(), "display-name" => $groupname)
+            "group" => array ("group-id" => $groupid->toString(), "display-name" => $groupname)
         );
 
     }

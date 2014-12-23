@@ -7,7 +7,7 @@ error_reporting(DEBUG ? E_ALL : E_NONE);
 set_include_path(get_include_path() . PATH_SEPARATOR . 'libs/phpseclib');
 
 require_once 'core/Utils.php';
-require_all(array('core', 'data', 'database', 'endpoints', 'format', 'exception'));
+require_all(array('core', 'data', 'database', 'endpoints', 'format', 'exception', 'secret'));
 require_once 'Routes.php';
 
 // Setup response formats

@@ -57,6 +57,11 @@ class Token
         return strtoupper($this->type . "-" . $this->user . "-" . $this->random . "-" . $this->server);
     }
 
+    public function toExternalForm($expires)
+    {
+        return ["token" => $this->toString(), "expires" => $expires];
+    }
+
     public function getType()
     {
         return $this->type;
@@ -76,5 +81,6 @@ class Token
     {
         return $this->server;
     }
+
 
 }

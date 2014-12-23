@@ -19,3 +19,7 @@ $endpoints["users/create"] = new UserCreateEndpoint();
 // Group management
 $endpoints["groups"] = new GroupLookupEndpoint();
 $endpoints["groups/create"] = new GroupCreateEndpoint();
+
+// Asset Management
+$endpoints["assets"] = new ImageViewEndpoint();
+$endpoints["assets/upload"] = new ImageUploadEndpoint();

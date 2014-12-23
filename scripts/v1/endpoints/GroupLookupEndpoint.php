@@ -10,18 +10,40 @@ class GroupLookupEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        $result = Database::query("SELECT * FROM " . DATABASE_TABLE_GROUPS);
+        if (isset($data->{"lookup"}))
+        {
+            return $this->lookup_group($data->{"lookup"});
+        }
+        else
+        {
+            return $this->list_groups();
+        }
+    }
+
+    private function list_groups()
+    {
         $users = array();
 
-        while ($row = Database::fetch_data($result)) {
-            $users[] = array(
-                "group-id" => $row["id"],
-                "display-name" => $row["name"]
-            );
+        foreach (Backend::fetch_all_groups() as $user) {
+            $users[] = $user->toExternalForm();
         }
 
-        Database::close_query($result);
-
         return array("count" => count($users), "groups" => $users);
+    }
+
+    private function lookup_group($lookup)
+    {
+        $profile = Backend::fetch_group_profile($lookup);
+
+        $data = array ();
+        $data["profile"] = $profile->toExternalForm();
+
+        $settings = array();
+        foreach (Backend::fetch_group_settings($profile) as $key => $setting) {
+            $settings[$key] = $setting;
+        }
+        $data["settings"] = $settings;
+
+        return $data;
     }
 }
