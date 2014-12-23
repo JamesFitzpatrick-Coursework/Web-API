@@ -6,6 +6,5 @@
 </IfModule>
 
 <Files  ~ "\.data$">
-    Order allow,deny
     Deny from all
 </Files>

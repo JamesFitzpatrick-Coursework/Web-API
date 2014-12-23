@@ -8,10 +8,16 @@ class Config
     public static function loadConfig()
     {
         self::$config = array();
-        self::$config["database.host"] = "localhost";
-        self::$config["database.user"] = "thefish_meteor";
-        self::$config["database.password"] = "VqzwaeZeXcdD";
-        self::$config["database.database"] = "thefish_meteor";
+        $my_file = 'core/Config.data';
+        $handle = fopen($my_file, 'r');
+
+        while ($line = fgets($handle)) {
+            if (!startsWith($line, "#") && $line != "") {
+                if (preg_match("/(.*) = (.*)/", $line, $data) == 1) {
+                    self::$config[trim($data[1])] = trim($data[2]);
+                }
+            }
+        }
     }
 
     public static function getDatabaseHost()
