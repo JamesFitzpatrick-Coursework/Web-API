@@ -19,7 +19,7 @@ class UserProfile
      * Instantiate a new Profile
      *
      * @param null|Token $userid
-     * @param null|Token $displayName
+     * @param null|String $displayName
      */
     public function __construct(Token $userid = null, $displayName = null)
     {

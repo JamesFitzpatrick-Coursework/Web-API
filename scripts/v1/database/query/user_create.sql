@@ -1,0 +1,1 @@
+INSERT INTO `{table.users}` VALUES ('{0}', '{1}', '{2}', '{3}');

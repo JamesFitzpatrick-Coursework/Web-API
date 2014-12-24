@@ -18,6 +18,8 @@ class Config
                 }
             }
         }
+
+        fclose($handle);
     }
 
     public static function getDatabaseHost()

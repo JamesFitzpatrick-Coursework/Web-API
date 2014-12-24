@@ -12,6 +12,6 @@ class Crypt
 
     public static function checkPassword($hash, $password, $secret)
     {
-        return $hash == self::hashPassword($password, $secret);
+        return $hash == self::hashPassword($password, $secret); // TODO convert to using a safer hash check
     }
 }

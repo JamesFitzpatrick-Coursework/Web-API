@@ -8,4 +8,3 @@ database.database = "meteor"
 database.user = "root"
 database.password = ""
 database.port = 3306
-database.prefix = "meteor_"

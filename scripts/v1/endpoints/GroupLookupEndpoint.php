@@ -22,13 +22,13 @@ class GroupLookupEndpoint extends Endpoint
 
     private function list_groups()
     {
-        $users = array();
+        $groups = array();
 
-        foreach (Backend::fetch_all_groups() as $user) {
-            $users[] = $user->toExternalForm();
+        foreach (Backend::fetch_all_groups() as $group) {
+            $groups[] = $group->toExternalForm();
         }
 
-        return array("count" => count($users), "groups" => $users);
+        return array("count" => count($groups), "groups" => $groups);
     }
 
     private function lookup_group($lookup)
@@ -37,12 +37,8 @@ class GroupLookupEndpoint extends Endpoint
 
         $data = array ();
         $data["profile"] = $profile->toExternalForm();
-
-        $settings = array();
-        foreach (Backend::fetch_group_settings($profile) as $key => $setting) {
-            $settings[$key] = $setting;
-        }
-        $data["settings"] = $settings;
+        $data["settings"] = Backend::fetch_group_settings($profile);
+        $data["permissions"] = Backend::fetch_group_permissions($profile);
 
         return $data;
     }

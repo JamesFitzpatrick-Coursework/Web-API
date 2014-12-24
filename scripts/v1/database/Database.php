@@ -2,14 +2,26 @@
 checkEnv();
 
 define("DATABASE_PREFIX", "meteor_");
-define("DATABASE_TABLE_USERS", DATABASE_PREFIX . "users");
-define("DATABASE_TABLE_GROUPS", DATABASE_PREFIX . "groups");
-define("DATABASE_TABLE_USER_SETTINGS", DATABASE_PREFIX . "user_settings");
-define("DATABASE_TABLE_GROUP_SETTINGS", DATABASE_PREFIX . "group_settings");
-define("DATABASE_TABLE_TOKENS", DATABASE_PREFIX . "tokens");
+define("DATABASE_TABLE_USERS",              DATABASE_PREFIX . "users");
+define("DATABASE_TABLE_GROUPS",             DATABASE_PREFIX . "groups");
+define("DATABASE_TABLE_USER_SETTINGS",      DATABASE_PREFIX . "user_settings");
+define("DATABASE_TABLE_GROUP_SETTINGS",     DATABASE_PREFIX . "group_settings");
+define("DATABASE_TABLE_USER_PERMISSIONS",   DATABASE_PREFIX . "user_permissions");
+define("DATABASE_TABLE_GROUP_PERMISSIONS",  DATABASE_PREFIX . "group_permissions");
+define("DATABASE_TABLE_TOKENS",             DATABASE_PREFIX . "tokens");
 
 class Database
 {
+
+    private static $tables = array (
+        "users" => DATABASE_TABLE_USERS,
+        "groups" => DATABASE_TABLE_GROUPS,
+        "users.settings" => DATABASE_TABLE_USER_SETTINGS,
+        "groups.settings" => DATABASE_TABLE_GROUP_SETTINGS,
+        "users.permissions" => DATABASE_TABLE_USER_PERMISSIONS,
+        "groups.permissions" => DATABASE_TABLE_GROUP_PERMISSIONS,
+        "tokens" => DATABASE_TABLE_TOKENS,
+    );
 
     private static $connected;
     private static $connection;
@@ -67,7 +79,9 @@ class Database
     }
 
     /**
-     * @param $result
+     * Return the amount of rows in a given query.
+     *
+     * @param $result mysqli_result the query to count the rows in
      *
      * @return bool|int the amount of rows contained in the specified query
      */
@@ -80,6 +94,13 @@ class Database
         return mysqli_num_rows($result);
     }
 
+    /**
+     * Escape a string to be used in a query.
+     *
+     * @param $value mixed the string to escape
+     *
+     * @return bool|string the escaped string
+     */
     public static function format_string($value)
     {
         if (!self::$connected) {
@@ -87,6 +108,26 @@ class Database
         }
 
         return mysqli_escape_string(self::$connection, $value);
+    }
+
+    public static function generate_query($name, $data = array())
+    {
+        $path = "database/query/$name.sql";
+        $file = fopen($path, "r");
+        $query = fread($file, filesize($path));
+
+        // Inject execution data into the query
+        for ($i = 0; $i < count($data); $i++) {
+            $query = preg_replace("/\{$i\}/", self::format_string($data[$i]), $query);
+        }
+
+        // Inject the table name into the query
+        if (preg_match("/\{(table.([^}]+))\}/", $query, $data) == 1) {
+            $query = preg_replace("/\{" . $data[1] . "\}/", self::$tables[$data[2]] ,$query);
+        }
+
+        fclose($file);
+        return new DatabaseQuery($query);
     }
 
     /**
@@ -118,6 +159,7 @@ class Database
             return false;
         }
 
+        self::$connected = false;
         return mysqli_close(self::$connection);
     }
 }

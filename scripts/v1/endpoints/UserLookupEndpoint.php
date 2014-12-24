@@ -32,12 +32,8 @@ class UserLookupEndpoint extends Endpoint
 
         $data = array ();
         $data["profile"] = $profile->toExternalForm();
-
-        $settings = array();
-        foreach (Backend::fetch_user_settings($profile) as $key => $setting) {
-            $settings[$key] = $setting;
-        }
-        $data["settings"] = $settings;
+        $data["settings"] = Backend::fetch_user_settings($profile);
+        $data["permissions"] = Backend::fetch_user_permissions($profile);
 
         return $data;
     }

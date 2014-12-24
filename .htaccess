@@ -8,3 +8,7 @@
 <Files  ~ "\.data$">
     Deny from all
 </Files>
+
+<Files  ~ "\.sql$">
+    Deny from all
+</Files>

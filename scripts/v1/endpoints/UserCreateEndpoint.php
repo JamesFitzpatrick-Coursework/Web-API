@@ -16,11 +16,11 @@ class UserCreateEndpoint extends AuthenticatedEndpoint
         }
 
         // Create their entry in the user database
-        $userid = Backend::create_user($username, $data->{"password"});
+        $profile = Backend::create_user($username, $data->{"password"});
 
         // Return the new user to the client
         return array(
-            "user" => array ("user-id" => $userid->toString(), "display-name" => $username)
+            "user" => $profile->toExternalForm()
         );
     }
 }

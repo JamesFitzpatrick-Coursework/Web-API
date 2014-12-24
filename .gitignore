@@ -1,5 +1,11 @@
+# GitIgnore File
+
+# IDE Settings
 .idea/
+
+# PHP log files
 error_log
-scripts/v1/secret/Secret.php
-*.mwb
-*.bak
+
+# Other
+/scripts/v1/secret/
+/database
