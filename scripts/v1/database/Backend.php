@@ -40,7 +40,7 @@ class Backend
             $userid = Token::decode($search);
 
             if ($userid->getType() != TOKEN_USER) {
-                throw new InvalidTokenException("Token provided is not a user id");
+                throw new InvalidTokenException("Token provided is not a user id", array ("user-id" => $userid->toString()));
             }
 
             $query = Database::generate_query("user_lookup_id", array ($userid->toString()));
@@ -84,7 +84,7 @@ class Backend
 
     public static function fetch_user_permissions(UserProfile $profile)
     {
-        $query = Database::generate_query("user_settings_fetch", array ($profile->getUserId()->toString()));
+        $query = Database::generate_query("user_permissions_fetch", array ($profile->getUserId()->toString()));
         $result = $query->execute();
 
         $settings = array();
@@ -232,8 +232,7 @@ class Backend
     public static function clear_tokens(Token $clientid, Token $userid, $tokentype)
     {
         $query = Database::generate_query("token_clear", array ($tokentype, $clientid->toString(), $userid->toString()));
-        $result = $query->execute();
-        $result->close();
+        $query->execute();
     }
 
 
@@ -250,8 +249,7 @@ class Backend
     public static function invalidate_token(Token $clientid, Token $token)
     {
         $query = Database::generate_query("token_invalidate", array ($token->toString(), $clientid->toString()));
-        $result = $query->execute();
-        $result->close();
+        $query->execute();
     }
 
     public static function create_token(Token $clientid, Token $userid, $tokentype, $expires)
@@ -263,6 +261,4 @@ class Backend
         $result->close();
         return $token;
     }
-
-
 }

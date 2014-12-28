@@ -34,4 +34,25 @@ abstract class Endpoint
         $payload["client-id"] = $data->{"client-id"};
         return $payload;
     }
+
+    public function validate_request($received, array $expected)
+    {
+        $missing = array();
+        $failed = false;
+
+        foreach ($expected as $current)
+        {
+            if (!isset($received->{$current}))
+            {
+                $missing[] = $current;
+                $failed = true;
+            }
+        }
+
+        if ($failed) {
+            throw new InvalidRequestException($missing);
+        }
+
+        return true;
+    }
 }

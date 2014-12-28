@@ -2,8 +2,8 @@
 
 class InvalidUserException extends EndpointExecutionException
 {
-    public function __construct($error)
+    public function __construct($error, $payload = array())
     {
-        parent::__construct($error);
+        parent::__construct($error, $payload);
     }
 }

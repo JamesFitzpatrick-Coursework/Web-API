@@ -5,18 +5,12 @@ class LoginEndpoint extends Endpoint
 
     public function handle($data)
     {
-        if (!isset($data->{"user-id"})
-            || !isset($data->{"client-id"})
-            || !isset($data->{"request-token"})
-            || !isset($data->{"password"})
-        ) {
-            throw new EndpointExecutionException("Invalid request");
-        }
+        $this->validate_request($data, array("user", "request-token", "password"));
 
         // Check to see if request token is valid
         $clientid = Token::decode($data->{"client-id"});
         $request = Token::decode($data->{"request-token"});
-        $profile = Backend::fetch_user_profile($data->{"user-id"});
+        $profile = Backend::fetch_user_profile($data->{"user"});
 
         if ($request->getType() != TOKEN_REQUEST) {
             throw new InvalidTokenException("Request token provided is not a valid request token");
@@ -30,7 +24,7 @@ class LoginEndpoint extends Endpoint
         $password = $data->{"password"};
 
         if (Backend::validate_user($profile, $password)) {
-            throw new EndpointExecutionException("Invalid password for user", array("user" => $profile->toExternalForm()));
+            throw new AuthenticationException("Invalid password for user", array("user" => $profile->toExternalForm()));
         }
 
         Backend::clear_tokens($clientid, $profile->getUserId(), TOKEN_ACCESS);

@@ -3,7 +3,7 @@ define ("DEFAULT_FORMAT", "json");
 define ("IN_BACKEND", true);
 define ("DEBUG", true);
 
-error_reporting(DEBUG ? E_ALL : E_NONE);
+error_reporting(DEBUG ? E_ALL : 0);
 set_include_path(get_include_path() . PATH_SEPARATOR . 'libs/phpseclib');
 
 require_once 'core/Utils.php';

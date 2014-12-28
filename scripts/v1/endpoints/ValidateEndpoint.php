@@ -5,11 +5,9 @@ class ValidateEndpoint extends Endpoint
 
     public function handle($data)
     {
-        if (!isset($data->{"user-id"}) || !isset($data->{"user-id"}) || !isset($data->{"token"})) {
-            throw new EndpointExecutionException("Invalid request");
-        }
+        $this->validate_request($data, array("user", "token"));
 
-        $userid = Token::decode($data->{"user-id"});
+        $userid = Token::decode($data->{"user"});
         $clientid = Token::decode($data->{"client-id"});
         $token = Token::decode($data->{"token"});
 

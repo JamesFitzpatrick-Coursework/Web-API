@@ -12,9 +12,7 @@ class ImageUploadEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        if (!isset($data->{"image"}) || !isset($data->{"name"})) {
-            throw new EndpointExecutionException("Invalid request");
-        }
+        $this->validate_request($data, array ("image", "name"));
 
         $image = $data->{"image"};
         $name = $data->{"name"};

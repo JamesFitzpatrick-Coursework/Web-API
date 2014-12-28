@@ -16,10 +16,7 @@ abstract class AuthenticatedEndpoint extends Endpoint
         }
 
         $data = $body == "" ? array() : json_decode($body);
-
-        if (!isset($data->{"client-id"})) {
-            throw new EndpointExecutionException("Invalid request");
-        }
+        $this->validate_request($data, array ("client-id"));
 
         if (!isset($_SERVER[HEADER_AUTH_USER]) || !isset($_SERVER[HEADER_AUTH_TOKEN])) {
             throw new AuthorizationException("Must provide authentication");

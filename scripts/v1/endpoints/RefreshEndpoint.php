@@ -5,9 +5,7 @@ class RefreshEndpoint extends Endpoint
 
     public function handle($data)
     {
-        if (!isset($data->{"user-id"}) || !isset($data->{"client-id"}) || !isset($data->{"refresh-token"})) {
-            throw new EndpointExecutionException("Invalid request");
-        }
+        $this->validate_request($data, array("user-id", "refresh-token"));
 
         $profile = Backend::fetch_user_profile($data->{"user-id"});
         $clientid = Token::decode($data->{"client-id"});

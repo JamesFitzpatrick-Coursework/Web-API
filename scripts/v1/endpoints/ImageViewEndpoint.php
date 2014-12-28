@@ -11,10 +11,7 @@ class ImageViewEndpoint extends Endpoint
 
     public function handle($data)
     {
-        if (!isset($data->{"asset"})) {
-            throw new EndpointExecutionException("Invalid request");
-        }
-
+        $this->validate_request($data, array("asset"));
         $asset = $data->{"asset"};
 
         // get asset url

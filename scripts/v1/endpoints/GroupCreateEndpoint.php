@@ -10,9 +10,7 @@ class GroupCreateEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        if (!isset($data->{"group-name"})) {
-            throw new EndpointExecutionException("Invalid request");
-        }
+        $this->validate_request($data, array ("group-name"));
 
         $groupname = $data->{"group-name"};
 
