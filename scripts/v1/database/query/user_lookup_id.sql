@@ -1,1 +1,4 @@
-SELECT `user_name` FROM `{table.users}` WHERE `user_id`='{0}' LIMIT 1;
+SELECT `user_name`
+FROM `{table.users}`
+WHERE `user_id` = '{0}'
+LIMIT 1;

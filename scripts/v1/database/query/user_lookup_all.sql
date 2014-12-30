@@ -1,1 +1,4 @@
-SELECT `user_id`, `user_name` FROM `{table.users}`
+SELECT
+  `user_id`,
+  `user_name`
+FROM `{table.users}`

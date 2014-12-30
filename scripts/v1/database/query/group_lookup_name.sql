@@ -1,1 +1,3 @@
-SELECT `group_id` FROM `{table.groups}` WHERE `group_name`='{0}';
+SELECT `group_id`
+FROM `{table.groups}`
+WHERE `group_name` = '{0}';
