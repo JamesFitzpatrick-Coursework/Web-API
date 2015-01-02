@@ -9,3 +9,4 @@ error_log
 # Other
 /scripts/v1/secret/
 /database
+vendor/

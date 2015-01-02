@@ -1,0 +1,15 @@
+{
+    "name": "thefishlive/meteor",
+    "description": "Restful authentication service",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "James Fitzpatrick",
+            "email": "james@thefishlive.co.uk"
+        }
+    ],
+    "require": {
+        "phpseclib/phpseclib": "dev-php5"
+    }
+}
