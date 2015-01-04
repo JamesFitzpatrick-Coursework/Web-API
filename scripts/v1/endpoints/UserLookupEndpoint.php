@@ -1,6 +1,7 @@
 <?php
 namespace meteor\endpoints;
 
+use meteor\data\GroupProfile;
 use meteor\database\Backend;
 
 class UserLookupEndpoint extends AuthenticatedEndpoint
@@ -24,6 +25,7 @@ class UserLookupEndpoint extends AuthenticatedEndpoint
         $data["permissions"] = Backend::fetch_user_permissions($profile);
 
         $groups = array();
+        /** @var GroupProfile $group */
         foreach (Backend::fetch_user_groups($profile) as $group) {
             $groups[] = $group->toExternalForm();
         }

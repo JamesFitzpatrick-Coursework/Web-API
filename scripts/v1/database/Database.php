@@ -8,14 +8,21 @@ use meteor\exceptions\DatabaseException;
 class Database
 {
     private static $tables = array (
-        "users" =>              "meteor_users",
-        "groups" =>             "meteor_groups",
-        "users.settings" =>     "meteor_user_settings",
-        "groups.settings" =>    "meteor_group_settings",
-        "users.permissions" =>  "meteor_user_permissions",
-        "groups.permissions" => "meteor_group_permissions",
-        "groups.users" =>       "meteor_group_users",
-        "tokens" =>             "meteor_tokens",
+        "users" =>                  "meteor_users",
+        "users.settings" =>         "meteor_user_settings",
+        "users.permissions" =>      "meteor_user_permissions",
+        "users.assignments" =>      "meteor_user_assignments",
+
+        "groups" =>                 "meteor_groups",
+        "groups.settings" =>        "meteor_group_settings",
+        "groups.permissions" =>     "meteor_group_permissions",
+        "groups.users" =>           "meteor_group_users",
+
+        "tokens" =>                 "meteor_tokens",
+
+        "assessments" =>            "meteor_assessments",
+        "assessments.questions" =>  "meteor_assessments_questions",
+        "assessments.answers" =>    "meteor_assessments_answers",
     );
 
     private static $connected;
@@ -31,6 +38,11 @@ class Database
         }
 
         self::$connection = mysqli_connect(Config::getDatabaseHost(), Config::getDatabaseUser(), Config::getDatabasePassword(), Config::getDatabaseName());
+
+        if (mysqli_connect_errno() != 0) {
+            throw new DatabaseException(mysqli_error(self::$connection));
+        }
+
         self::$connected = true;
     }
 
@@ -105,9 +117,18 @@ class Database
         return mysqli_escape_string(self::$connection, $value);
     }
 
+    /**
+     * Generate a query from a pre defined query structure.
+     *
+     * @param string $name the query structure
+     * @param array $data the specific data to replace into the query
+     *
+     * @return DatabaseQuery the query instance
+     */
     public static function generate_query($name, $data = array())
     {
-        $path = "database/query/$name.sql";
+        $identifier = substr($name, 0, strpos($name, "_"));
+        $path = "database/query/$identifier/$name.sql";
         $file = fopen($path, "r");
         $query = fread($file, filesize($path));
 

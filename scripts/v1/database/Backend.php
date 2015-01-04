@@ -18,13 +18,14 @@ class Backend
 
     /* USER OPERATIONS */
 
-    public static function create_user($username, $password)
+    public static function create_user($username, $displayname, $password)
     {
         $username = Database::format_string($username);
+        $displayname = Database::format_string($displayname);
         $userid = Token::generateNewToken(TOKEN_USER);
-        $query = Database::generate_query("user_create", array ($userid->toString(), $username, $username, Crypt::hash_password($password)));
+        $query = Database::generate_query("user_create", array ($userid->toString(), $username, $displayname, Crypt::hash_password($password)));
         $query->execute();
-        return new UserProfile($userid, $username);
+        return new UserProfile($userid, $username, $displayname);
     }
 
     public static function user_exists($lookup)
@@ -59,22 +60,26 @@ class Backend
                 throw new InvalidUserException("Could not find a user with that id", array("user-id" => $userid->toString()));
             }
 
-            $displayname = $result->fetch_data()["user_name"];
+            $row = $result->fetch_data();
+            $username = $row["user_name"];
+            $displayname = $row["user_display_name"];
             $result->close();
         } else {
-            $displayname = $search;
-            $query = Database::generate_query("user_lookup_name", array ($displayname));
+            $username = $search;
+            $query = Database::generate_query("user_lookup_name", array ($username));
             $result = $query->execute();
 
             if ($result->count() == 0) {
-                throw new InvalidUserException("Could not find a user with that name", array("display-name" => $displayname));
+                throw new InvalidUserException("Could not find a user with that name", array("display-name" => $username));
             }
 
-            $userid = Token::decode($result->fetch_data()["user_id"]);
+            $row = $result->fetch_data();
+            $userid = Token::decode($row["user_id"]);
+            $displayname = $row["user_display_name"];
             $result->close();
         }
 
-        return new UserProfile($userid, $displayname);
+        return new UserProfile($userid, $username, $displayname);
     }
 
     public static function fetch_user_settings(UserProfile $profile)
@@ -119,12 +124,22 @@ class Backend
 
     public static function fetch_user_permissions(UserProfile $profile)
     {
-        $query = Database::generate_query("user_permissions_fetch", array ($profile->getUserId()->toString()));
+        $query = Database::generate_query("user_permission_fetch", array ($profile->getUserId()->toString()));
         $result = $query->execute();
 
         $settings = array();
         while($row = $result->fetch_data()) {
             $settings[] = $row["permission_key"];
+        }
+
+        /** @var GroupProfile $group */
+        foreach (Backend::fetch_user_groups($profile) as $group) {
+            $query = Database::generate_query("group_permission_fetch", array ($group->getGroupId()->toString()));
+            $result = $query->execute();
+
+            while ($row = $result->fetch_data()) {
+                $settings[] = $row["permission_key"];
+            }
         }
 
         $result->close();
@@ -148,7 +163,18 @@ class Backend
         $result = $query->execute();
         $count = $result->count();
         $result->close();
-        return $count >= 1;
+
+        if ($count >= 1) {
+            return true;
+        }
+
+        foreach (Backend::fetch_user_groups($profile) as $group) {
+            if (Backend::check_group_permission($group, $permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function fetch_all_users()
@@ -158,7 +184,7 @@ class Backend
 
         $users = array();
         while($row = $result->fetch_data()) {
-            $users[] = new UserProfile(Token::decode($row["user_id"]), $row["user_name"]);
+            $users[] = new UserProfile(Token::decode($row["user_id"]), $row["user_name"], $row["user_display_name"]);
         }
 
         $result->close();
@@ -266,6 +292,19 @@ class Backend
             $groups[] = new GroupProfile(Token::decode($row["group_id"]), $row["group_name"]);
         }
         $result->close();
+
+        return $groups;
+    }
+
+    public static function fetch_group_users(GroupProfile $group)
+    {
+        $query = Database::generate_query("group_user_list", array ($group->getGroupId()->toString()));
+        $result = $query->execute();
+        $groups = array();
+
+        while ($row = $result->fetch_data()) {
+            $groups[] = new UserProfile(Token::decode($row["user_id"]), $row["user_name"], $row["user_display_name"]);
+        }
 
         return $groups;
     }
