@@ -1,6 +1,8 @@
 <?php
 namespace meteor;
 
+use meteor\exceptions\ClassLoadingException;
+
 new MeteorClassLoader();
 
 class MeteorClassLoader
@@ -14,12 +16,15 @@ class MeteorClassLoader
     {
         // we only handle loading meteor classes
         if (starts_with($class, "meteor\\")) {
-            $path = strtr($class, "\\", "/");
-            $path = substr($path, 7);
-            $path .= ".php";
+            $path = $class;
+            $path = substr($path, 7);                           // Gets rid of the meteor prefix
+            $path = strtr($path, "\\", DIRECTORY_SEPARATOR);    // Replace all backslashes with the current file separator
+            $path .= ".php";                                    // Append the file extension to the end
 
-            if (file_exists($path)) {
+            if (is_readable($path)) {
                 require_once($path);
+            } else {
+                throw new ClassLoadingException("Could not load meteor class " . $class);
             }
         }
     }
