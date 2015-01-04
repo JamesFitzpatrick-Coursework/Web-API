@@ -1,4 +1,5 @@
 <?php
+namespace meteor\data;
 
 define("TOKEN_CLIENT", "AA");
 define("TOKEN_REQUEST", "AB");
@@ -22,21 +23,24 @@ class Token
             return null;
         }
 
-        return new Token($type, $user, randomHex(14), randomHex(8));
+        return new Token($type, $user, random_hex(14), random_hex(8));
     }
 
     public static function generateNewToken($type)
     {
-        return Token::generateToken($type, randomHex(8));
+        return Token::generateToken($type, random_hex(8));
     }
 
     public static function verify($token)
     {
+        $token = strtoupper($token);
         return preg_match(self::TOKEN_REGEX, $token) == 1;
     }
 
     public static function decode($token)
     {
+        $token = strtoupper($token);
+
         if (preg_match(self::TOKEN_REGEX, $token, $result) != 1) {
             throw new InvalidTokenException("Token (" . $token . ") is not a valid token");
         }

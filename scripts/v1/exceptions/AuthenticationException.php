@@ -1,10 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 28/12/2014
- * Time: 13:15
- */
+namespace meteor\exceptions;
+
+use meteor\core\HTTP;
 
 class AuthenticationException extends EndpointExecutionException {
 
@@ -15,6 +12,6 @@ class AuthenticationException extends EndpointExecutionException {
 
     public function getErrorCode()
     {
-        return HTTP_UNAUTHORIZED;
+        return HTTP::UNAUTHORIZED;
     }
 }

@@ -1,5 +1,6 @@
 <?php
-checkEnv();
+namespace meteor\core;
+check_env();
 
 class Config
 {
@@ -12,7 +13,7 @@ class Config
         $handle = fopen($my_file, 'r');
 
         while ($line = fgets($handle)) {
-            if (!startsWith($line, "#") && $line != "") {
+            if (!starts_with($line, "#") && $line != "") {
                 if (preg_match("/(.*) = (.*)/", $line, $data) == 1) {
                     self::$config[trim($data[1])] = trim($data[2]);
                 }

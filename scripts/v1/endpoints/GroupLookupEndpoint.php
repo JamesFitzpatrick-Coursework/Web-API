@@ -1,39 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 15/12/2014
- * Time: 19:52
- */
+namespace meteor\endpoints;
 
-class GroupLookupEndpoint extends Endpoint
+use meteor\database\Backend;
+
+class GroupLookupEndpoint extends AuthenticatedEndpoint
 {
     public function handle($data)
     {
-        if (isset($data->{"lookup"}))
-        {
-            return $this->lookup_group($data->{"lookup"});
-        }
-        else
-        {
-            return $this->list_groups();
-        }
-    }
-
-    private function list_groups()
-    {
-        $groups = array();
-
-        foreach (Backend::fetch_all_groups() as $group) {
-            $groups[] = $group->toExternalForm();
-        }
-
-        return array("count" => count($groups), "groups" => $groups);
-    }
-
-    private function lookup_group($lookup)
-    {
-        $profile = Backend::fetch_group_profile($lookup);
+        $profile = Backend::fetch_group_profile($this->params["id"]);
 
         $data = array ();
         $data["profile"] = $profile->toExternalForm();
@@ -41,5 +15,10 @@ class GroupLookupEndpoint extends Endpoint
         $data["permissions"] = Backend::fetch_group_permissions($profile);
 
         return $data;
+    }
+
+    public function get_acceptable_methods()
+    {
+        return array ("GET");
     }
 }

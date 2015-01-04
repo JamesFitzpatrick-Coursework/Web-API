@@ -1,17 +1,21 @@
 <?php
+namespace meteor\endpoints;
+
+use meteor\core\Endpoint;
+use meteor\data\Token;
+use meteor\database\Backend;
+use meteor\exceptions\ValidationFailedException;
 
 class ValidateEndpoint extends Endpoint
 {
-
     public function handle($data)
     {
-        $this->validate_request($data, array("user", "token"));
+        $this->validate_request(array("user", "token"));
 
         $userid = Token::decode($data->{"user"});
-        $clientid = Token::decode($data->{"client-id"});
         $token = Token::decode($data->{"token"});
 
-        if (!Backend::validate_token($clientid, $userid, $token)) {
+        if (!Backend::validate_token($this->clientid, $userid, $token)) {
             throw new ValidationFailedException("Specified token is not valid");
         }
 

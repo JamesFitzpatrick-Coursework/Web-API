@@ -1,15 +1,17 @@
 <?php
+namespace meteor\endpoints;
 
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 10/12/2014
- * Time: 10:00
- */
-class TestEndpoint extends AuthenticatedEndpoint
+use meteor\core\Endpoint;
+use phpseclib\Crypt\RSA;
+
+class TestEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        return array();
+        $rsa = new RSA();
+        $rsa->setPrivateKeyFormat(RSA::PRIVATE_FORMAT_XML);
+        $rsa->setPublicKeyFormat(RSA::PRIVATE_FORMAT_XML);
+
+        return array ($rsa->createKey());
     }
 }

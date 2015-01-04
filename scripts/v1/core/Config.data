@@ -3,8 +3,8 @@
 ################
 
 ## Database ##
-database.host = "localhost"
-database.database = "meteor"
-database.user = "root"
-database.password = ""
+database.host = localhost
+database.database = thefish_meteor_test
+database.user = thefish_meteor
+database.password = VqzwaeZeXcdD
 database.port = 3306

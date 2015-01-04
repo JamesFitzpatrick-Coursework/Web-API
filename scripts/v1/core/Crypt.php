@@ -1,17 +1,19 @@
 <?php
-checkEnv();
-define ("HASH_ALGORITHM", "sha256");
+namespace meteor\core;
+
+check_env();
+define ("HASH_ALGORITHM", PASSWORD_DEFAULT);
+define ("HASH_COST", 10);
 
 class Crypt
 {
-
-    public static function hashPassword($password, $secret)
+    public static function hash_password($password)
     {
-        return hash_hmac(HASH_ALGORITHM, $password, $secret);
+        return password_hash($password, HASH_ALGORITHM, ["cost" => HASH_COST]);
     }
 
-    public static function checkPassword($hash, $password, $secret)
+    public static function check_password($hash, $password)
     {
-        return $hash == self::hashPassword($password, $secret); // TODO convert to using a safer hash check
+        return password_verify($password, $hash);
     }
 }

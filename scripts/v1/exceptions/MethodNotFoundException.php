@@ -1,4 +1,7 @@
 <?php
+namespace meteor\exceptions;
+
+use meteor\core\HTTP;
 
 class MethodNotFoundException extends EndpointExecutionException
 {
@@ -9,6 +12,6 @@ class MethodNotFoundException extends EndpointExecutionException
 
     public function getErrorCode()
     {
-        return HTTP_NOT_FOUND;
+        return HTTP::NOT_FOUND;
     }
 }

@@ -1,21 +1,19 @@
 <?php
+namespace meteor\core;
 
-// HTTP Status Codes
-define("HTTP_OK", 200);
-define("HTTP_CREATED", 201);
+class HTTP
+{
+    const OK = 200;
+    const CREATED = 201;
 
-define("HTTP_FOUND", 302);
-define("HTTP_NOT_MODIFIED", 304);
+    const FOUND = 302;
+    const NOT_MODIFIED = 304;
 
-define("HTTP_BAD_REQUEST", 400);
-define("HTTP_UNAUTHORIZED", 401);
-define("HTTP_FORBIDDEN", 403);
-define("HTTP_NOT_FOUND", 404);
-define("HTTP_METHOD_NOT_ALLOWED", 405);
+    const BAD_REQUEST = 400;
+    const UNAUTHORIZED = 401;
+    const FORBIDDEN = 403;
+    const NOT_FOUND = 404;
+    const METHOD_NOT_ALLOWED = 405;
 
-define("HTTP_INTERNAL_ERROR", 500);
-
-// HTTP Headers
-define("HEADER_RESPONSE_FORMAT", "HTTP_X_RESPONSE_FORMAT");
-define("HEADER_AUTH_USER", "HTTP_X_AUTHENTICATION_USER");
-define("HEADER_AUTH_TOKEN", "HTTP_X_AUTHENTICATION_TOKEN");
+    const INTERNAL_ERROR = 500;
+}

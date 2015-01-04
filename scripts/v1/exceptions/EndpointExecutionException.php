@@ -1,4 +1,8 @@
 <?php
+namespace meteor\exceptions;
+
+use Exception;
+use meteor\core\HTTP;
 
 class EndpointExecutionException extends Exception
 {
@@ -17,6 +21,6 @@ class EndpointExecutionException extends Exception
 
     public function getErrorCode()
     {
-        return HTTP_BAD_REQUEST;
+        return HTTP::BAD_REQUEST;
     }
 }

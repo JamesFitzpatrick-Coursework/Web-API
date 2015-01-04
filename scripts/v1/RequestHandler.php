@@ -1,93 +1,124 @@
 <?php
+namespace meteor;
+
+use Exception;
+
+use meteor\core;
+use meteor\core\Headers;
+use meteor\core\HTTP;
+use meteor\core\Endpoint;
+use meteor\core\ResponseFormat;
+use meteor\database;
+use meteor\response;
+use meteor\exceptions\EndpointExecutionException;
+use meteor\exceptions\MethodNotAllowedException;
+use meteor\exceptions\MethodNotFoundException;
+
+// Class loading
+require_once '../../vendor/autoload.php';
+require_once 'MeteorClassLoader.php';
+
 define ("DEFAULT_FORMAT", "json");
 define ("IN_BACKEND", true);
 define ("DEBUG", true);
 
 error_reporting(DEBUG ? E_ALL : 0);
-set_include_path(get_include_path() . PATH_SEPARATOR . 'libs/phpseclib');
 
 require_once 'core/Utils.php';
-require_all(array('core', 'data', 'database', 'endpoints', 'format', 'exception', 'secret'));
 require_once 'Routes.php';
 
 // Setup response formats
 $formats = array();
-$formats["json"] = new JsonResponseFormat(false);
-$formats["json/pretty"] = new JsonResponseFormat(true);
-$formats["xml"] = new XMLResponseFormat();
+$formats["json"] = new response\JsonResponseFormat(false);
+$formats["json/pretty"] = new response\JsonResponseFormat(true);
+$formats["xml"] = new response\XMLResponseFormat();
 
 // Setup config
-Config::loadConfig();
-Database::init();
+core\Config::loadConfig();
+database\Database::init();
 
 // Request from the same server don't have a HTTP_ORIGIN
 if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
     $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
 }
 
-// Get response format if provided
+// Get response response if provided
 $responseFormat = DEFAULT_FORMAT;
 
-if (array_key_exists(HEADER_RESPONSE_FORMAT, $_SERVER)) {
-    $responseFormat = $_SERVER[HEADER_RESPONSE_FORMAT];
+if (array_key_exists(Headers::RESPONSE_FORMAT, $_SERVER)) {
+    $responseFormat = $_SERVER[Headers::RESPONSE_FORMAT];
 }
 
-try {
-    if ($_SERVER['REQUEST_METHOD'] != "POST") {
-        throw new MethodNotAllowedException($_SERVER['REQUEST_METHOD']);
-    }
+$code = HTTP::INTERNAL_ERROR;
+$payload = array();
 
+try {
     // get the requested endpoint
     $request = strtolower($_REQUEST['request']);
 
     // Sanitize the request
-    if (strlen($request) != 0 && endsWith($request, "/")) {
+    if (strlen($request) != 0 && ends_with($request, "/")) {
         $request = substr($request, 0, strlen($request) - 1);
     }
 
     // Check to see if endpoint exists
     global $endpoints;
-    if (!array_key_exists($request, $endpoints)) {
+    $success = false;
+
+    /** @var Endpoint $endpoint */
+    foreach ($endpoints as $pattern => $endpoint) {
+        if (preg_match($pattern, $request, $matches)) {
+            if (!in_array($_SERVER['REQUEST_METHOD'], $endpoint->get_acceptable_methods())) {
+                throw new MethodNotAllowedException($_SERVER['REQUEST_METHOD']);
+            }
+
+            // Get the request payload
+            $body = @file_get_contents('php://input');
+
+            // Handle request
+            $payload = $endpoint->execute($body, $matches);
+            $code = HTTP::OK;
+            $success = true;
+            break;
+        }
+    }
+
+    if (!$success) {
         throw new MethodNotFoundException($request);
-    } else {
-        $endpoint = $endpoints[$request];
-
-        // Get the request payload
-        $body = @file_get_contents('php://input');
-
-        // Handle request
-        $payload = $endpoint->execute($body);
-        $code = HTTP_OK;
-        $success = true;
     }
 // Error handling
 } catch (EndpointExecutionException $ex) {
     $code = $ex->getErrorCode();
     $success = false;
     $payload = array(
-        "cause" => "uk.co.thefishlive.meteor.exception." . get_class($ex),
+        "cause" => "uk.co.thefishlive.meteor.exceptions." . get_class($ex),
         "error" => $ex->getMessage()
     );
 
     foreach ($ex->getData() as $key => $value) {
         $payload[$key] = $value;
     }
+
+    if (DEBUG) {
+        $payload["trace"] = $ex->getTrace();
+    }
 } catch (Exception $ex) {
-    $code = HTTP_INTERNAL_ERROR;
+    $code = HTTP::INTERNAL_ERROR;
     $success = false;
     $payload = array(
-        "cause" => "uk.co.thefishlive.meteor.exception.ServerExecutionException",
+        "cause" => "uk.co.thefishlive.meteor.exceptions.ServerExecutionException",
         "error" => $ex->getMessage()
     );
 }
 
-// Check to see if response format is valid
+// Check to see if response response is valid
 if (!array_key_exists($responseFormat, $formats)) {
-    $code = HTTP_BAD_REQUEST;
+    $code = HTTP::BAD_REQUEST;
     $payload = array("error" => "Response type not found", "requested" => $responseFormat);
     $responseFormat = DEFAULT_FORMAT;
 }
 
+/** @var ResponseFormat $format */
 $format = $formats[$responseFormat];
 
 // Create the response

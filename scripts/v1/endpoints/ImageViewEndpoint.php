@@ -1,17 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 19/12/2014
- * Time: 08:59
- */
+namespace meteor\endpoints;
+
+use meteor\core\Endpoint;
+use meteor\secret\Imgur;
 
 class ImageViewEndpoint extends Endpoint
 {
 
     public function handle($data)
     {
-        $this->validate_request($data, array("asset"));
+        $this->validate_request(array("asset"));
         $asset = $data->{"asset"};
 
         // get asset url

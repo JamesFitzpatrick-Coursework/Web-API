@@ -1,29 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 15/12/2014
- * Time: 19:31
- */
+namespace meteor\endpoints;
 
-class GroupCreateEndpoint extends Endpoint
+use meteor\database\Backend;
+use meteor\exceptions\EndpointExecutionException;
+
+class GroupCreateEndpoint extends AuthenticatedEndpoint
 {
     public function handle($data)
     {
-        $this->validate_request($data, array ("group-name"));
+        $this->validate_request(array("group-name"));
 
         $groupname = $data->{"group-name"};
+        $displayname = $groupname;
+
+        if (isset($data->{"display-name"})) {
+            $displayname = $data->{"display-name"};
+        }
 
         if (Backend::group_exists($groupname)) {
-            throw new EndpointExecutionException("Group with name already exists", array ("display-name", $groupname));
+            throw new EndpointExecutionException("Group with name already exists", array ("group-name", $groupname));
         }
 
         // Add the group to the database
-        $groupid = Backend::create_group($groupname);
+        $group = Backend::create_group($groupname, $displayname);
 
         // Return the new user to the client
         return array(
-            "group" => array ("group-id" => $groupid->toString(), "display-name" => $groupname)
+            "group" => $group->toExternalForm()
         );
 
     }

@@ -1,4 +1,5 @@
 <?php
+namespace meteor\database;
 
 class DatabaseQuery
 {
@@ -8,6 +9,11 @@ class DatabaseQuery
     public function __construct($query)
     {
         $this->query = $query;
+    }
+
+    public function getQuery()
+    {
+        return $this->query;
     }
 
     public function execute()

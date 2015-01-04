@@ -1,10 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 18/12/2014
- * Time: 20:14
- */
+namespace meteor\endpoints;
+
+use meteor\core\Endpoint;
+use meteor\secret\Imgur;
 
 define ("IMGUR_BASE_URL", "https://api.imgur.com/3/");
 
@@ -12,7 +10,7 @@ class ImageUploadEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        $this->validate_request($data, array ("image", "name"));
+        $this->validate_request(array("image", "name"));
 
         $image = $data->{"image"};
         $name = $data->{"name"};

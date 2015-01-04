@@ -1,4 +1,7 @@
 <?php
+namespace meteor\response;
+
+use meteor\core\ResponseFormat;
 
 class XMLResponseFormat extends ResponseFormat
 {

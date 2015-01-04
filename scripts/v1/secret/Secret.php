@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 18/12/2014
- * Time: 20:33
- */
+namespace meteor\secret;
 
 class Imgur
 {

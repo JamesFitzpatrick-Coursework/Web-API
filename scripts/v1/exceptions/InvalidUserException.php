@@ -1,6 +1,7 @@
 <?php
+namespace meteor\exceptions;
 
-class InvalidTokenException extends EndpointExecutionException
+class InvalidUserException extends EndpointExecutionException
 {
     public function __construct($error, $payload = array())
     {

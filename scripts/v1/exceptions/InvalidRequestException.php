@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 28/12/2014
- * Time: 14:04
- */
+namespace meteor\exceptions;
 
 class InvalidRequestException extends EndpointExecutionException
 {

@@ -1,4 +1,7 @@
 <?php
+namespace meteor\exceptions;
+
+use meteor\core\HTTP;
 
 class MethodNotAllowedException extends EndpointExecutionException
 {
@@ -9,6 +12,6 @@ class MethodNotAllowedException extends EndpointExecutionException
 
     public function getErrorCode()
     {
-        return HTTP_METHOD_NOT_ALLOWED;
+        return HTTP::METHOD_NOT_ALLOWED;
     }
 }

@@ -3,13 +3,13 @@
     "description": "Restful authentication service",
     "minimum-stability": "dev",
     "license": "MIT",
+    "require": {
+        "phpseclib/phpseclib": "dev-php5"
+    },
     "authors": [
         {
             "name": "James Fitzpatrick",
             "email": "james@thefishlive.co.uk"
         }
-    ],
-    "require": {
-        "phpseclib/phpseclib": "dev-php5"
-    }
+    ]
 }

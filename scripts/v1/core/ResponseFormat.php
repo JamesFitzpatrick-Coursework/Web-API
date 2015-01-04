@@ -1,5 +1,6 @@
 <?php
-checkEnv();
+namespace meteor\core;
+check_env();
 
 abstract class ResponseFormat
 {

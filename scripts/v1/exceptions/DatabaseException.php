@@ -1,4 +1,5 @@
 <?php
+namespace meteor\exceptions;
 
 class DatabaseException extends EndpointExecutionException
 {

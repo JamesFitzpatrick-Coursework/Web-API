@@ -1,26 +1,21 @@
 <?php
-checkEnv();
+namespace meteor\database;
+check_env();
 
-define("DATABASE_PREFIX", "meteor_");
-define("DATABASE_TABLE_USERS",              DATABASE_PREFIX . "users");
-define("DATABASE_TABLE_GROUPS",             DATABASE_PREFIX . "groups");
-define("DATABASE_TABLE_USER_SETTINGS",      DATABASE_PREFIX . "user_settings");
-define("DATABASE_TABLE_GROUP_SETTINGS",     DATABASE_PREFIX . "group_settings");
-define("DATABASE_TABLE_USER_PERMISSIONS",   DATABASE_PREFIX . "user_permissions");
-define("DATABASE_TABLE_GROUP_PERMISSIONS",  DATABASE_PREFIX . "group_permissions");
-define("DATABASE_TABLE_TOKENS",             DATABASE_PREFIX . "tokens");
+use meteor\core\Config;
+use meteor\exceptions\DatabaseException;
 
 class Database
 {
-
     private static $tables = array (
-        "users" => DATABASE_TABLE_USERS,
-        "groups" => DATABASE_TABLE_GROUPS,
-        "users.settings" => DATABASE_TABLE_USER_SETTINGS,
-        "groups.settings" => DATABASE_TABLE_GROUP_SETTINGS,
-        "users.permissions" => DATABASE_TABLE_USER_PERMISSIONS,
-        "groups.permissions" => DATABASE_TABLE_GROUP_PERMISSIONS,
-        "tokens" => DATABASE_TABLE_TOKENS,
+        "users" =>              "meteor_users",
+        "groups" =>             "meteor_groups",
+        "users.settings" =>     "meteor_user_settings",
+        "groups.settings" =>    "meteor_group_settings",
+        "users.permissions" =>  "meteor_user_permissions",
+        "groups.permissions" => "meteor_group_permissions",
+        "groups.users" =>       "meteor_group_users",
+        "tokens" =>             "meteor_tokens",
     );
 
     private static $connected;
@@ -44,7 +39,7 @@ class Database
      *
      * @param $query string the sql query to execute
      *
-     * @return mysqli_result the result of the sql query
+     * @return \mysqli_result the result of the sql query
      * @throws DatabaseException if there was a error executing the query
      */
     public static function query($query)
@@ -65,7 +60,7 @@ class Database
     /**
      * Fetch the data for a row from a query result.
      *
-     * @param $result mysqli_result the result of a query
+     * @param $result \mysqli_result the result of a query
      *
      * @return array|bool|null the data fetched from the result
      */
@@ -81,7 +76,7 @@ class Database
     /**
      * Return the amount of rows in a given query.
      *
-     * @param $result mysqli_result the query to count the rows in
+     * @param $result \mysqli_result the query to count the rows in
      *
      * @return bool|int the amount of rows contained in the specified query
      */
@@ -122,8 +117,8 @@ class Database
         }
 
         // Inject the table name into the query
-        if (preg_match("/\{(table.([^}]+))\}/", $query, $data) == 1) {
-            $query = preg_replace("/\{" . $data[1] . "\}/", self::$tables[$data[2]] ,$query);
+        while (preg_match("/\{(table.([^}]+))\}/", $query, $data) == 1) {
+            $query = preg_replace("/\{" . $data[1] . "\}/", self::$tables[$data[2]], $query, 1);
         }
 
         fclose($file);
@@ -133,7 +128,7 @@ class Database
     /**
      * Frees the memory associated with a result
      *
-     * @param $query mysqli_result the query result to close
+     * @param $query \mysqli_result the query result to close
      *
      * @return bool if it was successful
      */

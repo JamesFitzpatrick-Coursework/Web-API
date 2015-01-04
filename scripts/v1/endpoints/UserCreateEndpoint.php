@@ -1,14 +1,14 @@
 <?php
+namespace meteor\endpoints;
+
+use meteor\database\Backend;
+use meteor\exceptions\EndpointExecutionException;
 
 class UserCreateEndpoint extends AuthenticatedEndpoint
 {
-
     public function handle($data)
     {
-        if (!isset($data->{"username"}) || !isset($data->{"password"})) {
-            throw new EndpointExecutionException("Invalid request");
-        }
-
+        $this->validate_request(array("username", "password"));
         $username = $data->{"username"};
 
         if (Backend::user_exists($username)) {

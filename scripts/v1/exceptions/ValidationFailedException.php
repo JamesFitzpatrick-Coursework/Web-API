@@ -1,4 +1,7 @@
 <?php
+namespace meteor\exceptions;
+
+use meteor\core\HTTP;
 
 class ValidationFailedException extends EndpointExecutionException
 {
@@ -10,7 +13,7 @@ class ValidationFailedException extends EndpointExecutionException
 
     public function getErrorCode()
     {
-        return HTTP_OK;
+        return HTTP::OK;
     }
 
 } 

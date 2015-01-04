@@ -1,4 +1,7 @@
 <?php
+namespace meteor\endpoints;
+
+use meteor\database\Backend;
 
 class UserListEndpoint extends AuthenticatedEndpoint
 {
@@ -11,5 +14,10 @@ class UserListEndpoint extends AuthenticatedEndpoint
         }
 
         return array("count" => count($users), "users" => $users);
+    }
+
+    public function get_acceptable_methods()
+    {
+        return array ("GET");
     }
 }

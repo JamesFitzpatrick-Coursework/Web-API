@@ -1,10 +1,9 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-        "This file is @generated automatically"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "4772f56b19c6ffd1248af217327f2d96",
+    "hash": "a5854163baf2d1baaec97504404b782a",
     "packages": [
         {
             "name": "phpseclib/phpseclib",
@@ -12,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "f2134aa4b2ad789aba3a76034ed4edf58611128a"
+                "reference": "8fae19a02470463ddb8ac29cfd644a9918a8ae30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/f2134aa4b2ad789aba3a76034ed4edf58611128a",
-                "reference": "f2134aa4b2ad789aba3a76034ed4edf58611128a",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/8fae19a02470463ddb8ac29cfd644a9918a8ae30",
+                "reference": "8fae19a02470463ddb8ac29cfd644a9918a8ae30",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +100,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2014-12-27 19:25:04"
+            "time": "2015-01-03 16:22:39"
         }
     ],
     "packages-dev": [],
@@ -110,8 +109,6 @@
     "stability-flags": {
         "phpseclib/phpseclib": 20
     },
-    "prefer-stable": false,
-    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }

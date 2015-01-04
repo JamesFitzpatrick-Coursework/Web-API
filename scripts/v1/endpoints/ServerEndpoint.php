@@ -1,8 +1,10 @@
 <?php
+namespace meteor\endpoints;
+
+use meteor\core\Endpoint;
 
 class ServerEndpoint extends Endpoint
 {
-
     public function handle($data)
     {
         return array(
@@ -15,4 +17,8 @@ class ServerEndpoint extends Endpoint
         );
     }
 
+    public function get_acceptable_methods()
+    {
+        return array ("GET");
+    }
 }

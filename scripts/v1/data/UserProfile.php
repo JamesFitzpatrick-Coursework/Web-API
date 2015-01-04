@@ -1,4 +1,6 @@
 <?php
+namespace meteor\data;
+use InvalidArgumentException;
 
 /**
  * Represents a user's profile
@@ -49,6 +51,18 @@ class UserProfile
     public function getDisplayName()
     {
         return $this->displayName;
+    }
+
+    /**
+     * Checks if this profile represents the same user as another.
+     *
+     * @param UserProfile $profile the profile to check
+     *
+     * @return bool true if they are for the same user, false otherwise
+     */
+    public function equals(UserProfile $profile)
+    {
+        return $this->getUserId() == $profile->getUserId();
     }
 
     /**

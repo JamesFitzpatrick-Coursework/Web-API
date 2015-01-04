@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: James
- * Date: 24/12/2014
- * Time: 15:45
- */
+namespace meteor\database;
 
 class DatabaseResult {
 

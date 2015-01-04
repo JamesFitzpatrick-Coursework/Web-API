@@ -4,7 +4,7 @@ if (!defined("IN_BACKEND")) {
     die("Invalid environment");
 }
 
-function checkEnv()
+function check_env()
 {
     if (!defined("IN_BACKEND")) {
         die("Invalid environment");
@@ -45,17 +45,17 @@ function require_all($dir)
     }
 }
 
-function startsWith($haystack, $needle)
+function starts_with($haystack, $needle)
 {
     return $needle === "" || strpos($haystack, $needle) === 0;
 }
 
-function endsWith($haystack, $needle)
+function ends_with($haystack, $needle)
 {
     return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
 }
 
-function randomHex($len)
+function random_hex($len)
 {
     return substr(md5(rand()), 0, $len);
 }

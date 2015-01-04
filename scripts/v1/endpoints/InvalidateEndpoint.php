@@ -1,16 +1,18 @@
 <?php
+namespace meteor\endpoints;
+
+use meteor\core\Endpoint;
+use meteor\data\Token;
+use meteor\database\Backend;
 
 class InvalidateEndpoint extends Endpoint
 {
-
     public function handle($data)
     {
-        $this->validate_request($data, array("user-id", "token"));
+        $this->validate_request(array("user", "token"));
 
-        $clientid = Token::decode($data->{"client-id"});
         $token = Token::decode($data->{"token"});
-
-        Backend::invalidate_token($clientid, $token);
+        Backend::invalidate_token($this->clientid, $token);
 
         return array();
     }
