@@ -28,6 +28,12 @@ class Backend
         return new UserProfile($userid, $username, $displayname);
     }
 
+    public static function delete_user(UserProfile $profile)
+    {
+        $query = Database::generate_query("user_delete", array ($profile->getUserId()->toString()));
+        $query->execute();
+    }
+
     public static function user_exists($lookup)
     {
         // Check if it is a user id

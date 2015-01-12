@@ -36,7 +36,8 @@ class UserLookupEndpoint extends AuthenticatedEndpoint
 
     public function handle_delete($data)
     {
-
+        $profile = Backend::fetch_user_profile($this->params["id"]);
+        Backend::delete_user($profile);
         return array();
     }
 
