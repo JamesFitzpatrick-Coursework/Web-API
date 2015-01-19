@@ -1,0 +1,1 @@
+INSERT INTO `{table.groups.settings}` (`group_id`, `setting_key`, `setting_value`) VALUES ('{0}', '{1}', '{2}');

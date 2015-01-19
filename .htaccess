@@ -1,14 +1,11 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule v1/(.*)$ scripts/v1/RequestHandler.php?request=$1 [QSA,NC,L]
+
+# Handle auth api
+    RewriteCond %{HTTP_HOST} ^auth.thefishlive.co.uk$ [NC]
+    RewriteRule v1/(.*)$ scripts/v1/auth/RequestHandler.php?request=$1 [QSA,NC,L]
+
+# Handle launcher api
+    RewriteCond %{HTTP_HOST} ^launcher.thefishlive.co.uk$ [NC]
+    RewriteRule v1/(.*)$ scripts/v1/launcher/RequestHandler.php?request=$1 [QSA,NC,L]
 </IfModule>
-
-<Files  ~ "\.data$">
-    Deny from all
-</Files>
-
-<Files  ~ "\.sql$">
-    Deny from all
-</Files>
