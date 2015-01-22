@@ -9,7 +9,8 @@ class Crypt
 {
     public static function hash_password($password)
     {
-        return password_hash($password, HASH_ALGORITHM, ["cost" => HASH_COST]);
+        $hash = password_hash($password, HASH_ALGORITHM, ["cost" => HASH_COST]);
+        return $hash;
     }
 
     public static function check_password($hash, $password)

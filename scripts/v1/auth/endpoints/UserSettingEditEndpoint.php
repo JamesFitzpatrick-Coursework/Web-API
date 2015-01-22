@@ -8,7 +8,7 @@ class UserSettingEditEndpoint extends AuthenticatedEndpoint
     public function handle($data)
     {
         $state = $this->method == "POST";
-        $this->validate_request(array("setting" => $state ? array ("key", "value") : array ("key")));
+        $this->validate_request(array("setting" => array ("key", "value")));
 
         $profile = Backend::fetch_user_profile($this->params["id"]);
         $setting = $data->{"setting"};

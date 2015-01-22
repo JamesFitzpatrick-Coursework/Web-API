@@ -115,7 +115,7 @@ class Backend
 
     public static function delete_user_setting(UserProfile $profile, $setting)
     {
-        $query = Database::generate_query("user_setting_delete", array ($profile->getUserId()->toString(), $setting->{"key"}));
+        $query = Database::generate_query("user_setting_delete", array ($profile->getUserId()->toString(), $setting));
         $query->execute();
     }
 

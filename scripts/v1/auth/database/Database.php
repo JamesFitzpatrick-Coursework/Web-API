@@ -140,7 +140,7 @@ class Database
 
         // Inject execution data into the query
         for ($i = 0; $i < count($data); $i++) {
-            $query = preg_replace("/\{$i\}/", self::format_string($data[$i]), $query);
+            $query = preg_replace("/\{$i\}/", preg_quote(self::format_string($data[$i])), $query);
         }
 
         // Inject the table name into the query
