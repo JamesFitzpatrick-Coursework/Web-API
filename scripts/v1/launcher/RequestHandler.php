@@ -1,22 +1,21 @@
 <?php
-namespace meteor;
+namespace launcher;
 
 use Exception;
 
+use common\core\HTTP;
+use common\core\Endpoint;
+use common\core\ResponseFormat;
+use common\exceptions\EndpointExecutionException;
+use common\response;
+use common\exceptions\MethodNotAllowedException;
+use common\exceptions\MethodNotFoundException;
 use meteor\core;
-use meteor\core\Headers;
-use meteor\core\HTTP;
-use meteor\core\Endpoint;
-use meteor\core\ResponseFormat;
 use meteor\database;
-use meteor\response;
-use meteor\exceptions\EndpointExecutionException;
-use meteor\exceptions\MethodNotAllowedException;
-use meteor\exceptions\MethodNotFoundException;
 
 // Class loading
-require_once '../../vendor/autoload.php';
-require_once 'MeteorClassLoader.php';
+require_once '../../../vendor/autoload.php';
+require_once '../common/MeteorClassLoader.php';
 
 define ("DEFAULT_FORMAT", "json");
 define ("IN_BACKEND", true);
@@ -24,7 +23,6 @@ define ("DEBUG", true);
 
 error_reporting(DEBUG ? E_ALL : 0);
 
-require_once 'core/Utils.php';
 require_once 'Routes.php';
 
 // Setup response formats
@@ -33,10 +31,6 @@ $formats["json"] = new response\JsonResponseFormat(false);
 $formats["json/pretty"] = new response\JsonResponseFormat(true);
 $formats["xml"] = new response\XMLResponseFormat();
 
-// Setup config
-core\Config::loadConfig();
-database\Database::init();
-
 // Request from the same server don't have a HTTP_ORIGIN
 if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
     $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
@@ -44,10 +38,6 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
 
 // Get response response if provided
 $responseFormat = DEFAULT_FORMAT;
-
-if (array_key_exists(Headers::RESPONSE_FORMAT, $_SERVER)) {
-    $responseFormat = $_SERVER[Headers::RESPONSE_FORMAT];
-}
 
 $code = HTTP::INTERNAL_ERROR;
 $payload = array();
@@ -88,14 +78,14 @@ try {
     }
 // Error handling
 } catch (EndpointExecutionException $ex) {
-    $code = $ex->getErrorCode();
+    $code = $ex->get_error_code();
     $success = false;
     $payload = array(
         "cause" => "uk.co.thefishlive.meteor.exceptions." . get_class($ex),
         "error" => $ex->getMessage()
     );
 
-    foreach ($ex->getData() as $key => $value) {
+    foreach ($ex->get_data() as $key => $value) {
         $payload[$key] = $value;
     }
 
