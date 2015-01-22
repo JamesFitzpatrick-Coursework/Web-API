@@ -47,12 +47,12 @@ register_endpoint("groups/:id", new endpoints\GroupLookupEndpoint());
 function register_endpoint($pattern, $handler)
 {
     global $endpoints;
+    if (ends_with($pattern, "/")) {
+        $pattern = substr($pattern, 0, strlen($pattern) - 1);
+    }
     $pattern = preg_quote($pattern, "/");
     while (preg_match("/\\:([^\\/\\\\]*)/", $pattern, $matches)) {
         $pattern = preg_replace("/\\\\:([^\\/\\\\]*)/", "(?<" . substr($matches[0], 1) . ">[^\\/]+)", $pattern, 1);
-    }
-    if (ends_with($pattern, "/")) {
-        $pattern = substr($pattern, 0, strlen($pattern) - 1);
     }
     $endpoints["/^" . $pattern . "$/"] = $handler;
 }
