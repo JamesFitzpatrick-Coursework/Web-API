@@ -1,23 +1,23 @@
 <?php
 namespace meteor\endpoints;
 
+use common\core\Endpoint;
 use common\data\Token;
 use common\exceptions\InvalidTokenException;
 use meteor\database\Backend;
 use meteor\exceptions\InvalidUserException;
 
-class RefreshEndpoint extends AuthenticatedEndpoint
+class RefreshEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        $this->validate_permission("permission.login.refresh.self");
         $this->validate_request(array("user", "refresh-token"));
 
         $profile = Backend::fetch_user_profile($data->{"user"});
         $refresh = Token::decode($data->{"refresh-token"});
 
-        if (!$this->user->equals($profile) && !$this->validate_permission("permission.login.refresh.others")) {
-            throw new InvalidUserException("Authentication provided does not have permission to refresh this token");
+        if (!$refresh->getUserSecret() == $profile->getUserId()->getUserSecret()) {
+            throw new InvalidUserException("User provided and token do not match");
         }
 
         if (!Backend::validate_token($this->clientid, $profile->getUserId(), $refresh)) {

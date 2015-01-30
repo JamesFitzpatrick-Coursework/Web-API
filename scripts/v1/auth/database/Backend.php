@@ -28,6 +28,12 @@ class Backend
         return new UserProfile($userid, $username, $displayname);
     }
 
+    public static function update_user_profile(UserProfile $profile)
+    {
+        $query = Database::generate_query("user_update", array ($profile->getUserId()->toString(), $profile->getDisplayName(), $profile->getUsername()));
+        $query->execute();
+    }
+
     public static function delete_user(UserProfile $profile)
     {
         $query = Database::generate_query("user_delete", array ($profile->getUserId()->toString()));
@@ -219,6 +225,12 @@ class Backend
         }
 
         return $groups;
+    }
+
+    public static function add_user_group(UserProfile $user, GroupProfile $group)
+    {
+        $query = Database::generate_query("user_groups_add", array ($user->getUserId()->toString(), $group->getGroupId()->toString()));
+        $query->execute();
     }
 
     /* GROUP OPERATIONS */

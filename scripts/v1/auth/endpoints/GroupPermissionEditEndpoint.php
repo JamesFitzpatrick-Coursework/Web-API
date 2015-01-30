@@ -11,19 +11,17 @@ class GroupPermissionEditEndpoint extends AuthenticatedEndpoint
 
         $profile = Backend::fetch_group_profile($this->params["id"]);
         $permission = $data->{"permission"};
-        $state = $this->method == "POST";
 
-        Backend::set_group_permission($profile, $permission, $state);
+        Backend::set_group_permission($profile, $permission, true);
 
         return array (
             "user" => $profile->toExternalForm(),
-            "permission" => $permission,
-            "state" => $state ? "ADDED" : "DELETED"
+            "permission" => $permission
         );
     }
 
     public function get_acceptable_methods()
     {
-        return array ("POST", "DELETE");
+        return array ("POST");
     }
 }
