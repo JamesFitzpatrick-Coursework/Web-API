@@ -1,6 +1,7 @@
 <?php
 namespace meteor\endpoints;
 
+use meteor\data\GroupProfile;
 use meteor\data\UserProfile;
 use meteor\database\Backend;
 
@@ -10,6 +11,8 @@ class GroupLookupEndpoint extends AuthenticatedEndpoint
     {
         if ($this->method == "DELETE") {
             return $this->handle_delete($data);
+        } elseif ($this->method == "POST") {
+            return $this->handle_post($data);
         } else {
             return $this->handle_get($data);
         }
@@ -42,8 +45,28 @@ class GroupLookupEndpoint extends AuthenticatedEndpoint
         return array();
     }
 
+    private function handle_post($data)
+    {
+        $profile = Backend::fetch_group_profile($this->params["id"]);
+
+        $displayname = $profile->getDisplayName();
+        $name = $profile->getName();
+
+        if (isset($data->{"display-name"})) {
+            $displayname = $data->{"display-name"};
+        }
+
+        if (isset($data->{"group-name"})) {
+            $name = $data->{"group-name"};
+        }
+
+        $profile = new GroupProfile($profile->getGroupId(), $name, $displayname);
+        Backend::update_group_profile($profile);
+        return $this->handle_get($data);
+    }
+
     public function get_acceptable_methods()
     {
-        return array ("GET", "DELETE");
+        return array ("GET", "DELETE", "POST");
     }
 }

@@ -252,6 +252,12 @@ class Backend
         $query->execute();
     }
 
+    public static function update_group_profile(GroupProfile $profile)
+    {
+        $query = Database::generate_query("group_update", array ($profile->getGroupId()->toString(), $profile->getDisplayName(), $profile->getName()));
+        $query->execute();
+    }
+
     public static function group_exists($lookup)
     {
         // Check if it is a user id
