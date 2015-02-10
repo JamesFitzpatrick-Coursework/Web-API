@@ -10,7 +10,8 @@ class MeteorClassLoader
     private $mappings = array(
         "meteor" => "auth",
         "launcher" => "launcher",
-        "common" => "common"
+        "common" => "common",
+        "lang" => "lang"
     );
 
     public function __construct()

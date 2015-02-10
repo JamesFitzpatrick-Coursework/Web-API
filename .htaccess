@@ -8,4 +8,8 @@
 # Handle launcher api
     RewriteCond %{HTTP_HOST} ^launcher.thefishlive.co.uk$ [NC]
     RewriteRule v1/(.*)$ scripts/v1/launcher/RequestHandler.php?request=$1 [QSA,NC,L]
+
+# Handle lang api
+    RewriteCond %{HTTP_HOST} ^lang.thefishlive.co.uk$ [NC]
+    RewriteRule v1/(.*)$ scripts/v1/lang/RequestHandler.php?request=$1 [QSA,NC,L]
 </IfModule>

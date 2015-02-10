@@ -1,30 +1,28 @@
 <?php
-namespace meteor;
+namespace lang;
 
 use Exception;
 
 use common\core\HTTP;
-use common\core\Headers;
 use common\core\Endpoint;
 use common\core\ResponseFormat;
-use common\response;
 use common\exceptions\EndpointExecutionException;
+use common\response;
 use common\exceptions\MethodNotAllowedException;
 use common\exceptions\MethodNotFoundException;
 use meteor\core;
 use meteor\database;
 
-define ("DEFAULT_FORMAT", "json");
-define ("IN_BACKEND", true);
-define ("DEBUG", false);
-
 // Class loading
 require_once '../../../vendor/autoload.php';
 require_once '../common/MeteorClassLoader.php';
 
+define ("DEFAULT_FORMAT", "json");
+define ("IN_BACKEND", true);
+define ("DEBUG", false);
+
 error_reporting(DEBUG ? E_ALL : 0);
 
-require_once 'core/Utils.php';
 require_once 'Routes.php';
 
 // Setup response formats
@@ -33,10 +31,6 @@ $formats["json"] = new response\JsonResponseFormat(false);
 $formats["json/pretty"] = new response\JsonResponseFormat(true);
 $formats["xml"] = new response\XMLResponseFormat();
 
-// Setup config
-core\Config::loadConfig();
-database\Database::init();
-
 // Request from the same server don't have a HTTP_ORIGIN
 if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
     $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
@@ -44,10 +38,6 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
 
 // Get response response if provided
 $responseFormat = DEFAULT_FORMAT;
-
-if (array_key_exists(Headers::RESPONSE_FORMAT, $_SERVER)) {
-    $responseFormat = $_SERVER[Headers::RESPONSE_FORMAT];
-}
 
 $code = HTTP::INTERNAL_ERROR;
 $payload = array();
