@@ -2,6 +2,7 @@
 namespace launcher;
 
 use launcher\endpoints\java;
+use launcher\endpoints\version;
 
 // Setup endpoints
 $endpoints = array();
@@ -14,16 +15,11 @@ register_endpoint("java/:version/:system/:architecture/", new java\JavaVersionIn
 register_endpoint("java/:version/:system/", new java\JavaVersionInfoEndpoint());
 register_endpoint("java/:version/", new java\JavaVersionInfoEndpoint());
 
-register_endpoint("libraries/", null);
-register_endpoint("libraries/:library/download/:version", null);
-register_endpoint("libraries/:library/versions/", null);
-register_endpoint("libraries/:library", null);
-
-register_endpoint("versions/", null);
-register_endpoint("versions/:version/download", null);
-register_endpoint("versions/:version/libraries", null);
-register_endpoint("versions/:version/assets", null);
-register_endpoint("versions/:version", null);
+register_endpoint("versions/", new version\ListVersionsEndpoint());
+register_endpoint("versions/:version/download/", new version\VersionDownloadEndpoint("jar"));
+register_endpoint("versions/:version/libraries/", new version\VersionDownloadEndpoint("libraries"));
+register_endpoint("versions/:version/assets/", new version\VersionDownloadEndpoint("assets"));
+register_endpoint("versions/:version/", new version\VersionInfoEndpoint());
 
 function register_endpoint($pattern, $handler)
 {

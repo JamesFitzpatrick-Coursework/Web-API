@@ -19,7 +19,7 @@ require_once '../common/MeteorClassLoader.php';
 
 define ("DEFAULT_FORMAT", "json");
 define ("IN_BACKEND", true);
-define ("DEBUG", true);
+define ("DEBUG", false);
 
 error_reporting(DEBUG ? E_ALL : 0);
 
