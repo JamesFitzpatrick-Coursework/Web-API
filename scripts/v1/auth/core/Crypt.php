@@ -2,14 +2,15 @@
 namespace meteor\core;
 
 check_env();
-define ("HASH_ALGORITHM", PASSWORD_DEFAULT);
-define ("HASH_COST", 10);
 
 class Crypt
 {
+    const HASH_ALGORITHM = PASSWORD_DEFAULT;
+    const HASH_COST = 10;
+
     public static function hash_password($password)
     {
-        $hash = password_hash($password, HASH_ALGORITHM, ["cost" => HASH_COST]);
+        $hash = password_hash($password, HASH_ALGORITHM, ["cost" => self::HASH_COST]);
         return $hash;
     }
 

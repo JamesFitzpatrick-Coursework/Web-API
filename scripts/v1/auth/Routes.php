@@ -18,8 +18,11 @@ register_endpoint("test", new endpoints\TestEndpoint());
 // User management
 register_endpoint("users", new endpoints\UserListEndpoint());
 register_endpoint("users/create", new endpoints\UserCreateEndpoint());
-register_endpoint("users/:id/groups/add", null);
+register_endpoint("users/:id/groups/add", new endpoints\UserGroupAddEndpoint());
 register_endpoint("users/:id/groups", new endpoints\UserGroupsListEndpoint());
+register_endpoint("users/:id/assignments/add", null);
+register_endpoint("users/:id/assignments/complete", null);
+register_endpoint("users/:id/assignments", null);
 register_endpoint("users/:id/settings/edit", new endpoints\UserSettingEditEndpoint());
 register_endpoint("users/:id/settings/:setting", new endpoints\UserSettingLookupEndpoint());
 register_endpoint("users/:id/settings", new endpoints\UserSettingViewEndpoint());
@@ -39,6 +42,10 @@ register_endpoint("groups/:id/permissions/edit", new endpoints\GroupPermissionEd
 register_endpoint("groups/:id/permissions/:permission", new endpoints\GroupPermissionLookupEndpoint());
 register_endpoint("groups/:id/permissions", new endpoints\GroupPermissionViewEndpoint());
 register_endpoint("groups/:id", new endpoints\GroupLookupEndpoint());
+
+register_endpoint("assessments", new endpoints\AssessmentsListEndpoint());
+register_endpoint("assessments/create", new endpoints\AssessmentCreateEndpoint());
+register_endpoint("assessments/:id", new endpoints\AssessmentLookupEndpoint());
 
 // Asset Management
 //register_endpoint("assets", new endpoints\ImageViewEndpoint());

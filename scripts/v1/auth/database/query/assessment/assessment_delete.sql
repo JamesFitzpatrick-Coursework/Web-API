@@ -1,0 +1,1 @@
+DELETE FROM `{table.assessment}` WHERE `assessment_id`='{0}' LIMIT 1;

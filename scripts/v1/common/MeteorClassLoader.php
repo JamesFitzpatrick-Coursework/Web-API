@@ -22,6 +22,7 @@ class MeteorClassLoader
     public function load_class($class)
     {
         $key = substr($class, 0, strpos($class, "\\"));
+
         if (array_key_exists($key, $this->mappings)) {
             $path = $class;
             $path = substr($path, strlen($key) + 1);
@@ -29,6 +30,7 @@ class MeteorClassLoader
             $path = ".." . DIRECTORY_SEPARATOR . $this->mappings[$key] . DIRECTORY_SEPARATOR . $path . ".php";
 
             if (is_readable($path)) {
+                /** @noinspection PhpIncludeInspection */
                 require_once($path);
             } else {
                 throw new ClassLoadingException("Could not load meteor class " . $class . " (expected path " . $path . ")");

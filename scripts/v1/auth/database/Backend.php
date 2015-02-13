@@ -3,12 +3,12 @@ namespace meteor\database;
 
 use common\data\Token;
 use common\exceptions\InvalidTokenException;
+use meteor\data\Assessment;
 use meteor\data\UserProfile;
 use meteor\data\GroupProfile;
 use meteor\core\Crypt;
 use meteor\exceptions\InvalidUserException;
 use meteor\exceptions\InvalidGroupException;
-
 
 /**
  * Utility class for handling backend operations.
@@ -416,9 +416,9 @@ class Backend
 
     /* TOKEN OPERATIONS */
 
-    public static function clear_tokens(Token $clientid, Token $userid, $tokentype)
+    public static function clear_tokens(Token $clientid, Token $userid, $tokenType)
     {
-        $query = Database::generate_query("token_clear", array ($tokentype, $clientid->toString(), $userid->toString()));
+        $query = Database::generate_query("token_clear", array ($tokenType, $clientid->toString(), $userid->toString()));
         $query->execute();
     }
 
@@ -439,12 +439,69 @@ class Backend
         $query->execute();
     }
 
-    public static function create_token(Token $clientid, Token $userid, $tokentype, $expires)
+    public static function create_token(Token $clientid, Token $userid, $tokenType, $expires)
     {
-        $token = Token::generateToken($tokentype, $userid->getUserSecret());
+        $token = Token::generateToken($tokenType, $userid->getUserSecret());
 
         $query = Database::generate_query("token_create", array ($token->toString(), $userid->toString(), $clientid->toString(), $expires));
         $query->execute();
         return $token;
+    }
+
+    /** Asessment Operations */
+
+    public static function fetch_all_assessments()
+    {
+        $query = Database::generate_query("assessment_lookup_all");
+        $result = $query->execute();
+
+        $assessments = array();
+        while($row = $result->fetch_data()) {
+            $assessments[] = array (
+                "assessment-id" => $row["assessment_id"],
+                "assessment-name" => $row["assessment_name"]
+            );
+        }
+
+        $result->close();
+        return $assessments;
+    }
+
+    public static function fetch_assessment_profile(Token $id)
+    {
+        $query = Database::generate_query("assessment_lookup_id", array ($id->toString()));
+        $result = $query->execute();
+        $name = $result->fetch_data()['assessment_name'];
+
+        $query = Database::generate_query("assessment_lookup_questions", array ($id->toString()));
+        $result = $query->execute();
+
+        $questions = array();
+        while($row = $result->fetch_data()) {
+            $json = json_decode($row["question_data"], true);
+            $json["question-id"] = $row["question_id"];
+            $questions[] = $json;
+        }
+
+        return new Assessment($id, $name, $questions);
+    }
+
+    public static function create_assessment(Token $id, $name, array $questions)
+    {
+        $query = Database::generate_query("assessment_create", array ($id->toString(), $name));
+        $query->execute();
+
+        foreach ($questions as $question) {
+            $query = Database::generate_query("assessment_question_create", array ($question["id"], $id->toString(), json_encode($question["data"]), $question["type"]));
+            $query->execute();
+        }
+
+        return self::fetch_assessment_profile($id);
+    }
+
+    public static function delete_assessment(Token $id)
+    {
+        $query = Database::generate_query("assessment_delete", array ($id->toString()));
+        $query->execute();
     }
 }

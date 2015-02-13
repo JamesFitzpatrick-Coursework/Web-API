@@ -10,6 +10,10 @@ define("TOKEN_REFRESH", "AD");
 define("TOKEN_USER", "AE");
 define("TOKEN_GROUP", "AF");
 
+define("TOKEN_ASSESSMENT", "BA");
+define("TOKEN_QUESTION", "BB");
+define("TOKEN_ANSWER", "BC");
+
 class Token
 {
     const TOKEN_REGEX = "/^([A-F0-9]{2})-([A-F0-9]{8})-([A-F0-9]{14})-([A-F0-9]{8})$/";

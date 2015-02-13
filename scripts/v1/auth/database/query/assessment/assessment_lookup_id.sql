@@ -1,0 +1,1 @@
+SELECT `assessment_name` FROM `{table.assessment}` WHERE `assessment_id`='{0}';

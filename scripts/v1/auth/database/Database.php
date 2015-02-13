@@ -20,10 +20,12 @@ class Database
 
         "tokens" =>                 "meteor_tokens",
 
-        "assessment" =>            "meteor_assessments",
-        "assessment.questions" =>  "meteor_assessments_questions",
-        "assessment.answers" =>    "meteor_assessments_answers",
+        "assessment" =>             "meteor_assessments",
+        "assessment.questions" =>   "meteor_assessment_questions",
+        "assessment.answers" =>     "meteor_assessment_answers",
     );
+
+    private static $queryCache = array();
 
     private static $connected;
     private static $connection;
@@ -133,10 +135,14 @@ class Database
      */
     public static function generate_query($name, $data = array())
     {
-        $identifier = substr($name, 0, strpos($name, "_"));
-        $path = "database/query/$identifier/$name.sql";
-        $file = fopen($path, "r");
-        $query = fread($file, filesize($path));
+        if (array_key_exists($name, self::$queryCache)) {
+            $query = self::$queryCache[$name];
+        } else {
+            $identifier = substr($name, 0, strpos($name, "_"));
+            $path = "database/query/$identifier/$name.sql";
+            $file = fopen($path, "r");
+            $query = fread($file, filesize($path));
+        }
 
         // Inject execution data into the query
         for ($i = 0; $i < count($data); $i++) {

@@ -59,3 +59,16 @@ function random_hex($len)
 {
     return substr(md5(rand()), 0, $len);
 }
+
+function obj_to_array($obj)
+{
+    if (is_object($obj)) {
+        $obj = get_object_vars($obj);
+    }
+
+    if (is_array($obj)) {
+        return array_map(__FUNCTION__, $obj);
+    } else {
+        return $obj;
+    }
+}

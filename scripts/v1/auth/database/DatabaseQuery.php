@@ -3,7 +3,6 @@ namespace meteor\database;
 
 class DatabaseQuery
 {
-
     private $query;
 
     public function __construct($query)
@@ -20,5 +19,4 @@ class DatabaseQuery
     {
         return new DatabaseResult(Database::query($this->query));
     }
-
 } 
