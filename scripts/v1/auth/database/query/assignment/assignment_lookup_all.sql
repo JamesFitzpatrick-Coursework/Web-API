@@ -1,0 +1,1 @@
+SELECT `assignment_id`, `assessment_id`, `assignment_deadline` FROM `{table.assignment}`;

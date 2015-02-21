@@ -28,14 +28,17 @@ class JavaVersionsEndpoint extends Endpoint
                 foreach ($archFolders as $archFolder) {
                     $archName = substr($archFolder, strrpos($archFolder, DIRECTORY_SEPARATOR) + 1);
                     $system[$archName] = array(
-                        "download" => "http://launcher.thefishlive.co.uk/java/$versionName/$sysName/$archName/download/"
+                        "download" => "http://launcher.thefishlive.co.uk/v1/java/$versionName/$sysName/$archName/download/"
                     );
                 }
 
                 $version[$sysName] = $system;
             }
 
-            $versions[$versionName] = $version;
+            $versions[] = array (
+                "version" => $versionName,
+                "downloads" => $version
+            );
         }
 
         return array ("versions" => $versions);

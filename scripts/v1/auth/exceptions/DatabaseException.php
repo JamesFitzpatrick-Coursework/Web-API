@@ -5,8 +5,9 @@ use common\exceptions\EndpointExecutionException;
 
 class DatabaseException extends EndpointExecutionException
 {
-    public function __construct($error, $query = "")
+    public function __construct($error, $query = "", $data = array())
     {
-        parent::__construct($error, DEBUG && $query != "" ? array("query" => $query) : array());
+        if (DEBUG && $query != "") $data["query"] = $query;
+        parent::__construct($error, $data);
     }
 }

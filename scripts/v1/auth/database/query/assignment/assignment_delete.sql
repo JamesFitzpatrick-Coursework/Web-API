@@ -1,0 +1,1 @@
+DELETE FROM `{table.assignment}` WHERE `assignment_id` = '{0}';

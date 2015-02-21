@@ -13,6 +13,7 @@ define("TOKEN_GROUP", "AF");
 define("TOKEN_ASSESSMENT", "BA");
 define("TOKEN_QUESTION", "BB");
 define("TOKEN_ANSWER", "BC");
+define("TOKEN_ASSIGNMENT", "BD");
 
 class Token
 {

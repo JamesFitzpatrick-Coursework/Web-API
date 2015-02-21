@@ -3,16 +3,18 @@ namespace meteor\endpoints;
 
 use common\core\Endpoint;
 use common\core\Headers;
-use meteor\data\UserProfile;
+use common\exceptions\InvalidTokenException;
 use common\data\Token;
 use meteor\database\Backend;
 use common\exceptions\InvalidClientException;
+use meteor\database\backend\TokenBackend;
+use meteor\database\backend\UserBackend;
 use meteor\exceptions\AuthorizationException;
 
 abstract class AuthenticatedEndpoint extends Endpoint
 {
     /**
-     * @var UserProfile
+     * @var \meteor\data\profiles\UserProfile
      */
     protected $user;
 
@@ -28,7 +30,7 @@ abstract class AuthenticatedEndpoint extends Endpoint
             throw new AuthorizationException("Must provide authentication");
         }
 
-        $this->user = Backend::fetch_user_profile($_SERVER[Headers::AUTH_USER]);
+        $this->user = UserBackend::fetch_user_profile($_SERVER[Headers::AUTH_USER]);
         $this->params = $params;
         $this->method = $_SERVER["REQUEST_METHOD"];
         $token = Token::decode($_SERVER[Headers::AUTH_TOKEN]);
@@ -44,8 +46,8 @@ abstract class AuthenticatedEndpoint extends Endpoint
             throw new AuthorizationException("Token provided is not a access token");
         }
 
-        if (!Backend::validate_token($this->clientid, $this->user->getUserId(), $token)) {
-            throw new AuthorizationException("Token provided is not a valid access token");
+        if (!TokenBackend::validate_token($this->clientid, $this->user->getUserId(), $token)) {
+            throw new InvalidTokenException("Token provided is not a valid access token");
         }
 
         $payload = $this->handle($this->data);
@@ -55,7 +57,7 @@ abstract class AuthenticatedEndpoint extends Endpoint
 
     protected function validate_permission($permission)
     {
-        if (!DEBUG && !Backend::check_user_permission($this->user, $permission)) {
+        if (!DEBUG && !UserBackend::check_user_permission($this->user, $permission)) {
             throw new AuthorizationException("You do not have the required permissions to perform this operation", array ("permission" => $permission));
         }
 

@@ -3,6 +3,7 @@ namespace launcher;
 
 use launcher\endpoints\java;
 use launcher\endpoints\version;
+use launcher\endpoints\assets;
 
 // Setup endpoints
 $endpoints = array();
@@ -20,6 +21,8 @@ register_endpoint("versions/:version/download/", new version\VersionDownloadEndp
 register_endpoint("versions/:version/libraries/", new version\VersionDownloadEndpoint("libraries"));
 register_endpoint("versions/:version/assets/", new version\VersionDownloadEndpoint("assets"));
 register_endpoint("versions/:version/", new version\VersionInfoEndpoint());
+
+register_endpoint("assets/:asset", new assets\AssetDownloadEndpoint());
 
 function register_endpoint($pattern, $handler)
 {

@@ -1,1 +1,1 @@
-SELECT `question_id`, `question_type`, `question_data` FROM `{table.assessment.questions}` WHERE `assessment_id`='{0}';
+SELECT `question_id`, `question_data` FROM `{table.assessment.questions}` WHERE `assessment_id`='{0}';

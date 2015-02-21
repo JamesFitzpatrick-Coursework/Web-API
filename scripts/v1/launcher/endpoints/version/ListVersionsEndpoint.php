@@ -17,18 +17,26 @@ class ListVersionsEndpoint extends Endpoint
 
         foreach ($versions as $version) {
             $versionName = (string) $version;
-            $data["versions"][$versionName] = array ();
-            $data["versions"][$versionName]["type"] = \launcher\ends_with($versionName, "-SNAPSHOT") ? "DEVELOPMENT" : "RELEASE";
-            $data["versions"][$versionName]["link"] = self::BASE_URL . $versionName . "/";
+
+            $data["versions"][$versionName] = [
+                "name" => $versionName,
+                "type" => \launcher\ends_with($versionName, "-SNAPSHOT") ? "DEVELOPMENT" : "RELEASE",
+                "link" => self::BASE_URL . $versionName . "/",
+                "downloads" => [
+                    "assets" => self::BASE_URL . $versionName . "/assets/",
+                    "download" => self::BASE_URL . $versionName . "/download/",
+                    "libraries" => self::BASE_URL . $versionName . "/libraries/",
+                ]
+            ];
         }
+
 
         if (isset($metadata->versioning->release)) {
             $latest = (string) $metadata->versioning->release;
 
-            $data["latest"] = array ();
-            $data["latest"]["version"] = $latest;
-            $data["latest"]["type"] = \launcher\ends_with((string) $latest, "-SNAPSHOT") ? "DEVELOPMENT" : "RELEASE";
-            $data["latest"]["link"] = self::BASE_URL . (string) $latest . "/";
+            $data["latest"] = [
+                "release" => $latest
+            ];
         }
 
 

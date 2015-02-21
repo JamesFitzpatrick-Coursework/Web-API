@@ -6,7 +6,7 @@ use launcher\exceptions\InvalidArtifactException;
 
 class VersionDownloadEndpoint extends Endpoint
 {
-    const REPO_URL = "http://maven.thefishlive.co.uk/repo/uk/co/thefishlive/bs-maths/";
+    const REPO_URL = "../../../../maven/repo/uk/co/thefishlive/bs-maths/";
     const BASE_URL = "http://launcher.thefishlive.co.uk/v1/versions/";
 
     private $type;
@@ -21,12 +21,11 @@ class VersionDownloadEndpoint extends Endpoint
 
         switch ($this->type) {
             case "jar":
-                return array ("link" => $link);
+                $this->send_file_download($link);
                 break;
             case "assets":
             case "libraries":
                 return array ($this->type => json_decode(file_get_contents($link), true));
-                break;
         }
 
         throw new InvalidArtifactException("Invalid artifact specified", array ("artifact" => $this->type));

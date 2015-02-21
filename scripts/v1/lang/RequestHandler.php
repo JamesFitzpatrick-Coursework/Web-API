@@ -23,26 +23,26 @@ define ("DEBUG", false);
 
 error_reporting(DEBUG ? E_ALL : 0);
 
-require_once 'Routes.php';
-
-// Setup response formats
-$formats = array();
-$formats["json"] = new response\JsonResponseFormat(false);
-$formats["json/pretty"] = new response\JsonResponseFormat(true);
-$formats["xml"] = new response\XMLResponseFormat();
-
-// Request from the same server don't have a HTTP_ORIGIN
-if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
-    $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
-}
-
-// Get response response if provided
-$responseFormat = DEFAULT_FORMAT;
-
-$code = HTTP::INTERNAL_ERROR;
-$payload = array();
-
 try {
+    require_once 'Routes.php';
+
+    // Setup response formats
+    $formats = array();
+    $formats["json"] = new response\JsonResponseFormat(false);
+    $formats["json/pretty"] = new response\JsonResponseFormat(true);
+    $formats["xml"] = new response\XMLResponseFormat();
+
+    // Request from the same server don't have a HTTP_ORIGIN
+    if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
+        $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
+    }
+
+    // Get response response if provided
+    $responseFormat = DEFAULT_FORMAT;
+
+    $code = HTTP::INTERNAL_ERROR;
+    $payload = array();
+
     // get the requested endpoint
     $request = strtolower($_REQUEST['request']);
 
@@ -81,7 +81,7 @@ try {
     $code = $ex->get_error_code();
     $success = false;
     $payload = array(
-        "cause" => "uk.co.thefishlive.meteor.exceptions." . get_class($ex),
+        "cause" => "uk.co.thefishlive.meteor.exceptions." . str_replace("\\", ".", get_class($ex)),
         "error" => $ex->getMessage()
     );
 

@@ -1,1 +1,1 @@
-SELECT `assessment_id`, `assessment_name` FROM `{table.assessment}`;
+SELECT `assessment_id`, `assessment_name`, `assessment_display_name` FROM `{table.assessment}`;

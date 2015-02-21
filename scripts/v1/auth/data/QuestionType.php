@@ -5,6 +5,7 @@ class QuestionType
 {
     const MULTI_CHOICE = 0;
     const ANSWER = 1;
+    const UNKNOWN = -1;
 
     public static function convert_to_ordinal($type)
     {
@@ -18,6 +19,8 @@ class QuestionType
                 return $key;
             }
         }
+
+        return self::UNKNOWN;
     }
 
     private static function get_constants()

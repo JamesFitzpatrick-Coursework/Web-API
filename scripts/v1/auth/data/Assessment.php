@@ -2,33 +2,27 @@
 namespace meteor\data;
 
 use common\data\Token;
+use meteor\data\profiles\AssessmentProfile;
 
 class Assessment
 {
-    /** @var Token */
-    private $id;
-
-    private $name;
+    /** @var AssessmentProfile */
+    private $profile;
 
     /** @var  array */
     private $questions;
 
-    public function __construct(Token $id, $name, array $questions)
+    public function __construct(AssessmentProfile $profile, array $questions)
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->profile = $profile;
         $this->questions = $questions;
     }
 
-    public function getId()
+    public function getProfile()
     {
-        return $this->id;
+        return $this->profile;
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
 
     public function getQuestions()
     {
@@ -37,12 +31,11 @@ class Assessment
 
     public function toExternalForm()
     {
-        $data = array (
-            "id" => $this->id->toString(),
-            "name" => $this->name
-        );
+        $data = [
+            "profile" => $this->profile->toExternalForm()
+        ];
 
-        $questions = array();
+        $questions = [];
         foreach ($this->questions as $question) {
             $questions[] = $question;
         }

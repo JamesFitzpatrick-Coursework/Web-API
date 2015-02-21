@@ -1,1 +1,1 @@
-INSERT INTO `{table.assessment.questions}` VALUES ('{0}', '{1}', '{2}', '{3}');
+INSERT INTO `{table.assessment.questions}` VALUES ('{0}', '{1}', '{2}');

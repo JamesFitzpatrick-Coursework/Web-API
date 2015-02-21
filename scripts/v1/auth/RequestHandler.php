@@ -34,6 +34,19 @@ try {
     $formats["json/pretty"] = new response\JsonResponseFormat(true);
     $formats["xml"] = new response\XMLResponseFormat();
 
+// Get response response if provided
+$responseFormat = DEFAULT_FORMAT;
+
+if (array_key_exists(Headers::RESPONSE_FORMAT, $_SERVER)) {
+    $responseFormat = $_SERVER[Headers::RESPONSE_FORMAT];
+}
+
+error_reporting(DEBUG ? E_ALL : 0);
+
+try {
+    require_once 'core/Utils.php';
+    require_once 'Routes.php';
+
     // Setup config
     core\Config::loadConfig();
     database\Database::init();
@@ -49,6 +62,8 @@ try {
     if (array_key_exists(Headers::RESPONSE_FORMAT, $_SERVER)) {
         $responseFormat = $_SERVER[Headers::RESPONSE_FORMAT];
     }
+    $code = HTTP::INTERNAL_ERROR;
+    $payload = array();
 
     $code = HTTP::INTERNAL_ERROR;
     $payload = array();
