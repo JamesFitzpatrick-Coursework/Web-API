@@ -5,7 +5,7 @@ use common\exceptions\EndpointExecutionException;
 
 class InvalidUserException extends EndpointExecutionException
 {
-    public function __construct($error, $payload = array())
+    public function __construct($error, $payload = [])
     {
         parent::__construct($error, $payload);
     }

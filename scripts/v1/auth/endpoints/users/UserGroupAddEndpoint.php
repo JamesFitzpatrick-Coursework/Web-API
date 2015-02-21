@@ -10,11 +10,12 @@ class UserGroupAddEndpoint extends AuthenticatedEndpoint
 {
     public function handle($data)
     {
-        $this->validate_request(array ("group"));
+        $this->validate_request(["group"]);
 
         $user = UserBackend::fetch_user_profile($this->params['id']);
         $group = GroupBackend::fetch_group_profile($data->{"group"});
         UserBackend::add_user_group($user, $group);
-        return array();
+
+        return [];
     }
 }

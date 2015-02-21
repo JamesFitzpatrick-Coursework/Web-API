@@ -7,25 +7,22 @@ use meteor\exceptions\DatabaseException;
 
 class Database
 {
-    private static $tables = array (
-        "users" =>                  "meteor_users",
-        "users.settings" =>         "meteor_user_settings",
-        "users.permissions" =>      "meteor_user_permissions",
-        "users.assignments" =>      "meteor_user_assignments",
+    private static $tables = [
+        "users"                => "meteor_users",
+        "users.settings"       => "meteor_user_settings",
+        "users.permissions"    => "meteor_user_permissions",
+        "users.assignments"    => "meteor_user_assignments",
+        "groups"               => "meteor_groups",
+        "groups.settings"      => "meteor_group_settings",
+        "groups.permissions"   => "meteor_group_permissions",
+        "groups.users"         => "meteor_group_users",
+        "tokens"               => "meteor_tokens",
+        "assessment"           => "meteor_assessments",
+        "assessment.questions" => "meteor_assessment_questions",
+        "assessment.answers"   => "meteor_assessment_answers",
+    ];
 
-        "groups" =>                 "meteor_groups",
-        "groups.settings" =>        "meteor_group_settings",
-        "groups.permissions" =>     "meteor_group_permissions",
-        "groups.users" =>           "meteor_group_users",
-
-        "tokens" =>                 "meteor_tokens",
-
-        "assessment" =>             "meteor_assessments",
-        "assessment.questions" =>   "meteor_assessment_questions",
-        "assessment.answers" =>     "meteor_assessment_answers",
-    );
-
-    private static $queryCache = array();
+    private static $queryCache = [];
 
     private static $connected;
     private static $connection;
@@ -104,36 +101,14 @@ class Database
     }
 
     /**
-     * Escape a string to be used in a query.
-     *
-     * @param $value mixed the string to escape
-     *
-     * @throws DatabaseException if the value provided is not in the correct
-     *      format
-     * @return bool|string the escaped string
-     */
-    public static function format_string($value)
-    {
-        if (!self::$connected) {
-            return false;
-        }
-
-        if (!is_string($value)) {
-            throw new DatabaseException("Value provided is not a string", array ("value" => $value));
-        }
-
-        return mysqli_escape_string(self::$connection, $value);
-    }
-
-    /**
      * Generate a query from a pre defined query structure.
      *
      * @param string $name the query structure
-     * @param array $data the specific data to replace into the query
+     * @param array $data  the specific data to replace into the query
      *
      * @return DatabaseQuery the query instance
      */
-    public static function generate_query($name, $data = array())
+    public static function generate_query($name, $data = [])
     {
         if (array_key_exists($name, self::$queryCache)) {
             $query = self::$queryCache[$name];
@@ -160,6 +135,28 @@ class Database
         }
 
         return new DatabaseQuery($query);
+    }
+
+    /**
+     * Escape a string to be used in a query.
+     *
+     * @param $value mixed the string to escape
+     *
+     * @throws DatabaseException if the value provided is not in the correct
+     *      format
+     * @return bool|string the escaped string
+     */
+    public static function format_string($value)
+    {
+        if (!self::$connected) {
+            return false;
+        }
+
+        if (!is_string($value)) {
+            throw new DatabaseException("Value provided is not a string", ["value" => $value]);
+        }
+
+        return mysqli_escape_string(self::$connection, $value);
     }
 
     /**
@@ -192,6 +189,7 @@ class Database
         }
 
         self::$connected = false;
+
         return mysqli_close(self::$connection);
     }
 }

@@ -5,11 +5,11 @@ use meteor\endpoints;
 use meteor\endpoints\assessments;
 use meteor\endpoints\assignments;
 use meteor\endpoints\groups;
-use meteor\endpoints\users;
 use meteor\endpoints\login;
+use meteor\endpoints\users;
 
 // Setup endpoints
-$endpoints = array();
+$endpoints = [];
 
 register_endpoint("", new endpoints\ServerEndpoint());
 register_endpoint("test", new endpoints\TestEndpoint());

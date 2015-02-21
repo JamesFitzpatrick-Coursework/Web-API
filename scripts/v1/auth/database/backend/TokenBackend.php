@@ -4,21 +4,22 @@ namespace meteor\database\backend;
 use common\data\Token;
 use meteor\database\Database;
 
-class TokenBackend {
+class TokenBackend
+{
 
     public static function clear_tokens(Token $clientid, Token $userid, $tokenType)
     {
-        $query = Database::generate_query("token_clear", array($tokenType, $clientid->toString(), $userid->toString()));
+        $query = Database::generate_query("token_clear", [$tokenType, $clientid->toString(), $userid->toString()]);
         $query->execute();
     }
 
     public static function validate_token(Token $clientid, Token $userid, Token $token)
     {
-        $query = Database::generate_query("token_validate", array(
-                $token->toString(),
-                $clientid->toString(),
-                $userid->toString()
-            ));
+        $query = Database::generate_query("token_validate", [
+            $token->toString(),
+            $clientid->toString(),
+            $userid->toString()
+        ]);
         $result = $query->execute();
         $count = $result->fetch_data()["count"];
         $result->close();
@@ -28,7 +29,7 @@ class TokenBackend {
 
     public static function invalidate_token(Token $clientid, Token $token)
     {
-        $query = Database::generate_query("token_invalidate", array($token->toString(), $clientid->toString()));
+        $query = Database::generate_query("token_invalidate", [$token->toString(), $clientid->toString()]);
         $query->execute();
     }
 
@@ -36,12 +37,12 @@ class TokenBackend {
     {
         $token = Token::generateToken($tokenType, $userid->getUserSecret());
 
-        $query = Database::generate_query("token_create", array(
-                $token->toString(),
-                $userid->toString(),
-                $clientid->toString(),
-                $expires
-            ));
+        $query = Database::generate_query("token_create", [
+            $token->toString(),
+            $userid->toString(),
+            $clientid->toString(),
+            $expires
+        ]);
         $query->execute();
 
         return $token;

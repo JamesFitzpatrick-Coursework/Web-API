@@ -43,16 +43,6 @@ class UserProfile
     }
 
     /**
-     * Gets the user's user id.
-     *
-     * @return Token the user's user id
-     */
-    public function getUserId()
-    {
-        return $this->userid;
-    }
-
-    /**
      * Gets the user's display name.
      *
      * @return String the user's display name
@@ -85,13 +75,26 @@ class UserProfile
     }
 
     /**
+     * Gets the user's user id.
+     *
+     * @return Token the user's user id
+     */
+    public function getUserId()
+    {
+        return $this->userid;
+    }
+
+    /**
      * Convert this user profile into a json encodedable form to return from the API
      *
      * @return array this profile as an array
      */
     public function toExternalForm()
     {
-        return ["user-id" => $this->userid->toString(), "user-name" => $this->username, "display-name" => $this->displayName];
+        return ["user-id"      => $this->userid->toString(),
+                "user-name"    => $this->username,
+                "display-name" => $this->displayName
+        ];
     }
 
 } 

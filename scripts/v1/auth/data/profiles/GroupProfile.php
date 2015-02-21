@@ -79,6 +79,9 @@ class GroupProfile
      */
     public function toExternalForm()
     {
-        return ["group-id" => $this->groupid->toString(), "group-name" => $this->groupname, "display-name" => $this->displayName];
+        return ["group-id"     => $this->groupid->toString(),
+                "group-name"   => $this->groupname,
+                "display-name" => $this->displayName
+        ];
     }
 } 

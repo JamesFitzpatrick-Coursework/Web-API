@@ -2,8 +2,6 @@
 namespace meteor\endpoints\assignments;
 
 use common\data\Token;
-use meteor\data\Assessment;
-use meteor\data\profiles\AssessmentProfile;
 use meteor\database\Backend;
 use meteor\database\backend\AssignmentBackend;
 use meteor\endpoints\AuthenticatedEndpoint;
@@ -22,12 +20,6 @@ class AssignmentLookupEndpoint extends AuthenticatedEndpoint
         return [];
     }
 
-    public function handleDelete($data)
-    {
-        AssignmentBackend::delete_assignment(Token::decode($this->params['id']));
-        return [];
-    }
-
     public function handleGet($data)
     {
         $assignment = AssignmentBackend::fetch_assignment_profile(Token::decode($this->params['id']));
@@ -37,8 +29,15 @@ class AssignmentLookupEndpoint extends AuthenticatedEndpoint
         ];
     }
 
+    public function handleDelete($data)
+    {
+        AssignmentBackend::delete_assignment(Token::decode($this->params['id']));
+
+        return [];
+    }
+
     public function get_acceptable_methods()
     {
-        return array("GET", "DELETE");
+        return ["GET", "DELETE"];
     }
 }

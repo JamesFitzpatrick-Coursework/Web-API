@@ -24,6 +24,19 @@ class Token
     private $random;
     private $server;
 
+    protected function __construct($type, $user, $random, $server)
+    {
+        $this->type = strtoupper($type);
+        $this->user = strtoupper($user);
+        $this->random = strtoupper($random);
+        $this->server = strtoupper($server);
+    }
+
+    public static function generateNewToken($type)
+    {
+        return Token::generateToken($type, random_hex(8));
+    }
+
     public static function generateToken($type, $user)
     {
         if (strlen($user) != 8) {
@@ -33,14 +46,10 @@ class Token
         return new Token($type, $user, random_hex(14), random_hex(8));
     }
 
-    public static function generateNewToken($type)
-    {
-        return Token::generateToken($type, random_hex(8));
-    }
-
     public static function verify($token)
     {
         $token = strtoupper($token);
+
         return preg_match(self::TOKEN_REGEX, $token) == 1;
     }
 
@@ -55,22 +64,14 @@ class Token
         return new Token($result[1], $result[2], $result[3], $result[4]);
     }
 
-    protected function __construct($type, $user, $random, $server)
+    public function toExternalForm($expires)
     {
-        $this->type = strtoupper($type);
-        $this->user = strtoupper($user);
-        $this->random = strtoupper($random);
-        $this->server = strtoupper($server);
+        return ["token" => $this->toString(), "expires" => $expires];
     }
 
     public function toString()
     {
         return strtoupper($this->type . "-" . $this->user . "-" . $this->random . "-" . $this->server);
-    }
-
-    public function toExternalForm($expires)
-    {
-        return ["token" => $this->toString(), "expires" => $expires];
     }
 
     public function getType()

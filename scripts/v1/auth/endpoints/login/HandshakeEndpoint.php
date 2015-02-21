@@ -10,15 +10,15 @@ class HandshakeEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        $this->validate_request(array("user"));
+        $this->validate_request(["user"]);
 
         $profile = UserBackend::fetch_user_profile($data->{"user"});
 
         $token = TokenBackend::create_token($this->clientid, $profile->getUserId(), TOKEN_REQUEST, "1 HOUR");
 
-        return array(
-            "user" => $profile->toExternalForm(),
+        return [
+            "user"          => $profile->toExternalForm(),
             "request-token" => $token->toExternalForm(3600)
-        );
+        ];
     }
 }

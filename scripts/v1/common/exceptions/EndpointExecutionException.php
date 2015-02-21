@@ -1,14 +1,14 @@
 <?php
 namespace common\exceptions;
 
-use Exception;
 use common\core\HTTP;
+use Exception;
 
 class EndpointExecutionException extends Exception
 {
     private $data;
 
-    public function __construct($error, $data = array())
+    public function __construct($error, $data = [])
     {
         parent::__construct($error);
         $this->data = $data;

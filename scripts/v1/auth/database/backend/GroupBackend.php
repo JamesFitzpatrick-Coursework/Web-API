@@ -8,7 +8,8 @@ use meteor\data\profiles\UserProfile;
 use meteor\database\Database;
 use meteor\exceptions\InvalidGroupException;
 
-class GroupBackend {
+class GroupBackend
+{
 
     public static function create_group($groupname, $displayname)
     {
@@ -16,7 +17,7 @@ class GroupBackend {
         $groupname = Database::format_string($groupname);
         $displayname = Database::format_string($displayname);
 
-        $query = Database::generate_query("group_create", array($groupid->toString(), $groupname, $displayname));
+        $query = Database::generate_query("group_create", [$groupid->toString(), $groupname, $displayname]);
         $query->execute();
 
         return new GroupProfile($groupid, $groupname, $displayname);
@@ -24,17 +25,17 @@ class GroupBackend {
 
     public static function delete_group(GroupProfile $profile)
     {
-        $query = Database::generate_query("group_delete", array($profile->getGroupId()->toString()));
+        $query = Database::generate_query("group_delete", [$profile->getGroupId()->toString()]);
         $query->execute();
     }
 
     public static function update_group_profile(GroupProfile $profile)
     {
-        $query = Database::generate_query("group_update", array(
-                $profile->getGroupId()->toString(),
-                $profile->getDisplayName(),
-                $profile->getName()
-            ));
+        $query = Database::generate_query("group_update", [
+            $profile->getGroupId()->toString(),
+            $profile->getDisplayName(),
+            $profile->getName()
+        ]);
         $query->execute();
     }
 
@@ -42,10 +43,10 @@ class GroupBackend {
     {
         // Check if it is a user id
         if (Token::verify($lookup)) {
-            $query = Database::generate_query("group_lookup_id", array($lookup));
+            $query = Database::generate_query("group_lookup_id", [$lookup]);
             // Else assume a display name
         } else {
-            $query = Database::generate_query("group_lookup_name", array($lookup));
+            $query = Database::generate_query("group_lookup_name", [$lookup]);
         }
 
         $result = $query->execute();
@@ -64,11 +65,11 @@ class GroupBackend {
                 throw new InvalidTokenException("Token provided is not a group id");
             }
 
-            $query = Database::generate_query("group_lookup_id", array($groupid->toString()));
+            $query = Database::generate_query("group_lookup_id", [$groupid->toString()]);
             $result = $query->execute();
 
             if ($result->count() == 0) {
-                throw new InvalidGroupException("Could not find a group with that id", array("group-id" => $groupid->toString()));
+                throw new InvalidGroupException("Could not find a group with that id", ["group-id" => $groupid->toString()]);
             }
 
             $row = $result->fetch_data();
@@ -77,11 +78,11 @@ class GroupBackend {
             $result->close();
         } else {
             $name = $search;
-            $query = Database::generate_query("group_lookup_name", array($name));
+            $query = Database::generate_query("group_lookup_name", [$name]);
             $result = $query->execute();
 
             if ($result->count() == 0) {
-                throw new InvalidGroupException("Could not find a group with that name", array("group-name" => $name));
+                throw new InvalidGroupException("Could not find a group with that name", ["group-name" => $name]);
             }
 
             $row = $result->fetch_data();
@@ -98,7 +99,7 @@ class GroupBackend {
         $query = Database::generate_query("group_lookup_all");
         $result = $query->execute();
 
-        $groups = array();
+        $groups = [];
         while ($row = $result->fetch_data()) {
             $groups[] = new GroupProfile(Token::decode($row["group_id"]), $row["group_name"], $row["group_display_name"]);
         }
@@ -109,9 +110,9 @@ class GroupBackend {
 
     public static function fetch_group_users(GroupProfile $group)
     {
-        $query = Database::generate_query("group_user_list", array($group->getGroupId()->toString()));
+        $query = Database::generate_query("group_user_list", [$group->getGroupId()->toString()]);
         $result = $query->execute();
-        $groups = array();
+        $groups = [];
 
         while ($row = $result->fetch_data()) {
             $groups[] = new UserProfile(Token::decode($row["user_id"]), $row["user_name"], $row["user_display_name"]);
@@ -120,12 +121,31 @@ class GroupBackend {
         return $groups;
     }
 
+    public static function set_group_setting(GroupProfile $profile, $setting)
+    {
+        if (array_key_exists($setting->{"key"}, GroupBackend::fetch_group_settings($profile))) {
+            $query = Database::generate_query("group_setting_update", [
+                $profile->getGroupId()->toString(),
+                $setting->{"key"},
+                $setting->{"value"}
+            ]);
+        } else {
+            $query = Database::generate_query("group_setting_set", [
+                $profile->getGroupId()->toString(),
+                $setting->{"key"},
+                $setting->{"value"}
+            ]);
+        }
+
+        $query->execute();
+    }
+
     public static function fetch_group_settings(GroupProfile $profile)
     {
-        $query = Database::generate_query("group_settings_fetch", array($profile->getGroupId()->toString()));
+        $query = Database::generate_query("group_settings_fetch", [$profile->getGroupId()->toString()]);
         $result = $query->execute();
 
-        $settings = array();
+        $settings = [];
         while ($row = $result->fetch_data()) {
             $settings[$row["setting_key"]] = $row["setting_value"];
         }
@@ -135,34 +155,15 @@ class GroupBackend {
         return $settings;
     }
 
-    public static function set_group_setting(GroupProfile $profile, $setting)
-    {
-        if (array_key_exists($setting->{"key"}, GroupBackend::fetch_group_settings($profile))) {
-            $query = Database::generate_query("group_setting_update", array(
-                    $profile->getGroupId()->toString(),
-                    $setting->{"key"},
-                    $setting->{"value"}
-                ));
-        } else {
-            $query = Database::generate_query("group_setting_set", array(
-                    $profile->getGroupId()->toString(),
-                    $setting->{"key"},
-                    $setting->{"value"}
-                ));
-        }
-
-        $query->execute();
-    }
-
     public static function delete_group_setting(GroupProfile $profile, $setting)
     {
-        $query = Database::generate_query("group_setting_delete", array($profile->getGroupId()->toString(), $setting));
+        $query = Database::generate_query("group_setting_delete", [$profile->getGroupId()->toString(), $setting]);
         $query->execute();
     }
 
     public static function fetch_group_setting(GroupProfile $profile, $setting)
     {
-        $query = Database::generate_query("group_setting_lookup", array($profile->getGroupId()->toString(), $setting));
+        $query = Database::generate_query("group_setting_lookup", [$profile->getGroupId()->toString(), $setting]);
         $result = $query->execute();
         $value = $result->fetch_data()["setting_value"];
         $result->close();
@@ -172,10 +173,10 @@ class GroupBackend {
 
     public static function fetch_group_permissions(GroupProfile $profile)
     {
-        $query = Database::generate_query("group_permission_fetch", array($profile->getGroupId()->toString()));
+        $query = Database::generate_query("group_permission_fetch", [$profile->getGroupId()->toString()]);
         $result = $query->execute();
 
-        $settings = array();
+        $settings = [];
         while ($row = $result->fetch_data()) {
             $settings[] = $row["permission_key"];
         }
@@ -188,15 +189,15 @@ class GroupBackend {
     public static function set_group_permission(GroupProfile $profile, $permission, $value)
     {
         if ($value) {
-            $query = Database::generate_query("group_permission_add", array(
-                    $profile->getGroupId()->toString(),
-                    $permission
-                ));
+            $query = Database::generate_query("group_permission_add", [
+                $profile->getGroupId()->toString(),
+                $permission
+            ]);
         } else {
-            $query = Database::generate_query("group_permission_remove", array(
-                    $profile->getGroupId()->toString(),
-                    $permission
-                ));
+            $query = Database::generate_query("group_permission_remove", [
+                $profile->getGroupId()->toString(),
+                $permission
+            ]);
         }
 
         $query->execute();
@@ -204,10 +205,10 @@ class GroupBackend {
 
     public static function check_group_permission(GroupProfile $profile, $permission)
     {
-        $query = Database::generate_query("group_permission_check", array(
-                $profile->getGroupId()->toString(),
-                $permission
-            ));
+        $query = Database::generate_query("group_permission_check", [
+            $profile->getGroupId()->toString(),
+            $permission
+        ]);
         $result = $query->execute();
         $count = $result->count();
         $result->close();

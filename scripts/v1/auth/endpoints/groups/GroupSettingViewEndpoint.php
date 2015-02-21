@@ -11,11 +11,12 @@ class GroupSettingViewEndpoint extends AuthenticatedEndpoint
     {
         $profile = GroupBackend::fetch_group_profile($this->params["id"]);
         $settings = GroupBackend::fetch_group_settings($profile);
-        return array ("settings" => $settings);
+
+        return ["settings" => $settings];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

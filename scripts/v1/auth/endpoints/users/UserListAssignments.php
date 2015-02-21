@@ -21,8 +21,7 @@ class UserListAssignments extends AuthenticatedEndpoint
     {
         $assignments = [];
 
-        switch ($this->listType)
-        {
+        switch ($this->listType) {
             case self::LIST_ALL:
                 $assignments = $this->handleAll($data);
                 break;

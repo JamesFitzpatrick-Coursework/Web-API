@@ -1,8 +1,8 @@
 <?php
 namespace meteor\endpoints\users;
 
-use meteor\database\Backend;
 use common\exceptions\MethodNotAllowedException;
+use meteor\database\Backend;
 use meteor\database\backend\UserBackend;
 use meteor\endpoints\AuthenticatedEndpoint;
 
@@ -19,20 +19,23 @@ class UserPermissionLookupEndpoint extends AuthenticatedEndpoint
         }
     }
 
-    public function handleGet($data) {
+    public function handleGet($data)
+    {
         $profile = UserBackend::fetch_user_profile($this->params["id"]);
-        return array ("present" => UserBackend::check_user_permission($profile, $this->params["permission"]));
+
+        return ["present" => UserBackend::check_user_permission($profile, $this->params["permission"])];
     }
 
     private function handlePost($data)
     {
         $profile = UserBackend::fetch_user_profile($this->params["id"]);
         UserBackend::set_user_permission($profile, $this->params["permission"], false);
-        return array();
+
+        return [];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET", "DELETE");
+        return ["GET", "DELETE"];
     }
 }

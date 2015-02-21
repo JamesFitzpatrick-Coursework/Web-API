@@ -11,11 +11,12 @@ class UserSettingViewEndpoint extends AuthenticatedEndpoint
     {
         $profile = UserBackend::fetch_user_profile($this->params["id"]);
         $settings = UserBackend::fetch_user_settings($profile);
-        return array ("settings" => $settings);
+
+        return ["settings" => $settings];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

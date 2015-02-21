@@ -19,19 +19,14 @@ class JavaVersionInfoEndpoint extends Endpoint
         }
     }
 
-    public function get_acceptable_methods()
-    {
-        return array ("GET");
-    }
-
     private function handleArchitectureInfo($data)
     {
-        return array();
+        return [];
     }
 
     private function handleSystemInfo($data)
     {
-        return array();
+        return [];
     }
 
     private function handleVersionInfo($data)
@@ -40,30 +35,35 @@ class JavaVersionInfoEndpoint extends Endpoint
             throw new InvalidVersionException($this->params["version"]);
         }
 
-        $version = array();
+        $version = [];
         $versionName = $this->params["version"];
 
         $systemFolders = glob(self::BASE_DIR . $versionName . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR);
 
         foreach ($systemFolders as $systemFolder) {
-            $system = array();
+            $system = [];
             $sysName = substr($systemFolder, strrpos($systemFolder, DIRECTORY_SEPARATOR) + 1);
 
             $archFolders = glob($systemFolder . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR);
 
             foreach ($archFolders as $archFolder) {
                 $archName = substr($archFolder, strrpos($archFolder, DIRECTORY_SEPARATOR) + 1);
-                $system[$archName] = array(
+                $system[$archName] = [
                     "download" => "http://launcher.thefishlive.co.uk/java/$versionName/$sysName/$archName/download/"
-                );
+                ];
             }
 
             $version[$sysName] = $system;
         }
 
-        return array (
+        return [
             "version" => $this->params["version"],
             "systems" => $version
-        );
+        ];
+    }
+
+    public function get_acceptable_methods()
+    {
+        return ["GET"];
     }
 }

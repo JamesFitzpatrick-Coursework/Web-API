@@ -76,6 +76,9 @@ class AssessmentProfile
      */
     public function toExternalForm()
     {
-        return ["assessment-id" => $this->assessmentId->toString(), "assessment-name" => $this->assessmentName, "display-name" => $this->displayName];
+        return ["assessment-id"   => $this->assessmentId->toString(),
+                "assessment-name" => $this->assessmentName,
+                "display-name"    => $this->displayName
+        ];
     }
 } 

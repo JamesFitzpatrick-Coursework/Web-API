@@ -1,9 +1,9 @@
 <?php
 namespace common\core;
 
-use common\exceptions\FileNotFoundException;
-use common\exceptions\EndpointExecutionException;
 use common\data\Token;
+use common\exceptions\EndpointExecutionException;
+use common\exceptions\FileNotFoundException;
 use common\exceptions\InvalidClientException;
 use common\exceptions\InvalidRequestException;
 
@@ -15,19 +15,9 @@ abstract class Endpoint
     protected $params;
 
     /**
-     * Handles the execution of this endpoint.
-     *
-     * @param $data array the request data decoded
-     *
-     * @return array the payload response for this request
-     */
-    public abstract function handle($data);
-
-
-    /**
      * Executes this endpoint.
      *
-     * @param $body string the json encoded request body
+     * @param $body         string the json encoded request body
      * @param array $params parameters captured from the request url
      *
      * @throws EndpointExecutionException
@@ -37,7 +27,7 @@ abstract class Endpoint
     {
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->params = $params;
-        $this->data = $body == "" ? array() : json_decode($body);
+        $this->data = $body == "" ? [] : json_decode($body);
 
         if (!array_key_exists(Headers::CLIENT_ID, $_SERVER)) {
             throw new InvalidClientException();
@@ -47,8 +37,18 @@ abstract class Endpoint
 
         $payload = $this->handle($this->data);
         $payload["client-id"] = $this->clientid->toString();
+
         return $payload;
     }
+
+    /**
+     * Handles the execution of this endpoint.
+     *
+     * @param $data array the request data decoded
+     *
+     * @return array the payload response for this request
+     */
+    public abstract function handle($data);
 
     /**
      * Get the acceptable methods to be sent to this request
@@ -57,7 +57,7 @@ abstract class Endpoint
      */
     public function get_acceptable_methods()
     {
-        return array ("POST");
+        return ["POST"];
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class Endpoint
      */
     protected function validate_request(array $expected)
     {
-        $missing = array();
+        $missing = [];
         $this->validate_array($this->data, $expected, $missing);
 
         if (count($missing) > 0) {
@@ -83,7 +83,7 @@ abstract class Endpoint
     private function validate_array($actual, array $expected, array &$missing)
     {
         foreach ($expected as $key => $current) {
-            if (is_array ($current)) {
+            if (is_array($current)) {
                 if (!isset($actual->{$key})) {
                     $missing[] = $current;
                     break;
@@ -126,7 +126,7 @@ abstract class Endpoint
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Content-Disposition: attachment; filename=' . basename($file));
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');

@@ -10,11 +10,11 @@ class InvalidateEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        $this->validate_request(array("user", "token"));
+        $this->validate_request(["user", "token"]);
 
         $token = Token::decode($data->{"token"});
         TokenBackend::invalidate_token($this->clientid, $token);
 
-        return array();
+        return [];
     }
 }

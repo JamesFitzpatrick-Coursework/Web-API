@@ -1,16 +1,15 @@
 <?php
 namespace lang;
 
-use common\core\Headers;
-use Exception;
-
-use common\core\HTTP;
 use common\core\Endpoint;
+use common\core\Headers;
+use common\core\HTTP;
 use common\core\ResponseFormat;
 use common\exceptions\EndpointExecutionException;
-use common\response;
 use common\exceptions\MethodNotAllowedException;
 use common\exceptions\MethodNotFoundException;
+use common\response;
+use Exception;
 use meteor\core;
 use meteor\database;
 
@@ -119,7 +118,7 @@ $format = $formats[$responseFormat];
 // Create the response
 $response = [
     "success" => $success,
-    "status" => $code,
+    "status"  => $code,
     "payload" => $payload
 ];
 

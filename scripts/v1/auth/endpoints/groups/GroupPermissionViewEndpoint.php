@@ -11,11 +11,12 @@ class GroupPermissionViewEndpoint extends AuthenticatedEndpoint
     {
         $profile = GroupBackend::fetch_group_profile($this->params["id"]);
         $permissions = GroupBackend::fetch_group_permissions($profile);
-        return array ("permissions" => $permissions);
+
+        return ["permissions" => $permissions];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

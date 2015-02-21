@@ -11,7 +11,7 @@ class ValidateEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        $this->validate_request(array("user", "token"));
+        $this->validate_request(["user", "token"]);
 
         $userid = Token::decode($data->{"user"});
         $token = Token::decode($data->{"token"});
@@ -20,6 +20,6 @@ class ValidateEndpoint extends Endpoint
             throw new ValidationFailedException("Specified token is not valid");
         }
 
-        return array();
+        return [];
     }
 }

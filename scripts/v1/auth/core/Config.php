@@ -8,7 +8,7 @@ class Config
 
     public static function loadConfig()
     {
-        self::$config = array();
+        self::$config = [];
         $my_file = 'core/Config.data';
         $handle = fopen($my_file, 'r');
 

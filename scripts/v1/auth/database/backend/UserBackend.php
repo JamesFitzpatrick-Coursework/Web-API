@@ -7,12 +7,12 @@ use meteor\core\Crypt;
 use meteor\data\profiles\GroupProfile;
 use meteor\data\profiles\UserProfile;
 use meteor\database\Backend;
-use meteor\database\backend\GroupBackend;
 use meteor\database\Database;
 use meteor\exceptions\InvalidAssignmentException;
 use meteor\exceptions\InvalidUserException;
 
-class UserBackend {
+class UserBackend
+{
 
     public static function create_user($username, $displayname, $password)
     {
@@ -20,11 +20,11 @@ class UserBackend {
         $displayname = Database::format_string($displayname);
         $userid = Token::generateNewToken(TOKEN_USER);
         $query = Database::generate_query("user_create", [
-                $userid->toString(),
-                $username,
-                $displayname,
-                Crypt::hash_password($password)
-            ]);
+            $userid->toString(),
+            $username,
+            $displayname,
+            Crypt::hash_password($password)
+        ]);
         $query->execute();
 
         return new UserProfile($userid, $username, $displayname);
@@ -33,10 +33,10 @@ class UserBackend {
     public static function update_user_profile(UserProfile $profile)
     {
         $query = Database::generate_query("user_update", [
-                $profile->getUserId()->toString(),
-                $profile->getDisplayName(),
-                $profile->getUsername()
-            ]);
+            $profile->getUserId()->toString(),
+            $profile->getDisplayName(),
+            $profile->getUsername()
+        ]);
         $query->execute();
     }
 
@@ -101,6 +101,25 @@ class UserBackend {
         return new UserProfile($userid, $username, $displayname);
     }
 
+    public static function set_user_setting(UserProfile $profile, $setting)
+    {
+        if (array_key_exists($setting->{"key"}, UserBackend::fetch_user_settings($profile))) {
+            $query = Database::generate_query("user_setting_update", [
+                $profile->getUserId()->toString(),
+                $setting->{"key"},
+                $setting->{"value"}
+            ]);
+        } else {
+            $query = Database::generate_query("user_setting_set", [
+                $profile->getUserId()->toString(),
+                $setting->{"key"},
+                $setting->{"value"}
+            ]);
+        }
+
+        $query->execute();
+    }
+
     public static function fetch_user_settings(UserProfile $profile)
     {
         $query = Database::generate_query("user_settings_fetch", [$profile->getUserId()->toString()]);
@@ -114,25 +133,6 @@ class UserBackend {
         $result->close();
 
         return $settings;
-    }
-
-    public static function set_user_setting(UserProfile $profile, $setting)
-    {
-        if (array_key_exists($setting->{"key"}, UserBackend::fetch_user_settings($profile))) {
-            $query = Database::generate_query("user_setting_update", [
-                    $profile->getUserId()->toString(),
-                    $setting->{"key"},
-                    $setting->{"value"}
-                ]);
-        } else {
-            $query = Database::generate_query("user_setting_set", [
-                    $profile->getUserId()->toString(),
-                    $setting->{"key"},
-                    $setting->{"value"}
-                ]);
-        }
-
-        $query->execute();
     }
 
     public static function delete_user_setting(UserProfile $profile, $setting)
@@ -176,18 +176,31 @@ class UserBackend {
         return $settings;
     }
 
+    public static function fetch_user_groups(UserProfile $user)
+    {
+        $query = Database::generate_query("user_groups_list", [$user->getUserId()->toString()]);
+        $result = $query->execute();
+        $groups = [];
+
+        while ($row = $result->fetch_data()) {
+            $groups[] = new GroupProfile(Token::decode($row["group_id"]), $row["group_name"], $row["group_display_name"]);
+        }
+
+        return $groups;
+    }
+
     public static function set_user_permission(UserProfile $profile, $permission, $value)
     {
         if ($value) {
             $query = Database::generate_query("user_permission_add", [
-                    $profile->getUserId()->toString(),
-                    $permission
-                ]);
+                $profile->getUserId()->toString(),
+                $permission
+            ]);
         } else {
             $query = Database::generate_query("user_permission_remove", [
-                    $profile->getUserId()->toString(),
-                    $permission
-                ]);
+                $profile->getUserId()->toString(),
+                $permission
+            ]);
         }
 
         $query->execute();
@@ -196,9 +209,9 @@ class UserBackend {
     public static function check_user_permission(UserProfile $profile, $permission)
     {
         $query = Database::generate_query("user_permission_check", [
-                $profile->getUserId()->toString(),
-                $permission
-            ]);
+            $profile->getUserId()->toString(),
+            $permission
+        ]);
         $result = $query->execute();
         $count = $result->count();
         $result->close();
@@ -241,37 +254,27 @@ class UserBackend {
         return Crypt::check_password($hash, $password);
     }
 
-    public static function fetch_user_groups(UserProfile $user)
-    {
-        $query = Database::generate_query("user_groups_list", [$user->getUserId()->toString()]);
-        $result = $query->execute();
-        $groups = [];
-
-        while ($row = $result->fetch_data()) {
-            $groups[] = new GroupProfile(Token::decode($row["group_id"]), $row["group_name"], $row["group_display_name"]);
-        }
-
-        return $groups;
-    }
-
     public static function add_user_group(UserProfile $user, GroupProfile $group)
     {
         $query = Database::generate_query("user_groups_add", [
-                $user->getUserId()->toString(),
-                $group->getGroupId()->toString()
-            ]);
+            $user->getUserId()->toString(),
+            $group->getGroupId()->toString()
+        ]);
         $query->execute();
     }
 
     public static function add_user_assignment(UserProfile $profile, Token $id)
     {
-        if (!$id->getType() != TOKEN_ASSIGNMENT)
-        {
+        if (!$id->getType() != TOKEN_ASSIGNMENT) {
             throw new InvalidAssignmentException("Assignment id provided is not a valid assignment id");
         }
 
         $assignment = AssignmentBackend::fetch_assignment_profile($id);
-        $query = Database::generate_query("user_assignment_add", [$profile->getUserId()->toString(), $assignment["assignment-id"], $assignment["assessment-id"]]);
+        $query = Database::generate_query("user_assignment_add", [
+                $profile->getUserId()->toString(),
+                $assignment["assignment-id"],
+                $assignment["assessment-id"]
+            ]);
         $query->execute();
 
         return $assignment;
@@ -286,18 +289,18 @@ class UserBackend {
         while ($row = $result->fetch_data()) {
             $assignments[] =
                 [
-                    "assignment" =>
+                    "assignment"     =>
                         [
-                            "assignment-id" => $row['assignment_id'],
+                            "assignment-id"       => $row['assignment_id'],
                             "assignment-deadline" => $row['assignment_deadline'],
-                            "assessment" =>
-                            [
-                                "assessment-id" => $row['assessment_id'],
-                                "assessment-name" => $row['assessment_name'],
-                                "assessment-display-name" => $row['assessment_display_name']
-                            ]
+                            "assessment"          =>
+                                [
+                                    "assessment-id"           => $row['assessment_id'],
+                                    "assessment-name"         => $row['assessment_name'],
+                                    "assessment-display-name" => $row['assessment_display_name']
+                                ]
                         ],
-                    "completed" => ($row['completed'] == 1 ? true : false),
+                    "completed"      => ($row['completed'] == 1 ? true : false),
                     "date-completed" => $row['date_completed']
                 ];
         }
@@ -314,19 +317,19 @@ class UserBackend {
         while ($row = $result->fetch_data()) {
             $assignments[] =
                 [
-                    "assignment" =>
+                    "assignment"     =>
                         [
-                            "assignment-id" => $row['assignment_id'],
+                            "assignment-id"       => $row['assignment_id'],
                             "assignment-deadline" => $row['assignment_deadline'],
-                            "assessment" =>
+                            "assessment"          =>
                                 [
-                                    "assessment-id" => $row['assessment_id'],
-                                    "assessment-name" => $row['assessment_name'],
+                                    "assessment-id"           => $row['assessment_id'],
+                                    "assessment-name"         => $row['assessment_name'],
                                     "assessment-display-name" => $row['assessment_display_name']
                                 ]
                         ],
                     "date-completed" => $row['date_completed'],
-                    "score" => $row['score']
+                    "score"          => $row['score']
                 ];
         }
 
@@ -344,12 +347,12 @@ class UserBackend {
                 [
                     "assignment" =>
                         [
-                            "assignment-id" => $row['assignment_id'],
+                            "assignment-id"       => $row['assignment_id'],
                             "assignment-deadline" => $row['assignment_deadline'],
-                            "assessment" =>
+                            "assessment"          =>
                                 [
-                                    "assessment-id" => $row['assessment_id'],
-                                    "assessment-name" => $row['assessment_name'],
+                                    "assessment-id"           => $row['assessment_id'],
+                                    "assessment-name"         => $row['assessment_name'],
                                     "assessment-display-name" => $row['assessment_display_name']
                                 ]
                         ]

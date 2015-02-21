@@ -4,7 +4,8 @@ namespace meteor\database\backend;
 use common\data\Token;
 use meteor\database\Database;
 
-class AssignmentBackend {
+class AssignmentBackend
+{
 
     /** Assignment operations */
     public static function fetch_all_assignments()
@@ -12,12 +13,12 @@ class AssignmentBackend {
         $query = Database::generate_query("assignment_lookup_all");
         $result = $query->execute();
 
-        $assignments = array();
+        $assignments = [];
         while ($row = $result->fetch_data()) {
             $assignments[] = [
                 "assignment-id" => $row['assignment_id'],
                 "assessment-id" => $row['assessment_id'],
-                "deadline" => $row['assignment_deadline']
+                "deadline"      => $row['assignment_deadline']
             ];
         }
 
@@ -26,30 +27,30 @@ class AssignmentBackend {
 
     public static function create_assignment(Token $id, Token $assessment, $deadline)
     {
-        $query = Database::generate_query("assignment_create", array(
-                $id->toString(),
-                $assessment->toString(),
-                $deadline
-            ));
+        $query = Database::generate_query("assignment_create", [
+            $id->toString(),
+            $assessment->toString(),
+            $deadline
+        ]);
         $query->execute();
     }
 
     public static function delete_assignment(Token $token)
     {
-        $query = Database::generate_query("assignment_delete", array($token->toString()));
+        $query = Database::generate_query("assignment_delete", [$token->toString()]);
         $query->execute();
     }
 
     public static function fetch_assignment_profile(Token $token)
     {
-        $query = Database::generate_query("assignment_lookup_id", array($token->toString()));
+        $query = Database::generate_query("assignment_lookup_id", [$token->toString()]);
         $result = $query->execute();
         $row = $result->fetch_data();
 
         return [
             "assignment-id" => $token->toString(),
             "assessment-id" => $row['assessment_id'],
-            "deadline" => $row['assignment_deadline']
+            "deadline"      => $row['assignment_deadline']
         ];
     }
 }

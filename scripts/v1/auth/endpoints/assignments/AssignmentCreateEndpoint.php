@@ -2,9 +2,6 @@
 namespace meteor\endpoints\assignments;
 
 use common\data\Token;
-use meteor\data\Assessment;
-use meteor\data\profiles\AssessmentProfile;
-use meteor\data\QuestionType;
 use meteor\database\Backend;
 use meteor\database\backend\AssignmentBackend;
 use meteor\endpoints\AuthenticatedEndpoint;
@@ -24,7 +21,7 @@ class AssignmentCreateEndpoint extends AuthenticatedEndpoint
         return [
             "assignment-id" => $id->toString(),
             "assessment-id" => $data->{"assessment"},
-            "deadline" => $data->{"deadline"}
+            "deadline"      => $data->{"deadline"}
         ];
     }
 }

@@ -11,6 +11,7 @@ class Crypt
     public static function hash_password($password)
     {
         $hash = password_hash($password, self::HASH_ALGORITHM, ["cost" => self::HASH_COST]);
+
         return $hash;
     }
 

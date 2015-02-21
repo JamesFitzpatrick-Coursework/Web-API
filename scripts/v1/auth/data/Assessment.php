@@ -1,7 +1,6 @@
 <?php
 namespace meteor\data;
 
-use common\data\Token;
 use meteor\data\profiles\AssessmentProfile;
 
 class Assessment
@@ -40,7 +39,7 @@ class Assessment
             $questions[] = $question;
         }
 
-        uasort($questions, array ($this, "sort_questions"));
+        uasort($questions, [$this, "sort_questions"]);
 
         foreach ($questions as $question) {
             $data["questions"][] = $question;
@@ -54,6 +53,7 @@ class Assessment
         if ($a["question-number"] == $b["question-number"]) {
             return 0;
         }
+
         return ($a["question-number"] > $b["question-number"]) ? 1 : -1;
     }
 } 

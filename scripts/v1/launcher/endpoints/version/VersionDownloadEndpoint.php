@@ -11,7 +11,8 @@ class VersionDownloadEndpoint extends Endpoint
 
     private $type;
 
-    public function __construct($type) {
+    public function __construct($type)
+    {
         $this->type = $type;
     }
 
@@ -25,10 +26,10 @@ class VersionDownloadEndpoint extends Endpoint
                 break;
             case "assets":
             case "libraries":
-                return array ($this->type => json_decode(file_get_contents($link), true));
+                return [$this->type => json_decode(file_get_contents($link), true)];
         }
 
-        throw new InvalidArtifactException("Invalid artifact specified", array ("artifact" => $this->type));
+        throw new InvalidArtifactException("Invalid artifact specified", ["artifact" => $this->type]);
     }
 
     private function get_download_link($version)
@@ -64,6 +65,6 @@ class VersionDownloadEndpoint extends Endpoint
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

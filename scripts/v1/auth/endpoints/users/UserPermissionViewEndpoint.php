@@ -11,11 +11,12 @@ class UserPermissionViewEndpoint extends AuthenticatedEndpoint
     {
         $profile = UserBackend::fetch_user_profile($this->params["id"]);
         $permissions = UserBackend::fetch_user_permissions($profile);
-        return array ("permissions" => $permissions);
+
+        return ["permissions" => $permissions];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

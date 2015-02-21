@@ -5,7 +5,7 @@ use common\exceptions\EndpointExecutionException;
 
 class InvalidGroupException extends EndpointExecutionException
 {
-    public function __construct($error, $data = array())
+    public function __construct($error, $data = [])
     {
         parent::__construct($error, $data);
     }

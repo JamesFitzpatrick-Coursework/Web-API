@@ -4,7 +4,7 @@ namespace lang;
 // Setup endpoints
 use lang\endpoints\ListEndpoint;
 
-$endpoints = array();
+$endpoints = [];
 
 register_endpoint("", new endpoints\ServerEndpoint());
 
@@ -23,7 +23,8 @@ function register_endpoint($pattern, $handler)
     $endpoints["/^" . $pattern . "$/"] = $handler;
 }
 
-function ends_with($haystack, $needle) {
+function ends_with($haystack, $needle)
+{
     if ($haystack == "") {
         return false;
     }

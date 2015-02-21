@@ -10,26 +10,26 @@ class ImageUploadEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        $this->validate_request(array("image", "name"));
+        $this->validate_request(["image", "name"]);
 
         $image = $data->{"image"};
         $name = $data->{"name"};
 
         $request = curl_init(IMGUR_BASE_URL . "image/");
 
-        curl_setopt($request, CURLOPT_HTTPHEADER, array(
+        curl_setopt($request, CURLOPT_HTTPHEADER, [
             "Authorization: Client-ID " . Imgur::imgur_api_id()
-        ));
+        ]);
         curl_setopt($request, CURLOPT_POST, true);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($request, CURLOPT_POSTFIELDS, array (
-           "image" => $image,
-           "name" => $name
-        ));
+        curl_setopt($request, CURLOPT_POSTFIELDS, [
+            "image" => $image,
+            "name"  => $name
+        ]);
 
         $result = curl_exec($request);
         curl_close($request);
 
-        return array ("Raw" => $result);
+        return ["Raw" => $result];
     }
 }

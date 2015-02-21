@@ -1,8 +1,8 @@
 <?php
 namespace meteor\endpoints\groups;
 
-use meteor\database\Backend;
 use common\exceptions\MethodNotAllowedException;
+use meteor\database\Backend;
 use meteor\database\backend\GroupBackend;
 use meteor\endpoints\AuthenticatedEndpoint;
 
@@ -24,20 +24,21 @@ class GroupSettingLookupEndpoint extends AuthenticatedEndpoint
         $profile = GroupBackend::fetch_group_profile($this->params["id"]);
         $setting = $this->params["setting"];
 
-        return array (
-            "setting" => array ("key" => $setting, "value" => GroupBackend::fetch_group_setting($profile, $setting))
-        );
+        return [
+            "setting" => ["key" => $setting, "value" => GroupBackend::fetch_group_setting($profile, $setting)]
+        ];
     }
 
     private function handlePost($data)
     {
         $profile = GroupBackend::fetch_group_profile($this->params["id"]);
         GroupBackend::delete_group_setting($profile, $this->params["setting"]);
-        return array();
+
+        return [];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET", "DELETE");
+        return ["GET", "DELETE"];
     }
 }

@@ -21,12 +21,6 @@ class AssessmentLookupEndpoint extends AuthenticatedEndpoint
         return [];
     }
 
-    public function handleDelete($data)
-    {
-        AssessmentBackend::delete_assessment(Token::decode($this->params['id']));
-        return [];
-    }
-
     public function handleGet($data)
     {
         /** @var Assessment $assessment */
@@ -35,6 +29,13 @@ class AssessmentLookupEndpoint extends AuthenticatedEndpoint
         return [
             "assessment" => $assessment->toExternalForm()
         ];
+    }
+
+    public function handleDelete($data)
+    {
+        AssessmentBackend::delete_assessment(Token::decode($this->params['id']));
+
+        return [];
     }
 
     public function get_acceptable_methods()

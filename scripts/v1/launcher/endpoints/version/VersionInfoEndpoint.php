@@ -11,17 +11,17 @@ class VersionInfoEndpoint extends Endpoint
     {
         $version = $this->params['version'];
 
-        $data = array ();
+        $data = [];
 
         $data["version"] = $version;
 
-        $data["download"] = array();
+        $data["download"] = [];
         $data["download"]["link"] = self::BASE_URL . $version . "/download/";
 
-        $data["libraries"] = array();
+        $data["libraries"] = [];
         $data["libraries"]["link"] = self::BASE_URL . $version . "/libraries/";
 
-        $data["assets"] = array();
+        $data["assets"] = [];
         $data["assets"]["link"] = self::BASE_URL . $version . "/assets/";
 
         return $data;
@@ -29,6 +29,6 @@ class VersionInfoEndpoint extends Endpoint
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

@@ -1,7 +1,8 @@
 <?php
 namespace meteor\database;
 
-class DatabaseResult {
+class DatabaseResult
+{
 
     private $result;
 

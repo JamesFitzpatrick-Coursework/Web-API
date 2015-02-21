@@ -4,7 +4,8 @@ namespace meteor\exceptions;
 use common\core\HTTP;
 use common\exceptions\EndpointExecutionException;
 
-class AuthenticationException extends EndpointExecutionException {
+class AuthenticationException extends EndpointExecutionException
+{
 
     public function __construct($error, array $payload)
     {

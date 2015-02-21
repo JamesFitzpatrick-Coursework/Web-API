@@ -10,17 +10,17 @@ class ListEndpoint extends Endpoint
     public function handle($data)
     {
         $files = glob(self::BASE_DIR . "*", GLOB_ONLYDIR);
-        $langs = array();
+        $langs = [];
 
         foreach ($files as $file) {
             $langs[] = substr($file, strrpos($file, "/") + 1);
         }
 
-        return array ("languages" => $langs);
+        return ["languages" => $langs];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

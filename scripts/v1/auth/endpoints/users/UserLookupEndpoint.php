@@ -20,23 +20,12 @@ class UserLookupEndpoint extends AuthenticatedEndpoint
         }
     }
 
-    public function handle_get($data)
+    public function handle_delete($data)
     {
         $profile = UserBackend::fetch_user_profile($this->params["id"]);
+        UserBackend::delete_user($profile);
 
-        $data = array ();
-        $data["profile"] = $profile->toExternalForm();
-        $data["settings"] = UserBackend::fetch_user_settings($profile);
-        $data["permissions"] = UserBackend::fetch_user_permissions($profile);
-
-        $groups = array();
-        /** @var GroupProfile $group */
-        foreach (UserBackend::fetch_user_groups($profile) as $group) {
-            $groups[] = $group->toExternalForm();
-        }
-        $data["groups"] = $groups;
-
-        return $data;
+        return [];
     }
 
     private function handle_patch($data)
@@ -56,18 +45,31 @@ class UserLookupEndpoint extends AuthenticatedEndpoint
 
         $profile = new UserProfile($profile->getUserId(), $username, $displayname);
         UserBackend::update_user_profile($profile);
+
         return $this->handle_get($data);
     }
 
-    public function handle_delete($data)
+    public function handle_get($data)
     {
         $profile = UserBackend::fetch_user_profile($this->params["id"]);
-        UserBackend::delete_user($profile);
-        return array();
+
+        $data = [];
+        $data["profile"] = $profile->toExternalForm();
+        $data["settings"] = UserBackend::fetch_user_settings($profile);
+        $data["permissions"] = UserBackend::fetch_user_permissions($profile);
+
+        $groups = [];
+        /** @var GroupProfile $group */
+        foreach (UserBackend::fetch_user_groups($profile) as $group) {
+            $groups[] = $group->toExternalForm();
+        }
+        $data["groups"] = $groups;
+
+        return $data;
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET", "DELETE", "POST");
+        return ["GET", "DELETE", "POST"];
     }
 }

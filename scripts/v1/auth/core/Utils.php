@@ -14,7 +14,7 @@ function check_env()
 function include_all($dir)
 {
     if (!is_array($dir)) {
-        $dir = array($dir);
+        $dir = [$dir];
     }
 
     foreach ($dir as $current) {
@@ -31,7 +31,7 @@ function include_all($dir)
 function require_all($dir)
 {
     if (!is_array($dir)) {
-        $dir = array($dir);
+        $dir = [$dir];
     }
 
     foreach ($dir as $current) {

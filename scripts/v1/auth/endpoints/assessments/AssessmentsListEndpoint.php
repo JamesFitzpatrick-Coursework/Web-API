@@ -10,18 +10,18 @@ class AssessmentsListEndpoint extends AuthenticatedEndpoint
 {
     public function handle($data)
     {
-        $assessments = array();
+        $assessments = [];
 
         /** @var AssessmentProfile $assessment */
         foreach (AssessmentBackend::fetch_all_assessments() as $assessment) {
             $assessments[] = $assessment->toExternalForm();
         }
 
-        return array("count" => count($assessments), "users" => $assessments);
+        return ["count" => count($assessments), "users" => $assessments];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

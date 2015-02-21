@@ -8,7 +8,7 @@ class InvalidVersionException extends EndpointExecutionException
 {
     public function __construct($version)
     {
-        parent::__construct("Version specified cannot be found", array ("version" => $version));
+        parent::__construct("Version specified cannot be found", ["version" => $version]);
     }
 
     public function get_error_code()

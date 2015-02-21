@@ -3,10 +3,10 @@ namespace meteor\endpoints;
 
 use common\core\Endpoint;
 use common\core\Headers;
-use common\exceptions\InvalidTokenException;
 use common\data\Token;
-use meteor\database\Backend;
 use common\exceptions\InvalidClientException;
+use common\exceptions\InvalidTokenException;
+use meteor\database\Backend;
 use meteor\database\backend\TokenBackend;
 use meteor\database\backend\UserBackend;
 use meteor\exceptions\AuthorizationException;
@@ -20,7 +20,7 @@ abstract class AuthenticatedEndpoint extends Endpoint
 
     public function execute($body, array $params)
     {
-        $this->data = $body == "" ? array() : json_decode($body);
+        $this->data = $body == "" ? [] : json_decode($body);
 
         if (!array_key_exists(Headers::CLIENT_ID, $_SERVER)) {
             throw new InvalidClientException();
@@ -52,13 +52,14 @@ abstract class AuthenticatedEndpoint extends Endpoint
 
         $payload = $this->handle($this->data);
         $payload["client-id"] = $this->clientid->toString();
+
         return $payload;
     }
 
     protected function validate_permission($permission)
     {
         if (!DEBUG && !UserBackend::check_user_permission($this->user, $permission)) {
-            throw new AuthorizationException("You do not have the required permissions to perform this operation", array ("permission" => $permission));
+            throw new AuthorizationException("You do not have the required permissions to perform this operation", ["permission" => $permission]);
         }
 
         return true;

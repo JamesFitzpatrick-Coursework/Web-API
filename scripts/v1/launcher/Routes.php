@@ -1,12 +1,12 @@
 <?php
 namespace launcher;
 
+use launcher\endpoints\assets;
 use launcher\endpoints\java;
 use launcher\endpoints\version;
-use launcher\endpoints\assets;
 
 // Setup endpoints
-$endpoints = array();
+$endpoints = [];
 
 register_endpoint("", new endpoints\ServerEndpoint());
 
@@ -37,7 +37,8 @@ function register_endpoint($pattern, $handler)
     $endpoints["/^" . $pattern . "$/"] = $handler;
 }
 
-function ends_with($haystack, $needle) {
+function ends_with($haystack, $needle)
+{
     if ($haystack == "") {
         return false;
     }

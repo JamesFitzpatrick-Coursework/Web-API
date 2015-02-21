@@ -14,7 +14,7 @@ class LoginEndpoint extends Endpoint
 
     public function handle($data)
     {
-        $this->validate_request(array("user", "request-token", "password"));
+        $this->validate_request(["user", "request-token", "password"]);
 
         // Check to see if request token is valid
         $request = Token::decode($data->{"request-token"});
@@ -35,7 +35,7 @@ class LoginEndpoint extends Endpoint
         $password = $data->{"password"};
 
         if (!UserBackend::validate_user($profile, $password)) {
-            throw new AuthenticationException("Invalid password for user", array("user" => $profile->toExternalForm()));
+            throw new AuthenticationException("Invalid password for user", ["user" => $profile->toExternalForm()]);
         }
 
         // Remove any current login sessions for this user and this client
@@ -46,11 +46,11 @@ class LoginEndpoint extends Endpoint
         $accessToken = TokenBackend::create_token($this->clientid, $profile->getUserId(), TOKEN_ACCESS, "1 HOUR");
         $refreshToken = TokenBackend::create_token($this->clientid, $profile->getUserId(), TOKEN_REFRESH, "1 YEAR");
 
-        return array(
-            "access-token" => $accessToken->toExternalForm(3600),
+        return [
+            "access-token"  => $accessToken->toExternalForm(3600),
             "refresh-token" => $refreshToken->toExternalForm(false),
-            "profile" => $profile->toExternalForm()
-        );
+            "profile"       => $profile->toExternalForm()
+        ];
     }
 
 }

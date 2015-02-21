@@ -7,16 +7,16 @@ new MeteorClassLoader();
 
 class MeteorClassLoader
 {
-    private $mappings = array(
-        "meteor" => "auth",
+    private $mappings = [
+        "meteor"   => "auth",
         "launcher" => "launcher",
-        "common" => "common",
-        "lang" => "lang"
-    );
+        "common"   => "common",
+        "lang"     => "lang"
+    ];
 
     public function __construct()
     {
-        spl_autoload_register(array ($this, "load_class"), true, true);
+        spl_autoload_register([$this, "load_class"], true, true);
     }
 
     public function load_class($class)

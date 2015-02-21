@@ -10,19 +10,19 @@ class GroupListEndpoint extends Endpoint
 {
     public function handle($data)
     {
-        $groups = array();
+        $groups = [];
 
         /** @var GroupProfile $group */
         foreach (GroupBackend::fetch_all_groups() as $group) {
             $groups[] = $group->toExternalForm();
         }
 
-        return array("count" => count($groups), "groups" => $groups);
+        return ["count" => count($groups), "groups" => $groups];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 
 }

@@ -1,9 +1,8 @@
 <?php
 namespace common\response;
 
-use SimpleXMLElement;
-
 use common\core\ResponseFormat;
+use SimpleXMLElement;
 
 class XMLResponseFormat extends ResponseFormat
 {
@@ -17,6 +16,7 @@ class XMLResponseFormat extends ResponseFormat
     {
         $xml = new SimpleXMLElement('<response/>');
         $this->array_to_xml($data, $xml);
+
         return $xml->asXML();
     }
 

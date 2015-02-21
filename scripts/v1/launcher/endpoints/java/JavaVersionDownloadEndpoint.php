@@ -20,6 +20,6 @@ class JavaVersionDownloadEndpoint extends Endpoint
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

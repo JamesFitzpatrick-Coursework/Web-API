@@ -12,17 +12,17 @@ class UserGroupsListEndpoint extends AuthenticatedEndpoint
     {
         $profile = UserBackend::fetch_user_profile($this->params['id']);
 
-        $groups = array();
+        $groups = [];
         /** @var \meteor\data\profiles\GroupProfile $group */
         foreach (UserBackend::fetch_user_groups($profile) as $group) {
             $groups[] = $group->toExternalForm();
         }
 
-        return array ("groups" => $groups);
+        return ["groups" => $groups];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }
