@@ -5,6 +5,7 @@ use common\data\Token;
 use meteor\data\Assessment;
 use meteor\data\QuestionType;
 use meteor\database\Backend;
+use meteor\database\backend\AssessmentBackend;
 
 class AssessmentCreateEndpoint extends AuthenticatedEndpoint
 {
@@ -14,11 +15,11 @@ class AssessmentCreateEndpoint extends AuthenticatedEndpoint
 
         $name = $data->{"name"};
 
-        $questions = array();
+        $questions = [];
         foreach ($data->{"questions"} as $questionJson) {
             $questionJson = obj_to_array($questionJson);
 
-            $question = array();
+            $question = [];
             $question["id"] = Token::generateNewToken(TOKEN_QUESTION)->toString();
             $question["type"] = QuestionType::convert_to_string($questionJson["type"]); // TODO delete column in database
             $question["data"] = $questionJson;
@@ -26,10 +27,10 @@ class AssessmentCreateEndpoint extends AuthenticatedEndpoint
         }
 
         /** @var Assessment $assessment */
-        $assessment = Backend::create_assessment($id, $name, $questions);
+        $assessment = AssessmentBackend::create_assessment($id, $name, $questions);
 
-        return array (
+        return [
             "assessment" => $assessment->toExternalForm()
-        );
+        ];
     }
 }

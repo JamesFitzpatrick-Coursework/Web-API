@@ -2,18 +2,19 @@
 namespace meteor\endpoints;
 
 use meteor\database\Backend;
+use meteor\database\backend\AssessmentBackend;
 
 class AssessmentsListEndpoint extends AuthenticatedEndpoint
 {
     public function handle($data)
     {
-        return array (
-            "assessments" => Backend::fetch_all_assessments()
-        );
+        return [
+            "assessments" => AssessmentBackend::fetch_all_assessments()
+        ];
     }
 
     public function get_acceptable_methods()
     {
-        return array ("GET");
+        return ["GET"];
     }
 }

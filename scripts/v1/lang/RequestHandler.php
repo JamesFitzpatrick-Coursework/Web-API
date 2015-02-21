@@ -1,6 +1,7 @@
 <?php
 namespace lang;
 
+use common\core\Headers;
 use Exception;
 
 use common\core\HTTP;
@@ -23,25 +24,29 @@ define ("DEBUG", false);
 
 error_reporting(DEBUG ? E_ALL : 0);
 
+// Setup response formats
+$formats = [];
+$formats["json"] = new response\JsonResponseFormat(false);
+$formats["json/pretty"] = new response\JsonResponseFormat(true);
+$formats["xml"] = new response\XMLResponseFormat();
+
+// Get response response if provided
+$responseFormat = DEFAULT_FORMAT;
+
+if (array_key_exists(Headers::RESPONSE_FORMAT, $_SERVER)) {
+    $responseFormat = $_SERVER[Headers::RESPONSE_FORMAT];
+}
+
 try {
     require_once 'Routes.php';
-
-    // Setup response formats
-    $formats = array();
-    $formats["json"] = new response\JsonResponseFormat(false);
-    $formats["json/pretty"] = new response\JsonResponseFormat(true);
-    $formats["xml"] = new response\XMLResponseFormat();
 
     // Request from the same server don't have a HTTP_ORIGIN
     if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
         $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
     }
 
-    // Get response response if provided
-    $responseFormat = DEFAULT_FORMAT;
-
     $code = HTTP::INTERNAL_ERROR;
-    $payload = array();
+    $payload = [];
 
     // get the requested endpoint
     $request = strtolower($_REQUEST['request']);
@@ -80,10 +85,10 @@ try {
 } catch (EndpointExecutionException $ex) {
     $code = $ex->get_error_code();
     $success = false;
-    $payload = array(
+    $payload = [
         "cause" => "uk.co.thefishlive.meteor.exceptions." . str_replace("\\", ".", get_class($ex)),
         "error" => $ex->getMessage()
-    );
+    ];
 
     foreach ($ex->get_data() as $key => $value) {
         $payload[$key] = $value;
@@ -95,16 +100,16 @@ try {
 } catch (Exception $ex) {
     $code = HTTP::INTERNAL_ERROR;
     $success = false;
-    $payload = array(
+    $payload = [
         "cause" => "uk.co.thefishlive.meteor.exceptions.ServerExecutionException",
         "error" => $ex->getMessage()
-    );
+    ];
 }
 
 // Check to see if response response is valid
 if (!array_key_exists($responseFormat, $formats)) {
     $code = HTTP::BAD_REQUEST;
-    $payload = array("error" => "Response type not found", "requested" => $responseFormat);
+    $payload = ["error" => "Response type not found", "requested" => $responseFormat];
     $responseFormat = DEFAULT_FORMAT;
 }
 
@@ -112,11 +117,11 @@ if (!array_key_exists($responseFormat, $formats)) {
 $format = $formats[$responseFormat];
 
 // Create the response
-$response = array(
+$response = [
     "success" => $success,
     "status" => $code,
     "payload" => $payload
-);
+];
 
 // Display the response to the client
 http_response_code($code);

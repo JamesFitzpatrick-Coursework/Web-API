@@ -10,7 +10,11 @@ class Crypt
 
     public static function hash_password($password)
     {
+<<<<<<< HEAD
+        $hash = password_hash($password, HASH_ALGORITHM, ["cost" => self::HASH_COST]);
+=======
         $hash = password_hash($password, self::HASH_ALGORITHM, ["cost" => self::HASH_COST]);
+>>>>>>> I really need to learn to commit more often
         return $hash;
     }
 

@@ -3,7 +3,9 @@ namespace meteor\endpoints;
 
 use common\data\Token;
 use meteor\data\Assessment;
+use meteor\data\profiles\AssessmentProfile;
 use meteor\database\Backend;
+use meteor\database\backend\AssessmentBackend;
 
 class AssessmentLookupEndpoint extends AuthenticatedEndpoint
 {
@@ -15,18 +17,20 @@ class AssessmentLookupEndpoint extends AuthenticatedEndpoint
         } else if ($this->method == "DELETE") {
             return $this->handleDelete($data);
         }
+
+        return [];
     }
 
     public function handleDelete($data)
     {
-        Backend::delete_assessment(Token::decode($this->params['id']));
+        AssessmentBackend::delete_assessment(Token::decode($this->params['id']));
         return [];
     }
 
     public function handleGet($data)
     {
         /** @var Assessment $assessment */
-        $assessment = Backend::fetch_assessment_profile(Token::decode($this->params['id']));
+        $assessment = AssessmentBackend::fetch_assessment_profile(new AssessmentProfile(Token::decode($this->params['id'])));
 
         return [
             "assessment" => $assessment->toExternalForm()
@@ -35,6 +39,6 @@ class AssessmentLookupEndpoint extends AuthenticatedEndpoint
 
     public function get_acceptable_methods()
     {
-        return array ("GET", "DELETE");
+        return ["GET", "DELETE"];
     }
 }

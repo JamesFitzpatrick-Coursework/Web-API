@@ -142,6 +142,7 @@ class Database
             $path = "database/query/$identifier/$name.sql";
             $file = fopen($path, "r");
             $query = fread($file, filesize($path));
+            self::$queryCache[$name] = $query;
         }
 
         // Inject execution data into the query
@@ -154,7 +155,10 @@ class Database
             $query = preg_replace("/\{" . $data[1] . "\}/", self::$tables[$data[2]], $query, 1);
         }
 
-        fclose($file);
+        if (isset($file)) {
+            fclose($file);
+        }
+
         return new DatabaseQuery($query);
     }
 
