@@ -85,6 +85,27 @@ class AssessmentBackend
         return new Assessment($profile, $questions);
     }
 
+    public static function fetch_assessment_answers(AssessmentProfile $profile)
+    {
+        $query = Database::generate_query("assessment_lookup_answers", [$profile->getAssessmentId()->toString()]);
+        $result = $query->execute();
+
+        $questions = [];
+
+        while ($row = $result->fetch_data()) {
+            $data = json_decode($row['question_data'], true);
+
+            $questions[] = [
+                "question-id" => Token::decode($row['question_id']),
+                "question-number" => $data["question-number"],
+                "question-type" => $data['question-type'],
+                "question-answer" => $row['answer_value']
+            ];
+        }
+
+        return $questions;
+    }
+
     public static function delete_assessment(AssessmentProfile $profile)
     {
         $query = Database::generate_query("assessment_delete", [$profile->getAssessmentId()->toString()]);

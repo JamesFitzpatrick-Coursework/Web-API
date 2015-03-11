@@ -266,7 +266,7 @@ class UserBackend
     public static function add_user_assignment(UserProfile $profile, Token $id)
     {
         if (!$id->getType() != TOKEN_ASSIGNMENT) {
-            throw new InvalidAssignmentException("Assignment id provided is not a valid assignment id");
+            throw new InvalidAssignmentException(null, "Assignment id provided is not a valid assignment id");
         }
 
         $assignment = AssignmentBackend::fetch_assignment_profile($id);
@@ -360,6 +360,26 @@ class UserBackend
         }
 
         return $assignments;
+    }
+
+    public static function add_assignment_scores(UserProfile $user, Token $assignmentId, Token $assessmentId, array $scores)
+    {
+        $query = Database::generate_query("user_score_add", [$user->getUserId()->toString(), $assignmentId->toString(), $assessmentId->toString()]);
+        $query->execute();
+
+        $scoreId = Database::insert_id();
+
+        foreach ($scores as $score) {
+            $query = Database::generate_query("user_score_question_add", [
+                $user->getUserId()->toString(),
+                $scoreId,
+                $assignmentId->toString(),
+                $score['question-id']->toString(),
+                $assessmentId->toString(),
+                $score['score']
+            ]);
+            $query->execute();
+        }
     }
 
 }

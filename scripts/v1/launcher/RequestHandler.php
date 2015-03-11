@@ -85,7 +85,7 @@ try {
     $code = $ex->get_error_code();
     $success = false;
     $payload = [
-        "cause" => "uk.co.thefishlive.meteor.exceptions." . str_replace("\\", ".", get_class($ex)),
+        "cause" => "uk.co.thefishlive." . str_replace("\\", ".", get_class($ex)),
         "error" => $ex->getMessage()
     ];
 

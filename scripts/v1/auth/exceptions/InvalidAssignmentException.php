@@ -6,8 +6,8 @@ use meteor\data\profiles\AssessmentProfile;
 
 class InvalidAssignmentException extends EndpointExecutionException
 {
-    public function __construct(AssessmentProfile $profile)
+    public function __construct(AssessmentProfile $profile, $error = "Could not find assessment with id provided.")
     {
-        parent::__construct("Could not find assessment with id provided.", ["id" => $profile->getAssessmentId()->toString()]);
+        parent::__construct($error, $profile != null ? ["id" => $profile->getAssessmentId()->toString()] : []);
     }
 }

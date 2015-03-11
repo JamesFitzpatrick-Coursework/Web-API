@@ -60,8 +60,6 @@ try {
     if (array_key_exists(Headers::RESPONSE_FORMAT, $_SERVER)) {
         $responseFormat = $_SERVER[Headers::RESPONSE_FORMAT];
     }
-    $code = HTTP::INTERNAL_ERROR;
-    $payload = [];
 
     $code = HTTP::INTERNAL_ERROR;
     $payload = [];

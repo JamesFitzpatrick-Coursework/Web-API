@@ -8,18 +8,22 @@ use meteor\exceptions\DatabaseException;
 class Database
 {
     private static $tables = [
-        "users"                => "meteor_users",
-        "users.settings"       => "meteor_user_settings",
-        "users.permissions"    => "meteor_user_permissions",
-        "users.assignments"    => "meteor_user_assignments",
-        "groups"               => "meteor_groups",
-        "groups.settings"      => "meteor_group_settings",
-        "groups.permissions"   => "meteor_group_permissions",
-        "groups.users"         => "meteor_group_users",
-        "tokens"               => "meteor_tokens",
-        "assessment"           => "meteor_assessments",
-        "assessment.questions" => "meteor_assessment_questions",
-        "assessment.answers"   => "meteor_assessment_answers",
+        "users"                 => "meteor_users",
+        "users.settings"        => "meteor_user_settings",
+        "users.permissions"     => "meteor_user_permissions",
+        "users.assignments"     => "meteor_users_assignments",
+        "users.scores"          => "meteor_users_scores",
+        "users.question.scores" => "meteor_users_question_scores",
+        "groups"                => "meteor_groups",
+        "groups.settings"       => "meteor_group_settings",
+        "groups.permissions"    => "meteor_group_permissions",
+        "groups.users"          => "meteor_group_users",
+        "groups.assignments"    => "meteor_groups_assignments",
+        "tokens"                => "meteor_tokens",
+        "assignment"            => "meteor_assignments",
+        "assessment"            => "meteor_assessments",
+        "assessment.questions"  => "meteor_assessment_questions",
+        "assessment.answers"    => "meteor_assessment_answers",
     ];
 
     private static $queryCache = [];
@@ -98,6 +102,20 @@ class Database
         }
 
         return mysqli_num_rows($result);
+    }
+
+    /**
+     * Returns the auto generated id used in the last query
+     *
+     * @return bool|int the auto generated id used in the last query
+     */
+    public static function insert_id()
+    {
+        if (!self::$connected) {
+            return false;
+        }
+
+        return mysqli_insert_id(self::$connection);
     }
 
     /**

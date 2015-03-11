@@ -26,7 +26,7 @@ register_endpoint("users/create", new users\UserCreateEndpoint());
 register_endpoint("users/:id/groups/add", new users\UserGroupAddEndpoint());
 register_endpoint("users/:id/groups", new users\UserGroupsListEndpoint());
 register_endpoint("users/:id/assignments/add", new users\UserAddAssignmentEndpoint());
-register_endpoint("users/:id/assignments/complete", new users\UserAddAssignmentEndpoint());
+register_endpoint("users/:id/assignments/complete", new users\UserAssignmentCompleteEndpoint());
 register_endpoint("users/:id/assignments/completed", new users\UserListAssignments(users\UserListAssignments::LIST_COMPLETED));
 register_endpoint("users/:id/assignments/all", new users\UserListAssignments(users\UserListAssignments::LIST_ALL));
 register_endpoint("users/:id/assignments", new users\UserListAssignments(users\UserListAssignments::LIST_OUTSTANDING));
