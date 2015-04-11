@@ -55,6 +55,10 @@ class Token
 
     public static function decode($token)
     {
+        if (!(is_string($token))) {
+            throw new InvalidTokenException("Token provided is not a string", ["token" => $token]);
+        }
+
         $token = strtoupper($token);
 
         if (preg_match(self::TOKEN_REGEX, $token, $result) != 1) {

@@ -16,8 +16,6 @@ class AssessmentLookupEndpoint extends AuthenticatedEndpoint
             return $this->handleGet($data);
         } elseif ($this->method == "DELETE") {
             return $this->handleDelete($data);
-        } elseif ($this->method == "POST") {
-            return $this->handlePost($data);
         }
 
         return [];
@@ -26,7 +24,7 @@ class AssessmentLookupEndpoint extends AuthenticatedEndpoint
     public function handleGet($data)
     {
         /** @var Assessment $assessment */
-        $assessment = AssessmentBackend::fetch_assessment_profile(new AssessmentProfile(Token::decode($this->params['id'])));
+        $assessment = AssessmentBackend::fetch_assessment(new AssessmentProfile(Token::decode($this->params['id'])));
 
         return [
             "assessment" => $assessment->toExternalForm()
@@ -40,13 +38,8 @@ class AssessmentLookupEndpoint extends AuthenticatedEndpoint
         return [];
     }
 
-    private function handlePost($data)
-    {
-        return $this->handleGet($data);
-    }
-
     public function get_acceptable_methods()
     {
-        return ["GET", "DELETE", "POST"];
+        return ["GET", "DELETE"];
     }
 }

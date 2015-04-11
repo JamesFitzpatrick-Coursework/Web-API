@@ -265,8 +265,8 @@ class UserBackend
 
     public static function add_user_assignment(UserProfile $profile, Token $id)
     {
-        if (!$id->getType() != TOKEN_ASSIGNMENT) {
-            throw new InvalidAssignmentException(null, "Assignment id provided is not a valid assignment id");
+        if ($id->getType() != TOKEN_ASSIGNMENT) {
+            throw new InvalidAssignmentException("Assignment id provided is not a valid assignment id", $id);
         }
 
         $assignment = AssignmentBackend::fetch_assignment_profile($id);
@@ -315,6 +315,10 @@ class UserBackend
 
         $assignments = [];
         while ($row = $result->fetch_data()) {
+            if ($row['assignment_id'] == null) {
+                continue;
+            }
+
             $assignments[] =
                 [
                     "assignment"     =>
@@ -371,8 +375,8 @@ class UserBackend
 
         foreach ($scores as $score) {
             $query = Database::generate_query("user_score_question_add", [
-                $user->getUserId()->toString(),
                 $scoreId,
+                $user->getUserId()->toString(),
                 $assignmentId->toString(),
                 $score['question-id']->toString(),
                 $assessmentId->toString(),
@@ -380,6 +384,32 @@ class UserBackend
             ]);
             $query->execute();
         }
+    }
+
+    public static function fetch_user_scores(UserProfile $user, array $assignment)
+    {
+        $query = Database::generate_query("user_assignment_score", [$user->getUserId()->toString(), $assignment["assignment-id"]]);
+        $result = $query->execute();
+        $row = $result->fetch_data();
+
+        if ($row['score_id'] == null) {
+            return null;
+        }
+
+        $data = [
+            "completed" => $row['date_completed'],
+            "score" => $row['score']
+        ];
+
+        $query = Database::generate_query("user_assignment_question_scores", [$user->getUserId()->toString(), $assignment["assignment-id"], $row['score_id']]);
+        $result = $query->execute();
+        $i = 1;
+
+        while ($row = $result->fetch_data()) {
+            $data["questions"]["" . $i++] = $row['score'];
+        }
+
+        return $data;
     }
 
 }

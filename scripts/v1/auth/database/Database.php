@@ -124,6 +124,7 @@ class Database
      * @param string $name the query structure
      * @param array $data  the specific data to replace into the query
      *
+     * @throws DatabaseException if there is a error generating the query
      * @return DatabaseQuery the query instance
      */
     public static function generate_query($name, $data = [])
@@ -133,6 +134,11 @@ class Database
         } else {
             $identifier = substr($name, 0, strpos($name, "_"));
             $path = "database/query/$identifier/$name.sql";
+
+            if (!is_readable($path)) {
+                throw new DatabaseException("Cannot find query with identifier " . $name . " (" . $path . ")");
+            }
+
             $file = fopen($path, "r");
             $query = fread($file, filesize($path));
             self::$queryCache[$name] = $query;
@@ -145,6 +151,10 @@ class Database
 
         // Inject the table name into the query
         while (preg_match("/\{(table.([^}]+))\}/", $query, $data) == 1) {
+            if (!array_key_exists($data[2], self::$tables)) {
+                throw new DatabaseException("Cannot find table with id " . $data[2], $name);
+            }
+
             $query = preg_replace("/\{" . $data[1] . "\}/", self::$tables[$data[2]], $query, 1);
         }
 
@@ -170,8 +180,8 @@ class Database
             return false;
         }
 
-        if (!is_string($value)) {
-            throw new DatabaseException("Value provided is not a string", ["value" => $value]);
+        if (!is_scalar($value)) {
+            throw new DatabaseException("Value provided is not a valid sql type", ["value" => $value]);
         }
 
         return mysqli_escape_string(self::$connection, $value);

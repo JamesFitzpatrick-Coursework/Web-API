@@ -1,0 +1,1 @@
+UPDATE `{table.assessment.questions}` SET `question_data`='{2}' WHERE `question_id`='{1}' AND `assessment_id`='{0}' LIMIT 1

@@ -1,0 +1,1 @@
+SELECT `question_data` FROM `{table.assessment.questions}` WHERE `question_id`='{1}' AND `assessment_id`='{0}';

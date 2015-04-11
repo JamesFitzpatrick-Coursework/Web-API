@@ -1,13 +1,13 @@
 <?php
 namespace meteor\exceptions;
 
+use common\data\Token;
 use common\exceptions\EndpointExecutionException;
-use meteor\data\profiles\AssessmentProfile;
 
 class InvalidAssignmentException extends EndpointExecutionException
 {
-    public function __construct(AssessmentProfile $profile, $error = "Could not find assessment with id provided.")
+    public function __construct($error = "Could not find assignment with id provided.", Token $id = null)
     {
-        parent::__construct($error, $profile != null ? ["id" => $profile->getAssessmentId()->toString()] : []);
+        parent::__construct($error, $id != null ? ["id" => $id->toString()] : []);
     }
 }

@@ -30,15 +30,17 @@ class ListVersionsEndpoint extends Endpoint
             ];
         }
 
-
-        if (isset($metadata->versioning->release)) {
+       /* if (isset($metadata->versioning->release)) {
             $latest = (string)$metadata->versioning->release;
 
             $data["latest"] = [
                 "release" => $latest
             ];
-        }
+        }*/
 
+        $data["latest"] = [
+            "release" => "1.0-SNAPSHOT"
+        ];
 
         return $data;
     }

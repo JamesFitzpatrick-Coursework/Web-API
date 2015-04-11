@@ -1,0 +1,1 @@
+UPDATE `{table.assessment.answers}` SET `answer_value`='{0}' WHERE `question_id`='{1}' AND `assessment_id`='{2}'

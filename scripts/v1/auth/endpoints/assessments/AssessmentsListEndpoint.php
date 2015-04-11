@@ -17,7 +17,7 @@ class AssessmentsListEndpoint extends AuthenticatedEndpoint
             $assessments[] = $assessment->toExternalForm();
         }
 
-        return ["count" => count($assessments), "users" => $assessments];
+        return ["count" => count($assessments), "assessments" => $assessments];
     }
 
     public function get_acceptable_methods()

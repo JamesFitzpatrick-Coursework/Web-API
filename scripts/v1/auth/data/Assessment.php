@@ -40,8 +40,10 @@ class Assessment
         }
 
         uasort($questions, [$this, "sort_questions"]);
+        $data["questions"] = [];
 
         foreach ($questions as $question) {
+            unset($question["answer"]);
             $data["questions"][] = $question;
         }
 

@@ -49,7 +49,7 @@ class AssignmentBackend
 
         return [
             "assignment-id" => $token->toString(),
-            "assessment-id" => $row['assessment_id'],
+            "assessment-id" => Token::decode($row['assessment_id']),
             "deadline"      => $row['assignment_deadline']
         ];
     }

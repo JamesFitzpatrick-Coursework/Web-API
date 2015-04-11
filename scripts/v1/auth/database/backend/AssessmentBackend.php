@@ -41,36 +41,60 @@ class AssessmentBackend
         $query->execute();
 
         foreach ($questions as $question) {
-            $query = Database::generate_query("assessment_question_create", [
-                $question["id"],
-                $profile->getAssessmentId()->toString(),
-                json_encode($question["data"])
-            ]);
-            $query->execute();
-
-            $query = Database::generate_query("assessment_answer_create", [
-                Token::generateNewToken(TOKEN_ANSWER)->toString(),
-                $question["id"],
-                $profile->getAssessmentId()->toString(),
-                (string)$question["data"]["answer"]
-            ]);
-            $query->execute();
+            self::add_question($profile, $question);
         }
 
-        return self::fetch_assessment_profile($profile);
+        return self::fetch_assessment($profile);
     }
 
-    public static function fetch_assessment_profile(AssessmentProfile $profile)
+    public static function add_question(AssessmentProfile $profile, $question)
     {
-        $query = Database::generate_query("assessment_lookup_id", [$profile->getAssessmentId()->toString()]);
+        $answer = (string) $question["data"]["answer"];
+        unset($question['data']['answer']);
+
+        $query = Database::generate_query("assessment_question_create", [
+            $question["id"],
+            $profile->getAssessmentId()->toString(),
+            json_encode($question["data"])
+        ]);
+        $query->execute();
+
+        $query = Database::generate_query("assessment_answer_create", [
+            Token::generateNewToken(TOKEN_ANSWER)->toString(),
+            $question["id"],
+            $profile->getAssessmentId()->toString(),
+            $answer
+        ]);
+        $query->execute();
+    }
+
+    public static function fetch_assessment_profile(Token $id)
+    {
+        $query = Database::generate_query("assessment_lookup_id", [$id->toString()]);
         $result = $query->execute();
 
         if ($result->count() == 0) {
-            throw new InvalidAssessmentException($profile);
+            throw new InvalidAssessmentException($id);
         }
 
         $data = $result->fetch_data();
-        $profile = new AssessmentProfile($profile->getAssessmentId(), $data['assessment_name'], $data['assessment_display_name']);
+        return new AssessmentProfile($id, $data['assessment_name'], $data['assessment_display_name']);
+    }
+
+    public static function fetch_question(AssessmentProfile $profile, Token $id)
+    {
+        $query = Database::generate_query("assessment_question_lookup", [$profile->getAssessmentId()->toString(), $id->toString()]);
+        $result = $query->execute();
+        $row = $result->fetch_data();
+
+        $json = json_decode($row['question_data'], true);
+        $json['question-id'] = $id->toString();
+        return $json;
+    }
+
+    public static function fetch_assessment(AssessmentProfile $profile)
+    {
+        $profile = self::fetch_assessment_profile($profile->getAssessmentId());
 
         $query = Database::generate_query("assessment_lookup_questions", [$profile->getAssessmentId()->toString()]);
         $result = $query->execute();
@@ -98,17 +122,44 @@ class AssessmentBackend
             $questions[] = [
                 "question-id" => Token::decode($row['question_id']),
                 "question-number" => $data["question-number"],
-                "question-type" => $data['question-type'],
-                "question-answer" => $row['answer_value']
+                "question-type" => $data['type'],
+                "answer-value" => $row['answer_value']
             ];
         }
 
         return $questions;
     }
 
+    public static function update_question(AssessmentProfile $profile, Token $id, array $question)
+    {
+        unset($question["data"]["question-id"]);
+        $answer = (string) $question["data"]["answer"];
+        unset($question['data']['answer']);
+
+        $query = Database::generate_query("assessment_question_update", [
+            $profile->getAssessmentId()->toString(),
+            $question["id"],
+            json_encode($question["data"])
+        ]);
+        $query->execute();
+
+        $query = Database::generate_query("assessment_answer_update", [
+            $answer,
+            $question["id"],
+            $profile->getAssessmentId()->toString()
+        ]);
+        $query->execute();
+    }
+
     public static function delete_assessment(AssessmentProfile $profile)
     {
         $query = Database::generate_query("assessment_delete", [$profile->getAssessmentId()->toString()]);
+        $query->execute();
+    }
+
+    public static function delete_question(AssessmentProfile $profile, Token $id)
+    {
+        $query = Database::generate_query("assessment_question_delete", [$profile->getAssessmentId()->toString(), $id->toString()]);
         $query->execute();
     }
 }

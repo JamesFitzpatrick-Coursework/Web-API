@@ -5,7 +5,7 @@ SELECT
   `{table.assessment}`.`assessment_name`,
   `{table.assessment}`.`assessment_display_name`,
   `{table.users.scores}`.`completed` AS `date_completed`,
-  SUM(`{table.users.questions.scores}`.`score`) AS `score`
+  SUM(`{table.users.question.scores}`.`score`) AS `score`
 
 FROM `{table.users.assignments}`
   LEFT JOIN `{table.assignment}`
@@ -19,11 +19,11 @@ FROM `{table.users.assignments}`
       `{table.users.assignments}`.`assignment_id` = `{table.users.scores}`.`assignment_id` AND
       `{table.users.assignments}`.`assessment_id` = `{table.users.scores}`.`assessment_id` AND
       `{table.users.scores}`.`user_id` = '{0}'
-  LEFT JOIN `{table.users.questions.scores}`
+  LEFT JOIN `{table.users.question.scores}`
     ON
-      `{table.users.assignments}`.`assignment_id` = `{table.users.questions.scores}`.`assignment_id` AND
-      `{table.users.scores}`.`score_id` = `{table.users.questions.scores}`.`score_id` AND
-      `{table.users.questions.scores}`.`user_id` = '{0}'
+      `{table.users.assignments}`.`assignment_id` = `{table.users.question.scores}`.`assignment_id` AND
+      `{table.users.scores}`.`score_id` = `{table.users.question.scores}`.`score_id` AND
+      `{table.users.question.scores}`.`user_id` = '{0}'
 
 WHERE `{table.users.assignments}`.`user_id` = '{0}'
 

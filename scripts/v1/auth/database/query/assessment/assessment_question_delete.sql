@@ -1,0 +1,1 @@
+DELETE FROM `{table.assessment.questions}` WHERE `assessment_id`='{0}' AND `question_id`='{1}' LIMIT 1;
