@@ -273,7 +273,7 @@ class UserBackend
         $query = Database::generate_query("user_assignment_add", [
                 $profile->getUserId()->toString(),
                 $assignment["assignment-id"],
-                $assignment["assessment-id"]
+                $assignment["assessment-id"]->toString()
             ]);
         $query->execute();
 
@@ -378,7 +378,7 @@ class UserBackend
                 $scoreId,
                 $user->getUserId()->toString(),
                 $assignmentId->toString(),
-                $score['question-id']->toString(),
+                $score['question-id'],
                 $assessmentId->toString(),
                 $score['score']
             ]);

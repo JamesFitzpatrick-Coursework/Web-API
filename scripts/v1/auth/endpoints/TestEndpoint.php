@@ -2,6 +2,7 @@
 namespace meteor\endpoints;
 
 use common\core\Endpoint;
+use common\data\Token;
 use meteor\data\QuestionType;
 use phpseclib\Crypt\RSA;
 
@@ -14,8 +15,7 @@ class TestEndpoint extends Endpoint
         $rsa->setPublicKeyFormat(RSA::PRIVATE_FORMAT_XML);
 
         return [
-            "string"  => QuestionType::convert_to_string(QuestionType::MULTI_CHOICE),
-            "ordinal" => QuestionType::convert_to_ordinal("MULTI_CHOICE")
+            "assignment"  => Token::generateNewToken(TOKEN_ASSIGNMENT)->toExternalForm(false)
         ];
     }
 }

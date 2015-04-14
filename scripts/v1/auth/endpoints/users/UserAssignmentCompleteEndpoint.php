@@ -33,7 +33,7 @@ class UserAssignmentCompleteEndpoint extends AuthenticatedEndpoint
             $question = $answer['question-id'];
 
             $score = [
-                "question-id" => $question,
+                "question-id" => $question->toString(),
                 "question-number" => $answer['question-number'],
                 "max-score" => 1
             ];
